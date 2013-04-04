@@ -49,7 +49,7 @@ namespace FRC_Virtual_Robotics
         protected override void LoadContent()
         {
             // TODO: use this.Content to load your game content here
-            robot = new IterativeRobot(10);
+            robot = new IterativeRobot(20);
             driverInput = new ControllerInput();
             
             // Create a new SpriteBatch, which can be used to draw textures.
@@ -78,6 +78,10 @@ namespace FRC_Virtual_Robotics
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
+            if (driverInput.getBack())
+                robot.reset();
+            
+
             // TODO: Add your update logic here
             arcadeDrive();
             robot.run();
@@ -91,11 +95,10 @@ namespace FRC_Virtual_Robotics
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.White);
             spriteBatch.Begin();
 
             spriteBatch.Draw(robot.getImage(), robot.getLocation(), null, Color.White, robot.getDirection(), robot.getOrigin(), 1.0f, SpriteEffects.None, 0f);
-
             spriteBatch.End();
             // TODO: Add your drawing code here
 
@@ -105,7 +108,7 @@ namespace FRC_Virtual_Robotics
         protected void arcadeDrive()
         {
             double y = driverInput.getLeftY();
-            double x = driverInput.getRightX();
+            double x = -driverInput.getRightX();
             robot.setMotorValues(deadband(y + x), deadband(y - x));
         }
         private double deadband(double a)

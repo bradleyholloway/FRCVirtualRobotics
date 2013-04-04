@@ -30,7 +30,7 @@ namespace FRC_Virtual_Robotics
         public void run()
         {
             magnitude = (leftMotorSpeed + rightMotorSpeed) / 2 * scalar;
-            directionForward += (rightMotorSpeed - leftMotorSpeed);
+            directionForward += .1 * (rightMotorSpeed - leftMotorSpeed);
 
             location += magD(magnitude, directionForward);
         }
@@ -48,7 +48,7 @@ namespace FRC_Virtual_Robotics
 
         public Vector2 getOrigin()
         {
-            return new Vector2(location.X + ((float)image.Width) / 2, location.Y + ((float)image.Height) / 2);
+            return new Vector2(((float)image.Width) / 2, ((float)image.Height) / 2);
         }
 
         public Texture2D getImage()
@@ -71,6 +71,12 @@ namespace FRC_Virtual_Robotics
         public void setImage(Texture2D picture)
         {
             image = picture;
+        }
+
+        public void reset()
+        {
+            location = new Vector2(100, 100);
+            directionForward = 0;
         }
     }
 }
