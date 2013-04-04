@@ -78,12 +78,8 @@ namespace FRC_Virtual_Robotics
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            if (driverInput.getStart())
-                robot.reset();
-            
-
             // TODO: Add your update logic here
-            arcadeDrive();
+            processInput();
             robot.run();
 
             base.Update(gameTime);
@@ -98,18 +94,21 @@ namespace FRC_Virtual_Robotics
             GraphicsDevice.Clear(Color.White);
             spriteBatch.Begin();
 
-            spriteBatch.Draw(robot.getImage(), robot.getLocation(), null, Color.White, robot.getDirection(), robot.getOrigin(), 1.0f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(robot.getImage(), robot.getLocation(), null, Color.White, robot.getDirection(), robot.getOrigin(), 0.5f, SpriteEffects.None, 0f);
             spriteBatch.End();
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
         }
 
-        protected void arcadeDrive()
+        protected void processInput()
         {
             double y = driverInput.getLeftY();
             double x = -driverInput.getRightX();
             robot.setMotorValues(deadband(y + x), deadband(y - x));
+
+            if (driverInput.getRightDPad())
+                robot.reset();
         }
         private double deadband(double a)
         {
