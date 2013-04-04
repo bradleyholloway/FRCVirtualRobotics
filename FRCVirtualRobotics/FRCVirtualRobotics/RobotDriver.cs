@@ -80,6 +80,7 @@ namespace FRC_Virtual_Robotics
 
             // TODO: Add your update logic here
             arcadeDrive();
+            robot.run();
 
             base.Update(gameTime);
         }
@@ -91,8 +92,11 @@ namespace FRC_Virtual_Robotics
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            spriteBatch.Begin();
+
             spriteBatch.Draw(robot.getImage(), robot.getLocation(), null, Color.White, robot.getDirection(), robot.getOrigin(), 1.0f, SpriteEffects.None, 0f);
 
+            spriteBatch.End();
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
