@@ -78,7 +78,7 @@ namespace FRC_Virtual_Robotics
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            if (driverInput.getBack())
+            if (driverInput.getStart())
                 robot.reset();
             
 
