@@ -48,12 +48,14 @@ namespace FRC_Virtual_Robotics
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-
             // TODO: use this.Content to load your game content here
             robot = new IterativeRobot(10);
             driverInput = new ControllerInput();
+            
+            // Create a new SpriteBatch, which can be used to draw textures.
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            robot.setImage(Content.Load<Texture2D>("robot"));
+            
         }
 
         /// <summary>
@@ -89,7 +91,7 @@ namespace FRC_Virtual_Robotics
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Draw(robot.getImage(), robot.getLocation(), Color.White);
+            spriteBatch.Draw(robot.getImage(), robot.getLocation(), null, Color.White, robot.getDirection(), robot.getOrigin(), 1.0f, SpriteEffects.None, 0f);
 
             // TODO: Add your drawing code here
 
