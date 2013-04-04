@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using BradleyXboxUtils;
+using FRCVirtualRobotics;
 
 namespace FRC_Virtual_Robotics
 {
@@ -21,7 +22,9 @@ namespace FRC_Virtual_Robotics
         SpriteBatch spriteBatch;
 
         IterativeRobot robot;
+        private List<Frisbee> frisbees;
         ControllerInput driverInput;
+        ControlButton fire;
 
         public RobotDriver()
         {
@@ -49,12 +52,17 @@ namespace FRC_Virtual_Robotics
         protected override void LoadContent()
         {
             // TODO: use this.Content to load your game content here
-            robot = new IterativeRobot(20);
+            robot = new IterativeRobot(20, GraphicsDevice);
             driverInput = new ControllerInput();
-            
+            frisbees = new List<Frisbee>();
+            Frisbee.SPEED = 10;
+            Frisbee.setFrisbees(frisbees);
+            fire = new ControlButton();
+
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             robot.setImage(Content.Load<Texture2D>("robot"));
+            Frisbee.setImage(Content.Load<Texture2D>("frisbee"));
             
         }
 
@@ -64,7 +72,7 @@ namespace FRC_Virtual_Robotics
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            Content.Unload();
         }
 
         /// <summary>
@@ -74,13 +82,19 @@ namespace FRC_Virtual_Robotics
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
-
-            // TODO: Add your update logic here
             processInput();
+            
             robot.run();
+
+            for (int index = 0; index < frisbees.Count; index++)
+            {
+                index += frisbees.ElementAt<Frisbee>(index).run();
+            }
+
+            //foreach (Frisbee frisbee in frisbees)
+            //{
+            //    frisbee.run();
+            //}
 
             base.Update(gameTime);
         }
@@ -91,13 +105,19 @@ namespace FRC_Virtual_Robotics
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.White);
+            GraphicsDevice.Clear(Color.Black);
+            
             spriteBatch.Begin();
 
             spriteBatch.Draw(robot.getImage(), robot.getLocation(), null, Color.White, robot.getDirection(), robot.getOrigin(), 0.5f, SpriteEffects.None, 0f);
-            spriteBatch.End();
-            // TODO: Add your drawing code here
+            
+            foreach (Frisbee frisbee in frisbees)
+            {
+                spriteBatch.Draw(frisbee.getImage(), frisbee.getLocation(), null, frisbee.getColor(), frisbee.getDirection(), frisbee.getOrigin(), .1f, SpriteEffects.None, 0f);
+            }
 
+            spriteBatch.End();
+            
             base.Draw(gameTime);
         }
 
@@ -107,8 +127,16 @@ namespace FRC_Virtual_Robotics
             double x = -driverInput.getRightX();
             robot.setMotorValues(deadband(y + x), deadband(y - x));
 
-            if (driverInput.getRightDPad())
+            
+
+            if(fire.update(driverInput.getRightBumper()))
+                frisbees.Add(new Frisbee(robot.getLocation(), robot.getDirection()));
+
+            if (driverInput.getBack())
                 robot.reset();
+
+            if (driverInput.getDownDPad())
+                this.Exit();
         }
         private double deadband(double a)
         {

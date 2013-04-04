@@ -16,8 +16,10 @@ namespace FRC_Virtual_Robotics
         private int scalar;
         private Texture2D image;
         private Vector2 location;
+        private int windowX;
+        private int windowY;
 
-        public IterativeRobot(int maxSpeed)
+        public IterativeRobot(int maxSpeed, GraphicsDevice window)
         {
             leftMotorSpeed = 0;
             rightMotorSpeed = 0;
@@ -25,6 +27,8 @@ namespace FRC_Virtual_Robotics
             directionForward = Math.PI * 3 / 2;
             location = new Vector2(0, 0);
             image = null;
+            windowX = window.Viewport.Width;
+            windowY = window.Viewport.Height;
         }
 
         public void run()
@@ -32,7 +36,10 @@ namespace FRC_Virtual_Robotics
             magnitude = (leftMotorSpeed + rightMotorSpeed) / 2 * scalar;
             directionForward += .1 * (rightMotorSpeed - leftMotorSpeed);
 
-            location += magD(magnitude, directionForward);
+            
+            if(!((location+magD(magnitude,directionForward)).X<75 || (location+magD(magnitude,directionForward)).X>windowX-95) &&
+                !((location+magD(magnitude,directionForward)).Y<50 || (location+magD(magnitude,directionForward)).Y>windowY-50))
+                location += magD(magnitude, directionForward);
         }
 
         public void setMotorValues(double left, double right)

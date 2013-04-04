@@ -148,4 +148,46 @@ namespace BradleyXboxUtils
             return value;
         }
     }//Toggle
+
+    public class ControlButton
+    {
+        Boolean last;
+        Boolean state;
+
+        public ControlButton()
+        {
+            last = false;
+            state = false;
+        }
+        public ControlButton(Boolean start)
+        {
+            state = start;
+            last = false;
+        }
+
+        /*public void update(Boolean current)
+        {
+            if (!last && current)
+                state = true;
+            last = current;
+        }*/
+
+        public Boolean update(Boolean current)
+        {
+            if (!last && current)
+                state = true;
+            last = current;
+            Boolean temp = state;
+            state = false;
+            return temp;
+        }
+
+        public Boolean get()
+        {
+            Boolean temp = state;
+            state = false;
+            return temp;
+        }
+    }// ControlButton
+
 }
