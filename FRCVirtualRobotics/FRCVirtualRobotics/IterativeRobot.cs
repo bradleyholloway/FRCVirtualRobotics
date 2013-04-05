@@ -17,6 +17,7 @@ namespace FRC_Virtual_Robotics
         private int scalar;
         private static Texture2D image;
         private Vector2 location;
+        private int ammo;
         private int windowX;
         private int windowY;
 
@@ -31,6 +32,7 @@ namespace FRC_Virtual_Robotics
             windowX = window.Viewport.Width;
             windowY = window.Viewport.Height;
             red = r;
+            ammo = 3;
             reset();
         }
 
@@ -109,5 +111,20 @@ namespace FRC_Virtual_Robotics
                 directionForward = Math.PI;
             } 
         }
+        public Boolean fire()
+        {
+            if (ammo > 0)
+            {
+                ammo--;
+                return true;
+            }
+            return false;
+        }
+        public void feed()
+        {
+            if (ammo < 4)
+                ammo++;
+        }
+            
     }
 }

@@ -25,7 +25,7 @@ namespace FRCVirtualRobotics
         {
             location = new Vector2(loc.X, loc.Y);
             direction = dir;
-            countdown = 20;
+            countdown = 70;
             red = true;
             rotation = 0;
             origin = new Vector2(image.Width / 2, image.Height / 2);
@@ -46,7 +46,7 @@ namespace FRCVirtualRobotics
             location += magD(SPEED, direction);
             rotation += (float) Math.PI / 6;
 
-            if (countdown == 0)
+            if (countdown == 0 || offScreen())
             {
                 removeSelfFromList();
                 return -1;
@@ -54,7 +54,7 @@ namespace FRCVirtualRobotics
             return 0;
         }
 
-        public Texture2D getImage()
+        public static Texture2D getImage()
         {
             return image;
         }
@@ -83,6 +83,11 @@ namespace FRCVirtualRobotics
             return location;
         }
 
+        public Boolean getRed()
+        {
+            return red;
+        }
+
         public Color getColor()
         {
             if (red)
@@ -101,6 +106,11 @@ namespace FRCVirtualRobotics
         private void removeSelfFromList()
         {
             frisbees.Remove(this);
+        }
+        
+        private Boolean offScreen()
+        {
+            return  (location.X < 0) || (location.Y < 0) || (location.X > Field.X) || (location.Y > Field.Y);
         }
     }
 }

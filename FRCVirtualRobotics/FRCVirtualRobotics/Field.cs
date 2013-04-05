@@ -17,44 +17,44 @@ namespace FRCVirtualRobotics
         int twoBottom2;
         int leftX;
         int rightX;
-        int fieldX;
-        int fieldY;
+        public static int X;
+        public static int Y;
    
         public Field(GraphicsDevice window)
         {
-            fieldY = window.Viewport.Height;
-            fieldX = window.Viewport.Width;
+            X = window.Viewport.Width;
+            Y = window.Viewport.Height;
             
             //Scoring
-            threeTop = (int).4 * fieldY;
-            threeBottom = (int).6 * fieldY;
+            threeTop = (int).4 * Y;
+            threeBottom = (int).6 * Y;
 
-            twoTop1 = (int).1 * fieldY;
-            twoBottom1 = (int).3 * fieldY;
+            twoTop1 = (int).1 * Y;
+            twoBottom1 = (int).3 * Y;
 
-            twoTop2 = (int).7 * fieldY;
-            twoBottom2 = (int).9 * fieldY;
+            twoTop2 = (int).7 * Y;
+            twoBottom2 = (int).9 * Y;
 
             leftX = 0+20;
-            rightX = fieldX+20;
+            rightX = X+20;
 
             //Pyramid
 
 
 
         }
-        public Boolean score(Vector2 location, Boolean red)
+        public int score(Vector2 location, Boolean red)
         {//Left = blue goal, right = red goal
             if (red)
             {
                 if (location.X >= rightX)
                 {
                     if (location.Y >= twoTop1 && location.Y <= twoBottom1)
-                        return true;
+                        return 2;
                     if (location.Y >= threeTop && location.Y <= threeBottom)
-                        return true;
+                        return 3;
                     if (location.Y >= twoTop2 && location.Y <= twoBottom2)
-                        return true;
+                        return 2;
                 }
             }
             else
@@ -62,25 +62,25 @@ namespace FRCVirtualRobotics
                 if (location.X <= leftX)
                 {
                     if (location.Y >= twoTop1 && location.Y <= twoBottom1)
-                        return true;
+                        return 2;
                     if (location.Y >= threeTop && location.Y <= threeBottom)
-                        return true;
+                        return 3;
                     if (location.Y >= twoTop2 && location.Y <= twoBottom2)
-                        return true;
+                        return 2;
                 }
             }
-            return false;
+            return 0;
         }
         public Boolean feeding(Vector2 location, Boolean red)
         {//red feeds left, and blue feeds right
             if (red)
             {//95 left tollerance
-                if(location.X < 95 && (location.Y < 70 || location.Y > fieldY-70))
+                if(location.X < 95 && (location.Y < 70 || location.Y > Y-70))
                     return true;
             }
             else
             {//115 right tollerance
-                if(location.X < fieldX - 115 && (location.Y < 70 || location.Y > fieldY-70))
+                if(location.X < X - 115 && (location.Y < 70 || location.Y > Y-70))
                     return true;
             }
             return false;
