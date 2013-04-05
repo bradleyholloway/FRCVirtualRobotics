@@ -131,8 +131,10 @@ namespace FRC_Virtual_Robotics
         protected override void Update(GameTime gameTime)
         {
             foreach (int player in players)
-                processInput(player);
-            
+            {
+                if(robots.ElementAt<IterativeRobot>(player).getState().equals(Robot.TELEOP))
+                    processInput(player);
+            }
             foreach (int player in players)
                 robots.ElementAt<IterativeRobot>(player).run();
 
