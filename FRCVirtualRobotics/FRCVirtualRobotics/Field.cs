@@ -26,17 +26,17 @@ namespace FRCVirtualRobotics
             Y = window.Viewport.Height;
             
             //Scoring
-            threeTop = (int).4 * Y;
-            threeBottom = (int).6 * Y;
+            threeTop = (int)(.4 * Y);
+            threeBottom = (int)(.6 * Y);
 
-            twoTop1 = (int).1 * Y;
-            twoBottom1 = (int).3 * Y;
+            twoTop1 = (int)(.1 * Y);
+            twoBottom1 = (int)(.3 * Y);
 
-            twoTop2 = (int).7 * Y;
-            twoBottom2 = (int).9 * Y;
+            twoTop2 = (int)(.7 * Y);
+            twoBottom2 = (int)(.9 * Y);
 
             leftX = 0+20;
-            rightX = X+20;
+            rightX = X-20;
 
             //Pyramid
 
@@ -80,7 +80,7 @@ namespace FRCVirtualRobotics
             }
             else
             {//115 right tollerance
-                if(location.X < X - 115 && (location.Y < 70 || location.Y > Y-70))
+                if(location.X > X - 115 && (location.Y < 70 || location.Y > Y-70))
                     return true;
             }
             return false;

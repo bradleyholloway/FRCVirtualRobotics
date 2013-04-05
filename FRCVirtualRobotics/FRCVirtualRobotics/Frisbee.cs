@@ -103,14 +103,14 @@ namespace FRCVirtualRobotics
             return new Vector2(x, y);
         }
 
-        private void removeSelfFromList()
+        public void removeSelfFromList()
         {
             frisbees.Remove(this);
         }
         
         private Boolean offScreen()
         {
-            return  (location.X < 0) || (location.Y < 0) || (location.X > Field.X) || (location.Y > Field.Y);
+            return (location.X < 0) || (location.Y < 0) || (location.X > Field.X) || (location.Y > Field.Y);
         }
     }
 }

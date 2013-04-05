@@ -7,10 +7,10 @@ using Microsoft.Xna.Framework;
 
 namespace FRC_Virtual_Robotics
 {
-    protected class RobotState
+    public class RobotState
     {
         int state;
-
+        
         public RobotState(int s)
         {
             state = s;
@@ -28,9 +28,10 @@ namespace FRC_Virtual_Robotics
     {
         private RobotState state;
 
-        public static const RobotState DISABLED = new RobotState(0);
-        public static const RobotState AUTONOMOUS = new RobotState(1);
-        public static const RobotState TELEOP = new RobotState(2);
+        public static RobotState DISABLED = new RobotState(0);
+        public static RobotState AUTONOMOUS = new RobotState(1);
+        public static RobotState TELEOP = new RobotState(2);
+
 
         public Robot()
         {

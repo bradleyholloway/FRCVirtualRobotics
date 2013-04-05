@@ -22,8 +22,11 @@ namespace FRC_Virtual_Robotics
         SpriteBatch spriteBatch;
         SpriteFont spriteFont;
         List<MenuItem> menuItems;
+        List<MenuItem> menuText;
+        float menuSpin;
         int menuSelection;
         TimeSpan startGameTime;
+        double inGameTime;
 
         RobotState robotStates;
 
@@ -118,12 +121,15 @@ namespace FRC_Virtual_Robotics
                 fire.Add(new ControlButton());
 
             //Menu control
+            menuSpin = 0;
             menuUp = new ControlButton();
             menuDown = new ControlButton();
-            
+            menuItems = new List<MenuItem>();
+            menuText = new List<MenuItem>();
             menuItems.Add(new MenuItem("Play Game", new Vector2(200,200), Color.Red));
-            menuItems.Add(new MenuItem("Information", new Vector2(200,400), Color.White));
-            menuItems.Add(new MenuItem("Exit", new Vector2(200,600), Color.Blue));
+            menuItems.Add(new MenuItem("Information", new Vector2(200,300), Color.White));
+            menuItems.Add(new MenuItem("Exit", new Vector2(200,400), Color.Blue));
+            menuText.Add(new MenuItem("Ultimate - Accent!", new Vector2(250,30), Color.White));
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -153,6 +159,7 @@ namespace FRC_Virtual_Robotics
         {
             if (gameState == 1)
             {
+                inGameTime = gameTime.TotalGameTime.Subtract(startGameTime).TotalSeconds;
                 //Robot Control States
                 if (gameTime.TotalGameTime.Subtract(startGameTime).TotalSeconds < 15)
                 {
@@ -169,7 +176,7 @@ namespace FRC_Virtual_Robotics
                 }
                 foreach (int player in players)
                     robots.ElementAt<IterativeRobot>(player).setState(robotStates);
-
+                    
                 foreach (int player in players)
                 {
                     if (robots.ElementAt<IterativeRobot>(player).getState().equals(Robot.TELEOP))
@@ -180,16 +187,26 @@ namespace FRC_Virtual_Robotics
 
                 for (int index = 0; index < frisbees.Count; index++)
                 {
+                    int frisbeeScore = 0;
                     if (frisbees.ElementAt<Frisbee>(index).getRed())
                     {
-                        redScore += field.score(frisbees.ElementAt<Frisbee>(index).getLocation(), frisbees.ElementAt<Frisbee>(index).getRed());
+                        frisbeeScore = field.score(frisbees.ElementAt<Frisbee>(index).getLocation(), frisbees.ElementAt<Frisbee>(index).getRed());
+                        redScore += frisbeeScore;
                     }
                     else
                     {
-                        blueScore += field.score(frisbees.ElementAt<Frisbee>(index).getLocation(), frisbees.ElementAt<Frisbee>(index).getRed());
+                        frisbeeScore = field.score(frisbees.ElementAt<Frisbee>(index).getLocation(), frisbees.ElementAt<Frisbee>(index).getRed());
+                        blueScore += frisbeeScore;
                     }
-                    index += frisbees.ElementAt<Frisbee>(index).run();
-
+                    if (frisbeeScore != 0)
+                    {
+                        frisbees.ElementAt<Frisbee>(index).removeSelfFromList();
+                        index--;
+                    }
+                    else
+                    {
+                        index += frisbees.ElementAt<Frisbee>(index).run();
+                    }
                 }
             }//If inGame
             else if (gameState == 0)
@@ -202,13 +219,13 @@ namespace FRC_Virtual_Robotics
 
         protected void Menu()
         {
-            menuUp.update(driverInputs.ElementAt<ControllerInput>(0).getRightX() > .8);
-            menuDown.update(driverInputs.ElementAt<ControllerInput>(0).getRightX() > .8);
-            fire.ElementAt<ControlButton>(0).update(driverInputs.ElementAt<ControllerInput>(0).getRightBumper());
 
-            if (menuUp.get())
+
+            menuSpin += (float) Math.PI / 10;
+
+            if (menuUp.update(driverInputs.ElementAt<ControllerInput>(0).getRightY() < -.8 || driverInputs.ElementAt<ControllerInput>(0).getLeftY() < -.8 || driverInputs.ElementAt<ControllerInput>(0).getDownDPad()))
                 menuSelection++;
-            if (menuDown.get())
+            if (menuDown.update(driverInputs.ElementAt<ControllerInput>(0).getRightY() > .8 || driverInputs.ElementAt<ControllerInput>(0).getLeftY() > .8 || driverInputs.ElementAt<ControllerInput>(0).getUpDPad()))
                 menuSelection--;
 
             if (menuSelection < 0)
@@ -217,7 +234,7 @@ namespace FRC_Virtual_Robotics
             if (menuSelection >= menuItems.Count)
                 menuSelection = 0;
 
-            if (fire.ElementAt<ControlButton>(0).get())
+            if (fire.ElementAt<ControlButton>(0).update(driverInputs.ElementAt<ControllerInput>(0).getRightBumper() || driverInputs.ElementAt<ControllerInput>(0).getBottomActionButton()))
             {
                 if (menuSelection == 0)
                 {
@@ -256,12 +273,17 @@ namespace FRC_Virtual_Robotics
                 {
                     spriteBatch.Draw(Frisbee.getImage(), frisbee.getLocation(), null, frisbee.getColor(), frisbee.getDirection(), frisbee.getOrigin(), .06f, SpriteEffects.None, 0f);
                 }
+                spriteBatch.DrawString(spriteFont, redScore + "", new Vector2(30, 0), Color.Red);
+                spriteBatch.DrawString(spriteFont, blueScore + "", new Vector2(GraphicsDevice.Viewport.Width - 100,0), Color.Blue);
+                spriteBatch.DrawString(spriteFont, Math.Round(inGameTime,1) + "", new Vector2(GraphicsDevice.Viewport.Width / 2, 0), Color.White);
             }
             else if (gameState == 0)
             {
                 foreach (MenuItem menuItem in menuItems)
                     spriteBatch.DrawString(spriteFont, menuItem.text(), menuItem.location(), menuItem.color());
-                spriteBatch.Draw(Frisbee.getImage(), menuItems.ElementAt<MenuItem>(menuSelection).location()- new Vector2( 100, 0), null, Color.White, 0f, Vector2.Zero, .1f, SpriteEffects.None, 0f);
+                foreach (MenuItem menuItem in menuText)
+                    spriteBatch.DrawString(spriteFont, menuItem.text(), menuItem.location(), menuItem.color());
+                spriteBatch.Draw(Frisbee.getImage(), menuItems.ElementAt<MenuItem>(menuSelection).location()- new Vector2( 100, 0), null, Color.White, menuSpin, Vector2.Zero, .1f, SpriteEffects.None, 0f);
             }
 
             spriteBatch.End();
