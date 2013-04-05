@@ -190,4 +190,30 @@ namespace BradleyXboxUtils
         }
     }// ControlButton
 
+    public class MenuItem
+    {
+        private Color colord;
+        private Vector2 locationd;
+        private String textd;
+
+        public MenuItem(String t, Vector2 l, Color c)
+        {
+            colord = c;
+            textd = t;
+            locationd = l;
+        }
+        public Color color()
+        {
+            return colord;
+        }
+        public Vector2 location()
+        {
+            return locationd;
+        }
+        public String text()
+        {
+            return textd;
+        }
+    }//MenuItem
+
 }

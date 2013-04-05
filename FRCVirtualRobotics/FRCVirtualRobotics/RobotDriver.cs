@@ -20,6 +20,9 @@ namespace FRC_Virtual_Robotics
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        SpriteFont spriteFont;
+        List<MenuItem> menuItems;
+        int menuSelection;
 
         Field field;
         List<IterativeRobot> robots;
@@ -27,13 +30,18 @@ namespace FRC_Virtual_Robotics
         List<ControllerInput> driverInputs;
         List<ControlButton> fire;
         List<int> players;
+        ControlButton menuUp;
+        ControlButton menuDown;
         private int blueScore;
         private int redScore;
+        public int gameState;
 
         public RobotDriver()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            gameState = 0;
+            menuSelection = 0;
         }
 
         /// <summary>
@@ -106,10 +114,19 @@ namespace FRC_Virtual_Robotics
             for (int a = 0; a < 4; a++)
                 fire.Add(new ControlButton());
 
+            //Menu control
+            menuUp = new ControlButton();
+            menuDown = new ControlButton();
+            
+            menuItems.Add(new MenuItem("Play Game", new Vector2(200,200), Color.Red));
+            menuItems.Add(new MenuItem("Information", new Vector2(200,400), Color.White));
+            menuItems.Add(new MenuItem("Exit", new Vector2(200,600), Color.Blue));
+
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             IterativeRobot.setImage(Content.Load<Texture2D>("robot"));
             Frisbee.setImage(Content.Load<Texture2D>("frisbee"));
+            spriteFont = Content.Load<SpriteFont>("TimesNewRoman");
 
             redScore = blueScore = 0;
         }
@@ -130,29 +147,71 @@ namespace FRC_Virtual_Robotics
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            foreach (int player in players)
+            if (gameState == 1)
             {
-                if(robots.ElementAt<IterativeRobot>(player).getState().equals(Robot.TELEOP))
-                    processInput(player);
-            }
-            foreach (int player in players)
-                robots.ElementAt<IterativeRobot>(player).run();
 
-            for (int index = 0; index < frisbees.Count; index++)
+                foreach (int player in players)
+                {
+                    if (robots.ElementAt<IterativeRobot>(player).getState().equals(Robot.TELEOP))
+                        processInput(player);
+                }
+                foreach (int player in players)
+                    robots.ElementAt<IterativeRobot>(player).run();
+
+                for (int index = 0; index < frisbees.Count; index++)
+                {
+                    if (frisbees.ElementAt<Frisbee>(index).getRed())
+                    {
+                        redScore += field.score(frisbees.ElementAt<Frisbee>(index).getLocation(), frisbees.ElementAt<Frisbee>(index).getRed());
+                    }
+                    else
+                    {
+                        blueScore += field.score(frisbees.ElementAt<Frisbee>(index).getLocation(), frisbees.ElementAt<Frisbee>(index).getRed());
+                    }
+                    index += frisbees.ElementAt<Frisbee>(index).run();
+
+                }
+            }//If inGame
+            else if (gameState == 0)
             {
-                if (frisbees.ElementAt<Frisbee>(index).getRed())
-                {
-                    redScore += field.score(frisbees.ElementAt<Frisbee>(index).getLocation(), frisbees.ElementAt<Frisbee>(index).getRed());
-                }
-                else
-                {
-                    blueScore += field.score(frisbees.ElementAt<Frisbee>(index).getLocation(), frisbees.ElementAt<Frisbee>(index).getRed());
-                }
-                index += frisbees.ElementAt<Frisbee>(index).run();
-                
+                Menu();
             }
-
             base.Update(gameTime);
+        }
+
+        protected void Menu()
+        {
+            menuUp.update(driverInputs.ElementAt<ControllerInput>(0).getRightX() > .8);
+            menuDown.update(driverInputs.ElementAt<ControllerInput>(0).getRightX() > .8);
+            fire.ElementAt<ControlButton>(0).update(driverInputs.ElementAt<ControllerInput>(0).getRightBumper());
+
+            if (menuUp.get())
+                menuSelection++;
+            if (menuDown.get())
+                menuSelection--;
+
+            if (menuSelection < 0)
+                menuSelection = menuItems.Count-1;
+
+            if (menuSelection >= menuItems.Count)
+                menuSelection = 0;
+
+            if (fire.ElementAt<ControlButton>(0).get())
+            {
+                if (menuSelection == 0)
+                {
+                    LoadContent();
+                    gameState = 1;
+                }
+                else if (menuSelection == 1)
+                {
+
+                }
+                else if (menuSelection == 2)
+                {
+                    this.Exit();
+                }
+            }//menuMapping
         }
 
         /// <summary>
@@ -165,14 +224,23 @@ namespace FRC_Virtual_Robotics
             
             spriteBatch.Begin();
 
-            foreach (IterativeRobot robot in robots)
+            if (gameState == 1)
             {
-                if(robot != null)
-                    spriteBatch.Draw(robot.getImage(), robot.getLocation(), null, robot.getColor(), robot.getDirection(), robot.getOrigin(), .3f, SpriteEffects.None, 0f);
+                foreach (IterativeRobot robot in robots)
+                {
+                    if (robot != null)
+                        spriteBatch.Draw(robot.getImage(), robot.getLocation(), null, robot.getColor(), robot.getDirection(), robot.getOrigin(), .3f, SpriteEffects.None, 0f);
+                }
+                foreach (Frisbee frisbee in frisbees)
+                {
+                    spriteBatch.Draw(Frisbee.getImage(), frisbee.getLocation(), null, frisbee.getColor(), frisbee.getDirection(), frisbee.getOrigin(), .06f, SpriteEffects.None, 0f);
+                }
             }
-            foreach (Frisbee frisbee in frisbees)
+            else if (gameState == 0)
             {
-                spriteBatch.Draw(Frisbee.getImage(), frisbee.getLocation(), null, frisbee.getColor(), frisbee.getDirection(), frisbee.getOrigin(), .06f, SpriteEffects.None, 0f);
+                foreach (MenuItem menuItem in menuItems)
+                    spriteBatch.DrawString(spriteFont, menuItem.text(), menuItem.location(), menuItem.color());
+                spriteBatch.Draw(Frisbee.getImage(), menuItems.ElementAt<MenuItem>(menuSelection).location()- new Vector2( 100, 0), null, Color.White, 0f, Vector2.Zero, .1f, SpriteEffects.None, 0f);
             }
 
             spriteBatch.End();
