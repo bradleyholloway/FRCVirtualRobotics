@@ -34,7 +34,7 @@ namespace FRCVirtualRobotics
         {
             location = new Vector2(loc.X, loc.Y);
             direction = dir;
-            countdown = 20;
+            countdown = 70;
             red = r;
             rotation = 0;
             origin = new Vector2(image.Width / 2, image.Height / 2);

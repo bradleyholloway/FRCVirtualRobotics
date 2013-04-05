@@ -13,13 +13,14 @@ namespace FRC_Virtual_Robotics
         private double rightMotorSpeed;
         private double directionForward;
         private double magnitude;
+        private Boolean red;
         private int scalar;
-        private Texture2D image;
+        private static Texture2D image;
         private Vector2 location;
         private int windowX;
         private int windowY;
 
-        public IterativeRobot(int maxSpeed, GraphicsDevice window)
+        public IterativeRobot(int maxSpeed, GraphicsDevice window, Boolean r)
         {
             leftMotorSpeed = 0;
             rightMotorSpeed = 0;
@@ -29,6 +30,8 @@ namespace FRC_Virtual_Robotics
             image = null;
             windowX = window.Viewport.Width;
             windowY = window.Viewport.Height;
+            red = r;
+            reset();
         }
 
         public void run()
@@ -40,6 +43,19 @@ namespace FRC_Virtual_Robotics
             if(!((location+magD(magnitude,directionForward)).X<75 || (location+magD(magnitude,directionForward)).X>windowX-95) &&
                 !((location+magD(magnitude,directionForward)).Y<50 || (location+magD(magnitude,directionForward)).Y>windowY-50))
                 location += magD(magnitude, directionForward);
+        }
+
+        public Color getColor()
+        {
+            if (red)
+                return Color.Red;
+            else
+                return Color.Blue;
+        }
+
+        public Boolean getRed()
+        {
+            return red;
         }
 
         public void setMotorValues(double left, double right)
@@ -75,15 +91,23 @@ namespace FRC_Virtual_Robotics
             return new Vector2(x, y);
         }
 
-        public void setImage(Texture2D picture)
+        public static void setImage(Texture2D picture)
         {
             image = picture;
         }
 
         public void reset()
         {
-            location = new Vector2(100, 100);
-            directionForward = 0;
+            if (red)
+            {
+                location = new Vector2(100, 100);
+                directionForward = 0;
+            }
+            else
+            {
+                location = new Vector2(windowX - 150, 100);
+                directionForward = Math.PI;
+            } 
         }
     }
 }

@@ -21,10 +21,11 @@ namespace FRC_Virtual_Robotics
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        IterativeRobot robot;
-        private List<Frisbee> frisbees;
-        ControllerInput driverInput;
-        ControlButton fire;
+        List<IterativeRobot> robots;
+        List<Frisbee> frisbees;
+        List<ControllerInput> driverInputs;
+        List<ControlButton> fire;
+        List<int> players;
 
         public RobotDriver()
         {
@@ -51,17 +52,59 @@ namespace FRC_Virtual_Robotics
         /// </summary>
         protected override void LoadContent()
         {
+            players = new List<int>();
             // TODO: use this.Content to load your game content here
-            robot = new IterativeRobot(20, GraphicsDevice);
-            driverInput = new ControllerInput();
+            robots = new List<IterativeRobot>();
+            if (GamePad.GetState(PlayerIndex.One).IsConnected)
+            {
+                robots.Add(new IterativeRobot(6, GraphicsDevice, true));
+                players.Add(0);
+            }
+            else
+                robots.Add(null);
+
+            if (GamePad.GetState(PlayerIndex.Two).IsConnected)
+            {
+                robots.Add(new IterativeRobot(6, GraphicsDevice, false));
+                players.Add(1);
+            }
+            else
+                robots.Add(null);
+
+            if (GamePad.GetState(PlayerIndex.Three).IsConnected)
+            {
+                //robots.Add(new IterativeRobot(6, GraphicsDevice, true));
+                players.Add(2);
+            }
+            else
+                robots.Add(null);
+
+            if (GamePad.GetState(PlayerIndex.Four).IsConnected)
+            {
+                robots.Add(new IterativeRobot(6, GraphicsDevice, false));
+                players.Add(3);
+            }
+            else
+                robots.Add(null);
+
+            driverInputs = new List<ControllerInput>();
+            driverInputs.Add(new ControllerInput(PlayerIndex.One));
+            driverInputs.Add(new ControllerInput(PlayerIndex.Two));
+            driverInputs.Add(new ControllerInput(PlayerIndex.Three));
+            driverInputs.Add(new ControllerInput(PlayerIndex.Four));
+
             frisbees = new List<Frisbee>();
+
             Frisbee.SPEED = 10;
             Frisbee.setFrisbees(frisbees);
-            fire = new ControlButton();
+
+            fire = new List<ControlButton>();
+            for (int a = 0; a < 4; a++)
+                fire.Add(new ControlButton());
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            robot.setImage(Content.Load<Texture2D>("robot"));
+            IterativeRobot.setImage(Content.Load<Texture2D>("robot"));
             Frisbee.setImage(Content.Load<Texture2D>("frisbee"));
             
         }
@@ -82,9 +125,11 @@ namespace FRC_Virtual_Robotics
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            processInput();
+            foreach (int player in players)
+                processInput(player);
             
-            robot.run();
+            foreach (int player in players)
+                robots.ElementAt<IterativeRobot>(player).run();
 
             for (int index = 0; index < frisbees.Count; index++)
             {
@@ -109,11 +154,14 @@ namespace FRC_Virtual_Robotics
             
             spriteBatch.Begin();
 
-            spriteBatch.Draw(robot.getImage(), robot.getLocation(), null, Color.White, robot.getDirection(), robot.getOrigin(), 0.5f, SpriteEffects.None, 0f);
-            
+            foreach (IterativeRobot robot in robots)
+            {
+                if(robot != null)
+                    spriteBatch.Draw(robot.getImage(), robot.getLocation(), null, robot.getColor(), robot.getDirection(), robot.getOrigin(), .3f, SpriteEffects.None, 0f);
+            }
             foreach (Frisbee frisbee in frisbees)
             {
-                spriteBatch.Draw(frisbee.getImage(), frisbee.getLocation(), null, frisbee.getColor(), frisbee.getDirection(), frisbee.getOrigin(), .1f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(frisbee.getImage(), frisbee.getLocation(), null, frisbee.getColor(), frisbee.getDirection(), frisbee.getOrigin(), .06f, SpriteEffects.None, 0f);
             }
 
             spriteBatch.End();
@@ -121,21 +169,21 @@ namespace FRC_Virtual_Robotics
             base.Draw(gameTime);
         }
 
-        protected void processInput()
+        protected void processInput(int player)
         {
-            double y = driverInput.getLeftY();
-            double x = -driverInput.getRightX();
-            robot.setMotorValues(deadband(y + x), deadband(y - x));
+            double y = driverInputs.ElementAt<ControllerInput>(player).getLeftY();
+            double x = -driverInputs.ElementAt<ControllerInput>(player).getRightX();
+            robots.ElementAt<IterativeRobot>(player).setMotorValues(deadband(y + x), deadband(y - x));
 
-            
 
-            if(fire.update(driverInput.getRightBumper()))
-                frisbees.Add(new Frisbee(robot.getLocation(), robot.getDirection()));
 
-            if (driverInput.getBack())
-                robot.reset();
+            if (fire.ElementAt<ControlButton>(player).update(driverInputs.ElementAt<ControllerInput>(player).getRightBumper()))
+                frisbees.Add(new Frisbee(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getDirection(), robots.ElementAt<IterativeRobot>(player).getRed()));
 
-            if (driverInput.getDownDPad())
+            if (driverInputs.ElementAt<ControllerInput>(player).getBack())
+                robots.ElementAt<IterativeRobot>(player).reset();
+
+            if (driverInputs.ElementAt<ControllerInput>(player).getDownDPad())
                 this.Exit();
         }
         private double deadband(double a)
