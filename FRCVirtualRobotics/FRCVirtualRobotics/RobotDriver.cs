@@ -23,6 +23,9 @@ namespace FRC_Virtual_Robotics
         SpriteFont spriteFont;
         List<MenuItem> menuItems;
         int menuSelection;
+        TimeSpan startGameTime;
+
+        RobotState robotStates;
 
         Field field;
         List<IterativeRobot> robots;
@@ -129,6 +132,7 @@ namespace FRC_Virtual_Robotics
             spriteFont = Content.Load<SpriteFont>("TimesNewRoman");
 
             redScore = blueScore = 0;
+            robotStates = Robot.DISABLED;
         }
 
         /// <summary>
@@ -149,6 +153,22 @@ namespace FRC_Virtual_Robotics
         {
             if (gameState == 1)
             {
+                //Robot Control States
+                if (gameTime.TotalGameTime.Subtract(startGameTime).TotalSeconds < 15)
+                {
+                    robotStates = Robot.AUTONOMOUS;
+                }
+                else if (gameTime.TotalGameTime.Subtract(startGameTime).TotalSeconds < 135)
+                {
+                    robotStates = Robot.TELEOP;
+                }
+                else if (gameTime.TotalGameTime.Subtract(startGameTime).TotalSeconds >= 135)
+                {
+                    robotStates = Robot.DISABLED;
+                    gameState = 0;
+                }
+                foreach (int player in players)
+                    robots.ElementAt<IterativeRobot>(player).setState(robotStates);
 
                 foreach (int player in players)
                 {
@@ -175,6 +195,7 @@ namespace FRC_Virtual_Robotics
             else if (gameState == 0)
             {
                 Menu();
+                startGameTime = gameTime.TotalGameTime;
             }
             base.Update(gameTime);
         }
@@ -205,7 +226,7 @@ namespace FRC_Virtual_Robotics
                 }
                 else if (menuSelection == 1)
                 {
-
+                    //Display more information
                 }
                 else if (menuSelection == 2)
                 {
