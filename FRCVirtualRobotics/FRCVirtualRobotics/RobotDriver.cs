@@ -138,6 +138,14 @@ namespace FRC_Virtual_Robotics
             fire = new List<ControlButton>();
             for (int a = 0; a < 4; a++)
                 fire.Add(new ControlButton());
+            //Score Initalization
+            redAutoScore = 0;
+            redClimbScore = 0;
+            redFrisbeeScore = 0;
+            blueAutoScore = 0;
+            blueClimbScore = 0;
+            blueFrisbeeScore = 0;
+
 
             //Menu control
             menuSpin = 0;
@@ -145,6 +153,7 @@ namespace FRC_Virtual_Robotics
             menuDown = new ControlButton();
             menuItems = new List<MenuItem>();
             menuText = new List<MenuItem>();
+            scoreText = new List<MenuItem>();
             menuItems.Add(new MenuItem("Play Game", new Vector2(200,200), Color.Red));
             menuItems.Add(new MenuItem("Information", new Vector2(200,300), Color.White));
             menuItems.Add(new MenuItem("Exit", new Vector2(200,400), Color.Blue));
@@ -266,18 +275,19 @@ namespace FRC_Virtual_Robotics
             {
                 if (endGameFirstCycle)
                 {
+                    endGameFirstCycle = false;
                     endGameInstance.Play();
                     scoreText.Add(new MenuItem("Final Score", new Vector2(250,30), Color.White));
-                    scoreText.Add(new MenuItem("Red Alliance", new Vector2(20,100), Color.Red));
-                    scoreText.Add(new MenuItem("Blue Alliance", new Vector2(300,100), Color.Blue));
-                    scoreText.Add(new MenuItem("Climb: " + redClimbScore, new Vector2(20, 350), Color.Red));
-                    scoreText.Add(new MenuItem("Auto: " + redAutoScore, new Vector2(20, 400), Color.Red));
-                    scoreText.Add(new MenuItem("Disk: " + redFrisbeeScore, new Vector2(20, 450), Color.Red));
-                    scoreText.Add(new MenuItem("Climb: " + blueClimbScore, new Vector2(20, 350), Color.Blue));
-                    scoreText.Add(new MenuItem("Auto: " + blueAutoScore, new Vector2(20, 400), Color.Blue));
-                    scoreText.Add(new MenuItem("Disk: " + blueFrisbeeScore, new Vector2(20, 450), Color.Blue));
-                    scoreText.Add(new MenuItem("Total: " + redClimbScore+redFrisbeeScore+redAutoScore, new Vector2(20, 500), Color.Red));
-                    scoreText.Add(new MenuItem("Total: " + blueClimbScore+blueFrisbeeScore+blueAutoScore, new Vector2(300, 500), Color.Blue));
+                    scoreText.Add(new MenuItem("Red Alliance", new Vector2(60,100), Color.Red));
+                    scoreText.Add(new MenuItem("Blue Alliance", new Vector2(370,100), Color.Blue));
+                    scoreText.Add(new MenuItem("Climb: " + redClimbScore, new Vector2(60, 200), Color.Red));
+                    scoreText.Add(new MenuItem("Auto: " + redAutoScore, new Vector2(60, 250), Color.Red));
+                    scoreText.Add(new MenuItem("Disk: " + redFrisbeeScore, new Vector2(60, 300), Color.Red));
+                    scoreText.Add(new MenuItem("Climb: " + blueClimbScore, new Vector2(370, 200), Color.Blue));
+                    scoreText.Add(new MenuItem("Auto: " + blueAutoScore, new Vector2(370, 250), Color.Blue));
+                    scoreText.Add(new MenuItem("Disk: " + blueFrisbeeScore, new Vector2(370, 300), Color.Blue));
+                    scoreText.Add(new MenuItem("Total: " + (redClimbScore+redFrisbeeScore+redAutoScore), new Vector2(60, 350), Color.Red));
+                    scoreText.Add(new MenuItem("Total: " + (blueClimbScore+blueFrisbeeScore+blueAutoScore), new Vector2(370, 350), Color.Blue));
                 }
                 if (endGameInstance.State.Equals(SoundState.Stopped))
                     gameState = 0;
