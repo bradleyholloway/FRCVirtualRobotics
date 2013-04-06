@@ -42,6 +42,13 @@ namespace FRC_Virtual_Robotics
         private int redScore;
         public int gameState;
 
+        SoundEffect launch;
+        SoundEffect score;
+        SoundEffect teleOp;
+        SoundEffect start;
+        SoundEffect buzzer;
+        SoundEffect feed;
+
         public RobotDriver()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -135,6 +142,9 @@ namespace FRC_Virtual_Robotics
             spriteBatch = new SpriteBatch(GraphicsDevice);
             IterativeRobot.setImage(Content.Load<Texture2D>("robot"));
             Frisbee.setImage(Content.Load<Texture2D>("frisbee"));
+            launch = Content.Load<SoundEffect>("Piston");
+            score = Content.Load<SoundEffect>("Score");
+            feed = Content.Load<SoundEffect>("Feed");
             field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "topGoalRed"));
             field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "midGoalRed"));
             field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "botGoalRed"));
@@ -210,6 +220,7 @@ namespace FRC_Virtual_Robotics
                     }
                     if (frisbeeScore != 0)
                     {
+                        score.Play();
                         frisbees.ElementAt<Frisbee>(index).removeSelfFromList();
                         index--;
                     }
@@ -311,12 +322,15 @@ namespace FRC_Virtual_Robotics
             double x = -driverInputs.ElementAt<ControllerInput>(player).getRightX();
             robots.ElementAt<IterativeRobot>(player).setMotorValues(deadband(y + x), deadband(y - x));
 
-            if(field.feeding(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getRed()))
-                robots.ElementAt<IterativeRobot>(player).feed();
+            if (field.feeding(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getRed()))
+                if (robots.ElementAt<IterativeRobot>(player).feed())
+                    feed.Play();
 
             if (fire.ElementAt<ControlButton>(player).update(driverInputs.ElementAt<ControllerInput>(player).getRightBumper()) && robots.ElementAt<IterativeRobot>(player).fire())
+            {
+                launch.Play();
                 frisbees.Add(new Frisbee(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getDirection(), robots.ElementAt<IterativeRobot>(player).getRed()));
-
+            }
             if (driverInputs.ElementAt<ControllerInput>(player).getBack())
                 robots.ElementAt<IterativeRobot>(player).reset();
 

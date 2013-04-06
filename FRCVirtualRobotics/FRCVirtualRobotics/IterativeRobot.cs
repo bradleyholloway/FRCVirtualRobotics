@@ -172,10 +172,15 @@ namespace FRC_Virtual_Robotics
             }
             return false;
         }
-        public void feed()
+        public Boolean feed()
         {
             if (ammo < 4)
+            {
                 ammo++;
+                return true;
+            }
+            return false;
+            
         }
             
     }
