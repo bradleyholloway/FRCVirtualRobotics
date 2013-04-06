@@ -135,6 +135,12 @@ namespace FRC_Virtual_Robotics
             spriteBatch = new SpriteBatch(GraphicsDevice);
             IterativeRobot.setImage(Content.Load<Texture2D>("robot"));
             Frisbee.setImage(Content.Load<Texture2D>("frisbee"));
+            field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "topGoalRed"));
+            field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "midGoalRed"));
+            field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "botGoalRed"));
+            field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "topGoalBlue"));
+            field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "midGoalBlue"));
+            field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "botGoalBlue"));
             spriteFont = Content.Load<SpriteFont>("TimesNewRoman");
 
             redScore = blueScore = 0;
@@ -272,6 +278,10 @@ namespace FRC_Virtual_Robotics
                 foreach (Frisbee frisbee in frisbees)
                 {
                     spriteBatch.Draw(Frisbee.getImage(), frisbee.getLocation(), null, frisbee.getColor(), frisbee.getDirection(), frisbee.getOrigin(), .06f, SpriteEffects.None, 0f);
+                }
+                foreach (FieldObjects fo in field.getObjects())
+                {
+                    spriteBatch.Draw(fo.getImage(), fo.getLocation(), null, fo.getColor(), fo.getRotation(), fo.getOrigin(), fo.getScale(), SpriteEffects.None, 0f);
                 }
                 spriteBatch.DrawString(spriteFont, redScore + "", new Vector2(30, 0), Color.Red);
                 spriteBatch.DrawString(spriteFont, blueScore + "", new Vector2(GraphicsDevice.Viewport.Width - 100,0), Color.Blue);

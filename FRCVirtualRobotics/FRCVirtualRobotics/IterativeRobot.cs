@@ -67,8 +67,8 @@ namespace FRC_Virtual_Robotics
 
         public IterativeRobot(int maxSpeed, GraphicsDevice window, Boolean r)
         {
-            leftMotorPID = new PID(.01, 0, 0, .15);
-            rightMotorPID = new PID(.01, 0, 0, .15);
+            leftMotorPID = new PID(.1, 0, 0, .15);
+            rightMotorPID = new PID(.1, 0, 0, .15);
             leftMotorSpeed = 0;
             rightMotorSpeed = 0;
             scalar = maxSpeed;
