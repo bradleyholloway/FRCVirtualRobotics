@@ -141,6 +141,10 @@ namespace FRC_Virtual_Robotics
             field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "topGoalBlue"));
             field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "midGoalBlue"));
             field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "botGoalBlue"));
+            field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "redFeedTop"));
+            field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "redFeedBot"));
+            field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "blueFeedBot"));
+            field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "blueFeedTop"));
             spriteFont = Content.Load<SpriteFont>("TimesNewRoman");
 
             redScore = blueScore = 0;
@@ -283,8 +287,8 @@ namespace FRC_Virtual_Robotics
                 {
                     spriteBatch.Draw(fo.getImage(), fo.getLocation(), null, fo.getColor(), fo.getRotation(), fo.getOrigin(), fo.getScale(), SpriteEffects.None, 0f);
                 }
-                spriteBatch.DrawString(spriteFont, redScore + "", new Vector2(30, 0), Color.Red);
-                spriteBatch.DrawString(spriteFont, blueScore + "", new Vector2(GraphicsDevice.Viewport.Width - 100,0), Color.Blue);
+                spriteBatch.DrawString(spriteFont, redScore + "", new Vector2(60, 0), Color.Red);
+                spriteBatch.DrawString(spriteFont, blueScore + "", new Vector2(GraphicsDevice.Viewport.Width - 130,0), Color.Blue);
                 spriteBatch.DrawString(spriteFont, Math.Round(inGameTime,1) + "", new Vector2(GraphicsDevice.Viewport.Width / 2, 0), Color.White);
             }
             else if (gameState == 0)

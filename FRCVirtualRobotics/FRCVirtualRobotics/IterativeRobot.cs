@@ -91,7 +91,7 @@ namespace FRC_Virtual_Robotics
             directionForward += .1 * (rightMotorSpeed - leftMotorSpeed);
 
             
-            if(!((location+magD(magnitude,directionForward)).X<75 || (location+magD(magnitude,directionForward)).X>windowX-95) &&
+            if(!((location+magD(magnitude,directionForward)).X<75 || (location+magD(magnitude,directionForward)).X>windowX-75) &&
                 !((location+magD(magnitude,directionForward)).Y<50 || (location+magD(magnitude,directionForward)).Y>windowY-50))
                 location += magD(magnitude, directionForward);
         }

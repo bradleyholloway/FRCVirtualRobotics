@@ -101,7 +101,7 @@ namespace FRCVirtualRobotics
             }
             else
             {//115 right tollerance
-                if(location.X > X - 115 && (location.Y < 70 || location.Y > Y-70))
+                if(location.X > X - 95 && (location.Y < 70 || location.Y > Y-70))
                     return true;
             }
             return false;
@@ -123,44 +123,68 @@ namespace FRCVirtualRobotics
             float scale = 1;
             float rot = 0;
             color = Color.White;
-            if(name.Equals("topGoalRed"))
+            if (name.Equals("topGoalRed"))
             {
                 scale = calcScale(pic.Height, 0, field);
-                loc = new Vector2(field.ElementAt<int>(7), field.ElementAt<int>(0)+ (int) (.1*Field.Y));
+                loc = new Vector2(field.ElementAt<int>(7), field.ElementAt<int>(0) + (int)(.1 * Field.Y));
+                rot = (float)Math.PI;
                 color = Color.Red;
             }
-            else if(name.Equals("topGoalBlue"))
+            else if (name.Equals("topGoalBlue"))
             {
                 scale = calcScale(pic.Height, 0, field);
                 loc = new Vector2(field.ElementAt<int>(6), field.ElementAt<int>(0) + (int)(.1 * Field.Y));
-                rot = (float)Math.PI;
                 color = Color.Blue;
             }
-            else if(name.Equals("midGoalRed"))
+            else if (name.Equals("midGoalRed"))
             {
                 scale = calcScale(pic.Height, 2, field);
                 loc = new Vector2(field.ElementAt<int>(7), field.ElementAt<int>(2) + (int)(.1 * Field.Y));
+                rot = (float)Math.PI;
                 color = Color.Red;
             }
-            else if(name.Equals("midGoalBlue"))
+            else if (name.Equals("midGoalBlue"))
             {
                 scale = calcScale(pic.Height, 2, field);
                 loc = new Vector2(field.ElementAt<int>(6), field.ElementAt<int>(2) + (int)(.1 * Field.Y));
-                rot = (float) Math.PI;
                 color = Color.Blue;
             }
-            else if(name.Equals("botGoalRed"))
+            else if (name.Equals("botGoalRed"))
             {
                 scale = calcScale(pic.Height, 4, field);
                 loc = new Vector2(field.ElementAt<int>(7), field.ElementAt<int>(4) + (int)(.1 * Field.Y));
+                rot = (float)Math.PI;
                 color = Color.Red;
             }
-            else if(name.Equals("botGoalBlue"))
+            else if (name.Equals("botGoalBlue"))
             {
                 scale = calcScale(pic.Height, 4, field);
                 loc = new Vector2(field.ElementAt<int>(6), field.ElementAt<int>(4) + (int)(.1 * Field.Y));
-                rot = (float) Math.PI;
                 color = Color.Blue;
+            }
+            else if (name.Equals("blueFeedBot"))
+            {
+                rot = (float)Math.PI / 4 * 3;
+                loc = new Vector2(Field.X, Field.Y);
+                color = Color.Blue;
+            }
+            else if (name.Equals("blueFeedTop"))
+            {
+                rot = (float)Math.PI * 5 / 4;
+                loc = new Vector2(Field.X, 0);
+                color = Color.Blue;
+            }
+            else if (name.Equals("redFeedTop"))
+            {
+                rot = (float) Math.PI * 7 / 4;
+                loc = new Vector2(0, 0);
+                color = Color.Red;
+            }
+            else if (name.Equals("redFeedBot"))
+            {
+                rot = (float) Math.PI / 4;
+                loc = new Vector2(0, Field.Y);
+                color = Color.Red;
             }
             construct(pic, loc, scale, rot);
         }
