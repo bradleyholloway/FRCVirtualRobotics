@@ -169,7 +169,7 @@ namespace FRC_Virtual_Robotics
                 //Robot Control States
                 if (gameTime.TotalGameTime.Subtract(startGameTime).TotalSeconds < 15)
                 {
-                    robotStates = Robot.AUTONOMOUS;
+                    robotStates = Robot.TELEOP;//Change to Auto befor release or for testing
                 }
                 else if (gameTime.TotalGameTime.Subtract(startGameTime).TotalSeconds < 135)
                 {

@@ -126,39 +126,39 @@ namespace FRCVirtualRobotics
             if(name.Equals("topGoalRed"))
             {
                 scale = calcScale(pic.Height, 0, field);
-                loc = new Vector2(field.ElementAt<int>(7) - pic.Width * scale, field.ElementAt<int>(0));
+                loc = new Vector2(field.ElementAt<int>(7), field.ElementAt<int>(0)+ (int) (.1*Field.Y));
                 color = Color.Red;
             }
             else if(name.Equals("topGoalBlue"))
             {
                 scale = calcScale(pic.Height, 0, field);
-                loc = new Vector2(field.ElementAt<int>(6), field.ElementAt<int>(0));
+                loc = new Vector2(field.ElementAt<int>(6), field.ElementAt<int>(0) + (int)(.1 * Field.Y));
                 rot = (float)Math.PI;
                 color = Color.Blue;
             }
             else if(name.Equals("midGoalRed"))
             {
                 scale = calcScale(pic.Height, 2, field);
-                loc = new Vector2(field.ElementAt<int>(7) - pic.Width * scale, field.ElementAt<int>(2));
+                loc = new Vector2(field.ElementAt<int>(7), field.ElementAt<int>(2) + (int)(.1 * Field.Y));
                 color = Color.Red;
             }
             else if(name.Equals("midGoalBlue"))
             {
                 scale = calcScale(pic.Height, 2, field);
-                loc = new Vector2(field.ElementAt<int>(6), field.ElementAt<int>(2));
+                loc = new Vector2(field.ElementAt<int>(6), field.ElementAt<int>(2) + (int)(.1 * Field.Y));
                 rot = (float) Math.PI;
                 color = Color.Blue;
             }
             else if(name.Equals("botGoalRed"))
             {
                 scale = calcScale(pic.Height, 4, field);
-                loc = new Vector2(field.ElementAt<int>(7) - pic.Width*scale, field.ElementAt<int>(4));
+                loc = new Vector2(field.ElementAt<int>(7), field.ElementAt<int>(4) + (int)(.1 * Field.Y));
                 color = Color.Red;
             }
             else if(name.Equals("botGoalBlue"))
             {
                 scale = calcScale(pic.Height, 4, field);
-                loc = new Vector2(field.ElementAt<int>(6), field.ElementAt<int>(4));
+                loc = new Vector2(field.ElementAt<int>(6), field.ElementAt<int>(4) + (int)(.1 * Field.Y));
                 rot = (float) Math.PI;
                 color = Color.Blue;
             }
