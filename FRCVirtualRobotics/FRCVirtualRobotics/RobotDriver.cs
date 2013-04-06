@@ -23,6 +23,7 @@ namespace FRC_Virtual_Robotics
         SpriteFont spriteFont;
         List<MenuItem> menuItems;
         List<MenuItem> menuText;
+        List<MenuItem> scoreText;
         float menuSpin;
         int menuSelection;
         TimeSpan startGameTime;
@@ -38,9 +39,16 @@ namespace FRC_Virtual_Robotics
         List<int> players;
         ControlButton menuUp;
         ControlButton menuDown;
-        private int blueScore;
-        private int redScore;
+
+        private int blueFrisbeeScore;
+        private int redFrisbeeScore;
+        private int blueAutoScore;
+        private int redAutoScore;
+        private int blueClimbScore;
+        private int redClimbScore;
+
         public int gameState;
+        Random rand;
 
         SoundEffect launch;
         SoundEffect score;
@@ -48,6 +56,9 @@ namespace FRC_Virtual_Robotics
         SoundEffect start;
         SoundEffect buzzer;
         SoundEffect feed;
+        SoundEffect endGame;
+        SoundEffectInstance endGameInstance;
+        private Boolean endGameFirstCycle;
 
         public RobotDriver()
         {
@@ -55,6 +66,7 @@ namespace FRC_Virtual_Robotics
             Content.RootDirectory = "Content";
             gameState = 0;
             menuSelection = 0;
+            rand = new Random();
         }
 
         /// <summary>
@@ -82,7 +94,7 @@ namespace FRC_Virtual_Robotics
             robots = new List<IterativeRobot>();
             if (GamePad.GetState(PlayerIndex.One).IsConnected)
             {
-                robots.Add(new IterativeRobot(6, GraphicsDevice, true));
+                robots.Add(new IterativeRobot(6, GraphicsDevice, true, .3f));
                 players.Add(0);
             }
             else
@@ -90,7 +102,7 @@ namespace FRC_Virtual_Robotics
 
             if (GamePad.GetState(PlayerIndex.Two).IsConnected)
             {
-                robots.Add(new IterativeRobot(6, GraphicsDevice, false));
+                robots.Add(new IterativeRobot(6, GraphicsDevice, false, .3f));
                 players.Add(1);
             }
             else
@@ -98,7 +110,7 @@ namespace FRC_Virtual_Robotics
 
             if (GamePad.GetState(PlayerIndex.Three).IsConnected)
             {
-                //robots.Add(new IterativeRobot(6, GraphicsDevice, true));
+                robots.Add(new IterativeRobot(6, GraphicsDevice, true, .3f));
                 players.Add(2);
             }
             else
@@ -106,7 +118,7 @@ namespace FRC_Virtual_Robotics
 
             if (GamePad.GetState(PlayerIndex.Four).IsConnected)
             {
-                robots.Add(new IterativeRobot(6, GraphicsDevice, false));
+                robots.Add(new IterativeRobot(6, GraphicsDevice, false, .3f));
                 players.Add(3);
             }
             else
@@ -145,6 +157,10 @@ namespace FRC_Virtual_Robotics
             launch = Content.Load<SoundEffect>("Piston");
             score = Content.Load<SoundEffect>("Score");
             feed = Content.Load<SoundEffect>("Feed");
+            endGame = Content.Load<SoundEffect>("Fractilite");
+            endGameInstance = endGame.CreateInstance();
+            endGameInstance.IsLooped = false;
+            endGameFirstCycle = true;
             field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "topGoalRed"));
             field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "midGoalRed"));
             field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "botGoalRed"));
@@ -157,7 +173,7 @@ namespace FRC_Virtual_Robotics
             field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "blueFeedTop"));
             spriteFont = Content.Load<SpriteFont>("TimesNewRoman");
 
-            redScore = blueScore = 0;
+            redFrisbeeScore = blueFrisbeeScore = 0;
             robotStates = Robot.DISABLED;
         }
 
@@ -192,7 +208,7 @@ namespace FRC_Virtual_Robotics
                 else if (gameTime.TotalGameTime.Subtract(startGameTime).TotalSeconds >= 135)
                 {
                     robotStates = Robot.DISABLED;
-                    gameState = 0;
+                    gameState = 2;
                 }
                 foreach (int player in players)
                     robots.ElementAt<IterativeRobot>(player).setState(robotStates);
@@ -203,7 +219,7 @@ namespace FRC_Virtual_Robotics
                         processInput(player);
                 }
                 foreach (int player in players)
-                    robots.ElementAt<IterativeRobot>(player).run();
+                    robots.ElementAt<IterativeRobot>(player).run(robots);
 
                 for (int index = 0; index < frisbees.Count; index++)
                 {
@@ -211,12 +227,23 @@ namespace FRC_Virtual_Robotics
                     if (frisbees.ElementAt<Frisbee>(index).getRed())
                     {
                         frisbeeScore = field.score(frisbees.ElementAt<Frisbee>(index).getLocation(), frisbees.ElementAt<Frisbee>(index).getRed());
-                        redScore += frisbeeScore;
+                        redFrisbeeScore += frisbeeScore;
+                        if (inGameTime < 15)
+                        {
+                            redAutoScore += 2 * frisbeeScore;
+                            redFrisbeeScore -= frisbeeScore;
+                        }
+
                     }
                     else
                     {
                         frisbeeScore = field.score(frisbees.ElementAt<Frisbee>(index).getLocation(), frisbees.ElementAt<Frisbee>(index).getRed());
-                        blueScore += frisbeeScore;
+                        blueFrisbeeScore += frisbeeScore;
+                        if (inGameTime < 15)
+                        {
+                            blueAutoScore += 2 * frisbeeScore;
+                            blueFrisbeeScore -= frisbeeScore;
+                        }
                     }
                     if (frisbeeScore != 0)
                     {
@@ -234,6 +261,26 @@ namespace FRC_Virtual_Robotics
             {
                 Menu();
                 startGameTime = gameTime.TotalGameTime;
+            }
+            else if (gameState == 2)
+            {
+                if (endGameFirstCycle)
+                {
+                    endGameInstance.Play();
+                    scoreText.Add(new MenuItem("Final Score", new Vector2(250,30), Color.White));
+                    scoreText.Add(new MenuItem("Red Alliance", new Vector2(20,100), Color.Red));
+                    scoreText.Add(new MenuItem("Blue Alliance", new Vector2(300,100), Color.Blue));
+                    scoreText.Add(new MenuItem("Climb: " + redClimbScore, new Vector2(20, 350), Color.Red));
+                    scoreText.Add(new MenuItem("Auto: " + redAutoScore, new Vector2(20, 400), Color.Red));
+                    scoreText.Add(new MenuItem("Disk: " + redFrisbeeScore, new Vector2(20, 450), Color.Red));
+                    scoreText.Add(new MenuItem("Climb: " + blueClimbScore, new Vector2(20, 350), Color.Blue));
+                    scoreText.Add(new MenuItem("Auto: " + blueAutoScore, new Vector2(20, 400), Color.Blue));
+                    scoreText.Add(new MenuItem("Disk: " + blueFrisbeeScore, new Vector2(20, 450), Color.Blue));
+                    scoreText.Add(new MenuItem("Total: " + redClimbScore+redFrisbeeScore+redAutoScore, new Vector2(20, 500), Color.Red));
+                    scoreText.Add(new MenuItem("Total: " + blueClimbScore+blueFrisbeeScore+blueAutoScore, new Vector2(300, 500), Color.Blue));
+                }
+                if (endGameInstance.State.Equals(SoundState.Stopped))
+                    gameState = 0;
             }
             base.Update(gameTime);
         }
@@ -288,7 +335,7 @@ namespace FRC_Virtual_Robotics
                 foreach (IterativeRobot robot in robots)
                 {
                     if (robot != null)
-                        spriteBatch.Draw(robot.getImage(), robot.getLocation(), null, robot.getColor(), robot.getDirection(), robot.getOrigin(), .3f, SpriteEffects.None, 0f);
+                        spriteBatch.Draw(robot.getImage(), robot.getLocation(), null, robot.getColor(), robot.getDirection(), robot.getOrigin(), robot.getScale(), SpriteEffects.None, 0f);
                 }
                 foreach (Frisbee frisbee in frisbees)
                 {
@@ -298,8 +345,8 @@ namespace FRC_Virtual_Robotics
                 {
                     spriteBatch.Draw(fo.getImage(), fo.getLocation(), null, fo.getColor(), fo.getRotation(), fo.getOrigin(), fo.getScale(), SpriteEffects.None, 0f);
                 }
-                spriteBatch.DrawString(spriteFont, redScore + "", new Vector2(60, 0), Color.Red);
-                spriteBatch.DrawString(spriteFont, blueScore + "", new Vector2(GraphicsDevice.Viewport.Width - 130,0), Color.Blue);
+                spriteBatch.DrawString(spriteFont, redFrisbeeScore + "", new Vector2(60, 0), Color.Red);
+                spriteBatch.DrawString(spriteFont, blueFrisbeeScore + "", new Vector2(GraphicsDevice.Viewport.Width - 130,0), Color.Blue);
                 spriteBatch.DrawString(spriteFont, Math.Round(inGameTime,1) + "", new Vector2(GraphicsDevice.Viewport.Width / 2, 0), Color.White);
             }
             else if (gameState == 0)
@@ -309,6 +356,11 @@ namespace FRC_Virtual_Robotics
                 foreach (MenuItem menuItem in menuText)
                     spriteBatch.DrawString(spriteFont, menuItem.text(), menuItem.location(), menuItem.color());
                 spriteBatch.Draw(Frisbee.getImage(), menuItems.ElementAt<MenuItem>(menuSelection).location()- new Vector2( 100, 0), null, Color.White, menuSpin, Vector2.Zero, .1f, SpriteEffects.None, 0f);
+            }
+            else if (gameState == 2)
+            {
+                foreach (MenuItem menuItem in scoreText)
+                    spriteBatch.DrawString(spriteFont, menuItem.text(), menuItem.location(), menuItem.color());
             }
 
             spriteBatch.End();
@@ -329,7 +381,7 @@ namespace FRC_Virtual_Robotics
             if (fire.ElementAt<ControlButton>(player).update(driverInputs.ElementAt<ControllerInput>(player).getRightBumper()) && robots.ElementAt<IterativeRobot>(player).fire())
             {
                 launch.Play();
-                frisbees.Add(new Frisbee(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getDirection(), robots.ElementAt<IterativeRobot>(player).getRed()));
+                frisbees.Add(new Frisbee(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getDirection() + (rand.NextDouble()-.5)/5, robots.ElementAt<IterativeRobot>(player).getRed()));
             }
             if (driverInputs.ElementAt<ControllerInput>(player).getBack())
                 robots.ElementAt<IterativeRobot>(player).reset();

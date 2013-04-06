@@ -64,11 +64,13 @@ namespace FRC_Virtual_Robotics
         private int windowY;
         private PID leftMotorPID;
         private PID rightMotorPID;
-
-        public IterativeRobot(int maxSpeed, GraphicsDevice window, Boolean r)
+        private Rectangle rect;
+        private float scale;
+        
+        public IterativeRobot(int maxSpeed, GraphicsDevice window, Boolean r, float sc)
         {
-            leftMotorPID = new PID(.1, 0, 0, .15);
-            rightMotorPID = new PID(.1, 0, 0, .15);
+            leftMotorPID = new PID(.2, 0, 0, .15);
+            rightMotorPID = new PID(.2, 0, 0, .15);
             leftMotorSpeed = 0;
             rightMotorSpeed = 0;
             scalar = maxSpeed;
@@ -79,10 +81,25 @@ namespace FRC_Virtual_Robotics
             windowY = window.Viewport.Height;
             red = r;
             ammo = 3;
+            scale = sc;
+            
             reset();
+            
+        }
+        public Rectangle getRectangle()
+        {
+            return rect;
+        }
+        public float getScale()
+        {
+            return scale;
+        }
+        public Boolean intersects(IterativeRobot rob)
+        {
+            return rect.Contains(rob.getRectangle()) || rect.Intersects(rob.getRectangle());
         }
 
-        public void run()
+        public void run(List<IterativeRobot> robots)
         {
             rightMotorSpeed += rightMotorPID.calcPID(rightMotorSpeed);
             leftMotorSpeed += leftMotorPID.calcPID(leftMotorSpeed);
@@ -90,10 +107,73 @@ namespace FRC_Virtual_Robotics
             magnitude = (leftMotorSpeed + rightMotorSpeed) / 2 * scalar;
             directionForward += .1 * (rightMotorSpeed - leftMotorSpeed);
 
+            Vector2 tempLocation = location + magD(magnitude, directionForward);
             
-            if(!((location+magD(magnitude,directionForward)).X<75 || (location+magD(magnitude,directionForward)).X>windowX-75) &&
-                !((location+magD(magnitude,directionForward)).Y<50 || (location+magD(magnitude,directionForward)).Y>windowY-50))
-                location += magD(magnitude, directionForward);
+            rect = new Rectangle((int) tempLocation.X, (int) tempLocation.Y, (int)(image.Width*scale), (int)(image.Height*scale));
+
+            if (!((location + magD(magnitude, directionForward)).X < 75 || (location + magD(magnitude, directionForward)).X > windowX - 75) &&
+                !((location + magD(magnitude, directionForward)).Y < 50 || (location + magD(magnitude, directionForward)).Y > windowY - 50))
+            {
+                Boolean collisionFree = true;
+                IterativeRobot collidedWith = null;
+                foreach (IterativeRobot rob in robots)
+                {
+                    if(rob != null)
+                        if(!rob.Equals(this))
+                            if (intersects(rob))
+                            {
+                                collisionFree = false;
+                                rect = new Rectangle((int)location.X, (int)location.Y, (int)(image.Width * scale), (int)(image.Height * scale));
+                                collidedWith = rob;
+                            }
+                }
+                if (collisionFree)
+                    location += magD(magnitude, directionForward);
+                else
+                {
+                    Vector2 result = magD(magnitude, directionForward) + magD(collidedWith.magnitude, collidedWith.directionForward);
+                    result /= 3;
+                    if(collidedWith.push(result, robots))
+                        this.push(result, robots);
+                }
+            }
+            else
+            {
+                //no move
+            }
+        }
+        public Boolean push(Vector2 collision, List<IterativeRobot> robots)
+        {
+            Vector2 tempLocation = location + collision;
+
+            if (!((tempLocation).X < 75 || (tempLocation).X > windowX - 75) &&
+                !(tempLocation.Y < 50 || (tempLocation).Y > windowY - 50))
+            {
+                Boolean collisionFree = true;
+                IterativeRobot collidedWith = null;
+                foreach (IterativeRobot rob in robots)
+                {
+                    if (rob != null)
+                        if (!rob.Equals(this))
+                            if (intersects(rob))
+                            {
+                                collisionFree = false;
+                                rect = new Rectangle((int)location.X, (int)location.Y, (int)(image.Width * scale), (int)(image.Height * scale));
+                                collidedWith = rob;
+                            }
+                }
+                if (collisionFree)
+                {
+                    location += collision;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+                return false;
         }
 
         public Color getColor()
