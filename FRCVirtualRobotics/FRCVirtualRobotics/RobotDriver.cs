@@ -171,6 +171,9 @@ namespace FRC_Virtual_Robotics
             feed = Content.Load<SoundEffect>("Feed");
             endGame = Content.Load<SoundEffect>("Fractilite");
             driving = Content.Load<SoundEffect>("Driving");
+            buzzer = Content.Load<SoundEffect>("Buzzer");
+            teleOp = Content.Load<SoundEffect>("TeleOp");
+            start = Content.Load<SoundEffect>("TrumpetStart");
             endGameInstance = endGame.CreateInstance();
             endGameInstance.IsLooped = false;
             endGameFirstCycle = true;
@@ -213,15 +216,27 @@ namespace FRC_Virtual_Robotics
                 //Robot Control States
                 if (gameTime.TotalGameTime.Subtract(startGameTime).TotalSeconds < 15)
                 {
+                    if (inGameState == 0)
+                        start.Play();
                     robotStates = Robot.AUTONOMOUS;
+                    inGameState = 1;
                 }
                 else if (gameTime.TotalGameTime.Subtract(startGameTime).TotalSeconds < 135)
                 {
+                    if (inGameState == 1)
+                        teleOp.Play();
                     robotStates = Robot.TELEOP;
+                    inGameState = 2;
                 }
                 else if (gameTime.TotalGameTime.Subtract(startGameTime).TotalSeconds >= 135)
                 {
+                    buzzer.Play();
                     robotStates = Robot.DISABLED;
+                    foreach (int player in players)
+                    {
+                        robots.ElementAt<IterativeRobot>(player).endGame();
+                        robots.ElementAt<IterativeRobot>(player).setState(robotStates);
+                    }
                     gameState = 2;
                 }
                 foreach (int player in players)

@@ -86,6 +86,7 @@ namespace FRC_Virtual_Robotics
             scale = sc;
             drive = driving;
             drive.IsLooped = true;
+            drive.Volume = .5f;
             reset();
             
         }
@@ -148,8 +149,10 @@ namespace FRC_Virtual_Robotics
             }
             else
             {
-                //no move
+                drive.Stop();
             }
+            if (Math.Abs(magnitude) < 0.2)
+                drive.Stop();
         }
         public Boolean push(Vector2 collision, List<IterativeRobot> robots)
         {
@@ -183,6 +186,11 @@ namespace FRC_Virtual_Robotics
             }
             else
                 return false;
+        }
+        public void endGame()
+        {
+            drive.Stop();
+            reset();
         }
 
         public Color getColor()
