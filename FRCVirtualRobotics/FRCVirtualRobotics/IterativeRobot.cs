@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using BradleyXboxUtils;
 
 namespace FRC_Virtual_Robotics
 {
@@ -61,9 +62,13 @@ namespace FRC_Virtual_Robotics
         private int ammo;
         private int windowX;
         private int windowY;
+        private PID leftMotorPID;
+        private PID rightMotorPID;
 
         public IterativeRobot(int maxSpeed, GraphicsDevice window, Boolean r)
         {
+            leftMotorPID = new PID(.01, 0, 0, .15);
+            rightMotorPID = new PID(.01, 0, 0, .15);
             leftMotorSpeed = 0;
             rightMotorSpeed = 0;
             scalar = maxSpeed;
@@ -79,6 +84,9 @@ namespace FRC_Virtual_Robotics
 
         public void run()
         {
+            rightMotorSpeed += rightMotorPID.calcPID(rightMotorSpeed);
+            leftMotorSpeed += leftMotorPID.calcPID(leftMotorSpeed);
+
             magnitude = (leftMotorSpeed + rightMotorSpeed) / 2 * scalar;
             directionForward += .1 * (rightMotorSpeed - leftMotorSpeed);
 
@@ -103,8 +111,11 @@ namespace FRC_Virtual_Robotics
 
         public void setMotorValues(double left, double right)
         {
-            leftMotorSpeed = left;
-            rightMotorSpeed = right;
+            leftMotorPID.setDesiredValue(left);
+            rightMotorPID.setDesiredValue(right);
+            
+            //leftMotorSpeed = left;
+            //rightMotorSpeed = right;
         }
 
         public float getDirection()
