@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using BradleyXboxUtils;
+using Microsoft.Xna.Framework.Audio;
 
 namespace FRC_Virtual_Robotics
 {
@@ -66,8 +67,9 @@ namespace FRC_Virtual_Robotics
         private PID rightMotorPID;
         private Rectangle rect;
         private float scale;
+        private SoundEffectInstance drive;
         
-        public IterativeRobot(int maxSpeed, GraphicsDevice window, Boolean r, float sc)
+        public IterativeRobot(int maxSpeed, GraphicsDevice window, Boolean r, float sc, SoundEffectInstance driving)
         {
             leftMotorPID = new PID(.2, 0, 0, .15);
             rightMotorPID = new PID(.2, 0, 0, .15);
@@ -82,7 +84,8 @@ namespace FRC_Virtual_Robotics
             red = r;
             ammo = 3;
             scale = sc;
-            
+            drive = driving;
+            drive.IsLooped = true;
             reset();
             
         }
@@ -127,13 +130,19 @@ namespace FRC_Virtual_Robotics
                                 collidedWith = rob;
                             }
                 }
+                
                 if (collisionFree)
+                {
+                    if(drive.State.Equals(SoundState.Stopped))
+                        drive.Play();
                     location += magD(magnitude, directionForward);
+                }
                 else
                 {
+                    drive.Stop();
                     Vector2 result = magD(magnitude, directionForward) + magD(collidedWith.magnitude, collidedWith.directionForward);
                     result /= 3;
-                    if(collidedWith.push(result, robots))
+                    if (collidedWith.push(result, robots))
                         this.push(result, robots);
                 }
             }

@@ -48,6 +48,7 @@ namespace FRC_Virtual_Robotics
         private int redClimbScore;
 
         public int gameState;
+        public int inGameState;
         Random rand;
 
         SoundEffect launch;
@@ -56,6 +57,7 @@ namespace FRC_Virtual_Robotics
         SoundEffect start;
         SoundEffect buzzer;
         SoundEffect feed;
+        SoundEffect driving;
         SoundEffect endGame;
         SoundEffectInstance endGameInstance;
         private Boolean endGameFirstCycle;
@@ -88,13 +90,14 @@ namespace FRC_Virtual_Robotics
         /// </summary>
         protected override void LoadContent()
         {
+            driving = Content.Load<SoundEffect>("Driving");
             field = new Field(GraphicsDevice);
             players = new List<int>();
             // TODO: use this.Content to load your game content here
             robots = new List<IterativeRobot>();
             if (GamePad.GetState(PlayerIndex.One).IsConnected)
             {
-                robots.Add(new IterativeRobot(6, GraphicsDevice, true, .3f));
+                robots.Add(new IterativeRobot(6, GraphicsDevice, true, .3f, driving.CreateInstance()));
                 players.Add(0);
             }
             else
@@ -102,7 +105,7 @@ namespace FRC_Virtual_Robotics
 
             if (GamePad.GetState(PlayerIndex.Two).IsConnected)
             {
-                robots.Add(new IterativeRobot(6, GraphicsDevice, false, .3f));
+                robots.Add(new IterativeRobot(6, GraphicsDevice, false, .3f, driving.CreateInstance()));
                 players.Add(1);
             }
             else
@@ -110,7 +113,7 @@ namespace FRC_Virtual_Robotics
 
             if (GamePad.GetState(PlayerIndex.Three).IsConnected)
             {
-                robots.Add(new IterativeRobot(6, GraphicsDevice, true, .3f));
+                robots.Add(new IterativeRobot(6, GraphicsDevice, true, .3f, driving.CreateInstance()));
                 players.Add(2);
             }
             else
@@ -118,7 +121,7 @@ namespace FRC_Virtual_Robotics
 
             if (GamePad.GetState(PlayerIndex.Four).IsConnected)
             {
-                robots.Add(new IterativeRobot(6, GraphicsDevice, false, .3f));
+                robots.Add(new IterativeRobot(6, GraphicsDevice, false, .3f, driving.CreateInstance()));
                 players.Add(3);
             }
             else
@@ -167,6 +170,7 @@ namespace FRC_Virtual_Robotics
             score = Content.Load<SoundEffect>("Score");
             feed = Content.Load<SoundEffect>("Feed");
             endGame = Content.Load<SoundEffect>("Fractilite");
+            driving = Content.Load<SoundEffect>("Driving");
             endGameInstance = endGame.CreateInstance();
             endGameInstance.IsLooped = false;
             endGameFirstCycle = true;
@@ -184,6 +188,7 @@ namespace FRC_Virtual_Robotics
 
             redFrisbeeScore = blueFrisbeeScore = 0;
             robotStates = Robot.DISABLED;
+            inGameState = 0;
         }
 
         /// <summary>
@@ -208,7 +213,7 @@ namespace FRC_Virtual_Robotics
                 //Robot Control States
                 if (gameTime.TotalGameTime.Subtract(startGameTime).TotalSeconds < 15)
                 {
-                    robotStates = Robot.TELEOP;//Change to Auto befor release or for testing
+                    robotStates = Robot.AUTONOMOUS;
                 }
                 else if (gameTime.TotalGameTime.Subtract(startGameTime).TotalSeconds < 135)
                 {
