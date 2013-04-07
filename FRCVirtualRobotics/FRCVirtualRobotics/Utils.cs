@@ -119,12 +119,12 @@ namespace BradleyXboxUtils
         public Toggle()
         {
             value = false;
-            lastValue = false;
+            lastValue = true;
         }
         public Toggle(Boolean a)
         {
             value = a;
-            lastValue = false;
+            lastValue = true;
         }
 
         public Boolean update(Boolean a)
@@ -156,13 +156,13 @@ namespace BradleyXboxUtils
 
         public ControlButton()
         {
-            last = false;
+            last = true;
             state = false;
         }
         public ControlButton(Boolean start)
         {
             state = start;
-            last = false;
+            last = true;
         }
 
         /*public void update(Boolean current)

@@ -36,6 +36,7 @@ namespace FRC_Virtual_Robotics
         List<Frisbee> frisbees;
         List<ControllerInput> driverInputs;
         List<ControlButton> fire;
+        List<Toggle> preAutoReady;
         List<int> players;
         ControlButton menuUp;
         ControlButton menuDown;
@@ -49,6 +50,7 @@ namespace FRC_Virtual_Robotics
 
         public int gameState;
         public int inGameState;
+        public int autoState;
         Random rand;
 
         SoundEffect launch;
@@ -59,6 +61,8 @@ namespace FRC_Virtual_Robotics
         SoundEffect feed;
         SoundEffect driving;
         SoundEffect endGame;
+        SoundEffect titleScreen;
+        SoundEffectInstance titleScreenInstance;
         SoundEffectInstance endGameInstance;
         private Boolean endGameFirstCycle;
 
@@ -137,10 +141,15 @@ namespace FRC_Virtual_Robotics
 
             Frisbee.SPEED = 10;
             Frisbee.setFrisbees(frisbees);
+            
+            preAutoReady = new List<Toggle>();
+            for (int a = 0; a < 4; a++)
+                preAutoReady.Add(new Toggle(false));
 
             fire = new List<ControlButton>();
             for (int a = 0; a < 4; a++)
                 fire.Add(new ControlButton());
+
             //Score Initalization
             redAutoScore = 0;
             redClimbScore = 0;
@@ -174,8 +183,11 @@ namespace FRC_Virtual_Robotics
             buzzer = Content.Load<SoundEffect>("Buzzer");
             teleOp = Content.Load<SoundEffect>("TeleOp");
             start = Content.Load<SoundEffect>("TrumpetStart");
+            titleScreen = Content.Load<SoundEffect>("CantHoldUs");
+            titleScreenInstance = titleScreen.CreateInstance();
             endGameInstance = endGame.CreateInstance();
             endGameInstance.IsLooped = false;
+            titleScreenInstance.IsLooped = true;
             endGameFirstCycle = true;
             field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "topGoalRed"));
             field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "midGoalRed"));
@@ -190,8 +202,8 @@ namespace FRC_Virtual_Robotics
             spriteFont = Content.Load<SpriteFont>("TimesNewRoman");
 
             redFrisbeeScore = blueFrisbeeScore = 0;
-            robotStates = Robot.DISABLED;
-            inGameState = 0;
+            robotStates = Robot.PreAUTONOMOUS;
+            inGameState = 0; autoState = 0;
         }
 
         /// <summary>
@@ -212,9 +224,29 @@ namespace FRC_Virtual_Robotics
         {
             if (gameState == 1)
             {
+                if (titleScreenInstance.State.Equals(SoundState.Playing))
+                    titleScreenInstance.Stop();
+
+                Boolean ready = true;
+                foreach (int play in players)
+                    if (!preAutoReady.ElementAt<Toggle>(play).get())
+                        ready = false;
+                
                 inGameTime = gameTime.TotalGameTime.Subtract(startGameTime).TotalSeconds;
+
                 //Robot Control States
-                if (gameTime.TotalGameTime.Subtract(startGameTime).TotalSeconds < 15)
+                if (!ready)
+                {
+                    inGameState = 0;
+                    startGameTime = gameTime.TotalGameTime;
+                    robotStates = Robot.PreAUTONOMOUS;
+                    foreach (int play in players)
+                    {
+                        preAutoReady.ElementAt<Toggle>(play).update(driverInputs.ElementAt<ControllerInput>(play).getBottomActionButton());
+                    }
+
+                }
+                else if (gameTime.TotalGameTime.Subtract(startGameTime).TotalSeconds < 15)
                 {
                     if (inGameState == 0)
                         start.Play();
@@ -244,9 +276,41 @@ namespace FRC_Virtual_Robotics
                     
                 foreach (int player in players)
                 {
-                    if (robots.ElementAt<IterativeRobot>(player).getState().equals(Robot.TELEOP))
+                    if (robots.ElementAt<IterativeRobot>(player).getState().equals(Robot.TELEOP) || robots.ElementAt<IterativeRobot>(player).getState().equals(Robot.PreAUTONOMOUS))
                         processInput(player);
+                    else if(robots.ElementAt<IterativeRobot>(player).getState().equals(Robot.AUTONOMOUS))
+                    {
+                        if (inGameTime > 3 && autoState < players.Count)
+                        {
+                            if (robots.ElementAt<IterativeRobot>(player).fire())
+                            {
+                                launch.Play();
+                                frisbees.Add(new Frisbee(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getDirection() + (rand.NextDouble() - .5) / 5, robots.ElementAt<IterativeRobot>(player).getRed()));
+                                autoState++;
+                            }   
+                        }
+                        else if (inGameTime > 8 && autoState < 2*players.Count)
+                        {
+                            if (robots.ElementAt<IterativeRobot>(player).fire())
+                            {
+                                launch.Play();
+                                frisbees.Add(new Frisbee(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getDirection() + (rand.NextDouble() - .5) / 5, robots.ElementAt<IterativeRobot>(player).getRed()));
+                                autoState++;
+                            }
+                        }
+                        else if (inGameTime > 13 && autoState < 3*players.Count)
+                        {
+                            if (robots.ElementAt<IterativeRobot>(player).fire())
+                            {
+                                launch.Play();
+                                frisbees.Add(new Frisbee(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getDirection() + (rand.NextDouble() - .5) / 5, robots.ElementAt<IterativeRobot>(player).getRed()));
+                                autoState++;
+                            }
+                        }
+                    }
                 }
+
+
                 foreach (int player in players)
                     robots.ElementAt<IterativeRobot>(player).run(robots);
 
@@ -289,6 +353,8 @@ namespace FRC_Virtual_Robotics
             else if (gameState == 0)
             {
                 Menu();
+                if (titleScreenInstance.State.Equals(SoundState.Stopped))
+                    titleScreenInstance.Play();
                 startGameTime = gameTime.TotalGameTime;
             }
             else if (gameState == 2)
@@ -348,6 +414,8 @@ namespace FRC_Virtual_Robotics
                     this.Exit();
                 }
             }//menuMapping
+            if (driverInputs.ElementAt<ControllerInput>(0).getBack())
+                this.Exit();
         }
 
         /// <summary>
@@ -375,9 +443,9 @@ namespace FRC_Virtual_Robotics
                 {
                     spriteBatch.Draw(fo.getImage(), fo.getLocation(), null, fo.getColor(), fo.getRotation(), fo.getOrigin(), fo.getScale(), SpriteEffects.None, 0f);
                 }
-                spriteBatch.DrawString(spriteFont, redFrisbeeScore + "", new Vector2(60, 0), Color.Red);
-                spriteBatch.DrawString(spriteFont, blueFrisbeeScore + "", new Vector2(GraphicsDevice.Viewport.Width - 130,0), Color.Blue);
-                spriteBatch.DrawString(spriteFont, Math.Round(inGameTime,1) + "", new Vector2(GraphicsDevice.Viewport.Width / 2, 0), Color.White);
+                spriteBatch.DrawString(spriteFont, (redFrisbeeScore + redAutoScore)+"", new Vector2(60, 0), Color.Red);
+                spriteBatch.DrawString(spriteFont, (blueFrisbeeScore + blueAutoScore)+"", new Vector2(GraphicsDevice.Viewport.Width - 130,0), Color.Blue);
+                spriteBatch.DrawString(spriteFont, Math.Round(inGameTime) + "", new Vector2(GraphicsDevice.Viewport.Width / 2, 0), Color.White);
             }
             else if (gameState == 0)
             {
@@ -404,20 +472,24 @@ namespace FRC_Virtual_Robotics
             double x = -driverInputs.ElementAt<ControllerInput>(player).getRightX();
             robots.ElementAt<IterativeRobot>(player).setMotorValues(deadband(y + x), deadband(y - x));
 
-            if (field.feeding(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getRed()))
-                if (robots.ElementAt<IterativeRobot>(player).feed())
-                    feed.Play();
-
-            if (fire.ElementAt<ControlButton>(player).update(driverInputs.ElementAt<ControllerInput>(player).getRightBumper()) && robots.ElementAt<IterativeRobot>(player).fire())
+            if (!robots.ElementAt<IterativeRobot>(player).getState().equals(Robot.PreAUTONOMOUS))
             {
-                launch.Play();
-                frisbees.Add(new Frisbee(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getDirection() + (rand.NextDouble()-.5)/5, robots.ElementAt<IterativeRobot>(player).getRed()));
-            }
-            if (driverInputs.ElementAt<ControllerInput>(player).getBack())
-                robots.ElementAt<IterativeRobot>(player).reset();
+                if (field.feeding(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getRed()))
+                    if (robots.ElementAt<IterativeRobot>(player).feed())
+                        feed.Play();
+
+                if (fire.ElementAt<ControlButton>(player).update(driverInputs.ElementAt<ControllerInput>(player).getRightBumper()) && robots.ElementAt<IterativeRobot>(player).fire())
+                {
+                    launch.Play();
+                    frisbees.Add(new Frisbee(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getDirection() + (rand.NextDouble() - .5) / 5, robots.ElementAt<IterativeRobot>(player).getRed()));
+                }
+            }//PreAutonmous disable feeding and shooting
+
+            //if (driverInputs.ElementAt<ControllerInput>(player).getBack())
+            //    robots.ElementAt<IterativeRobot>(player).reset();
 
             if (driverInputs.ElementAt<ControllerInput>(player).getDownDPad())
-                this.Exit();
+                gameState = 0;
         }
         private double deadband(double a)
         {

@@ -33,6 +33,7 @@ namespace FRC_Virtual_Robotics
         public static RobotState DISABLED = new RobotState(0);
         public static RobotState AUTONOMOUS = new RobotState(1);
         public static RobotState TELEOP = new RobotState(2);
+        public static RobotState PreAUTONOMOUS = new RobotState(3);
 
 
         public Robot()
