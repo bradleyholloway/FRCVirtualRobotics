@@ -170,7 +170,7 @@ namespace FRC_Virtual_Robotics
             menuItems.Add(new MenuItem("Information", new Vector2(200,300), Color.White));
             menuItems.Add(new MenuItem("Exit", new Vector2(200,400), Color.Blue));
             menuText.Add(new MenuItem("Ultimate - Accent!", new Vector2(250,30), Color.White));
-            menuText.Add(new MenuItem("By: Texas Torque, Team 1477", new Vector2(70,80),Color.White));
+            menuText.Add(new MenuItem("By: Texas Torque, Team 1477", new Vector2(120,80),Color.White));
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
