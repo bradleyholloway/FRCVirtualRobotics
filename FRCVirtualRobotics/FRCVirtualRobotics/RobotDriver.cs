@@ -170,24 +170,28 @@ namespace FRC_Virtual_Robotics
             menuItems.Add(new MenuItem("Information", new Vector2(200,300), Color.White));
             menuItems.Add(new MenuItem("Exit", new Vector2(200,400), Color.Blue));
             menuText.Add(new MenuItem("Ultimate - Accent!", new Vector2(250,30), Color.White));
+            menuText.Add(new MenuItem("By: Texas Torque, Team 1477", new Vector2(70,80),Color.White));
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             IterativeRobot.setImage(Content.Load<Texture2D>("robot"));
             Frisbee.setImage(Content.Load<Texture2D>("frisbee"));
-            launch = Content.Load<SoundEffect>("Piston");
-            score = Content.Load<SoundEffect>("Score");
-            feed = Content.Load<SoundEffect>("Feed");
-            endGame = Content.Load<SoundEffect>("Fractilite");
-            driving = Content.Load<SoundEffect>("Driving");
-            buzzer = Content.Load<SoundEffect>("Buzzer");
-            teleOp = Content.Load<SoundEffect>("TeleOp");
-            start = Content.Load<SoundEffect>("TrumpetStart");
-            titleScreen = Content.Load<SoundEffect>("CantHoldUs");
-            titleScreenInstance = titleScreen.CreateInstance();
-            endGameInstance = endGame.CreateInstance();
-            endGameInstance.IsLooped = false;
-            titleScreenInstance.IsLooped = true;
+            if (launch == null)
+            {
+                launch = Content.Load<SoundEffect>("Piston");
+                score = Content.Load<SoundEffect>("Score");
+                feed = Content.Load<SoundEffect>("Feed");
+                endGame = Content.Load<SoundEffect>("Fractilite");
+                driving = Content.Load<SoundEffect>("Driving");
+                buzzer = Content.Load<SoundEffect>("Buzzer");
+                teleOp = Content.Load<SoundEffect>("TeleOp");
+                start = Content.Load<SoundEffect>("TrumpetStart");
+                titleScreen = Content.Load<SoundEffect>("CantHoldUs");
+                titleScreenInstance = titleScreen.CreateInstance();
+                endGameInstance = endGame.CreateInstance();
+                endGameInstance.IsLooped = false;
+                titleScreenInstance.IsLooped = true;
+            }
             endGameFirstCycle = true;
             field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "topGoalRed"));
             field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "midGoalRed"));
@@ -353,7 +357,7 @@ namespace FRC_Virtual_Robotics
             else if (gameState == 0)
             {
                 Menu();
-                if (titleScreenInstance.State.Equals(SoundState.Stopped))
+                if (!titleScreenInstance.State.Equals(SoundState.Playing))
                     titleScreenInstance.Play();
                 startGameTime = gameTime.TotalGameTime;
             }
@@ -478,7 +482,7 @@ namespace FRC_Virtual_Robotics
                     if (robots.ElementAt<IterativeRobot>(player).feed())
                         feed.Play();
 
-                if (fire.ElementAt<ControlButton>(player).update(driverInputs.ElementAt<ControllerInput>(player).getRightBumper()) && robots.ElementAt<IterativeRobot>(player).fire())
+                if (fire.ElementAt<ControlButton>(player).update((driverInputs.ElementAt<ControllerInput>(player).getRightBumper()||driverInputs.ElementAt<ControllerInput>(player).getRightTrigger()>.6)) && robots.ElementAt<IterativeRobot>(player).fire())
                 {
                     launch.Play();
                     frisbees.Add(new Frisbee(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getDirection() + (rand.NextDouble() - .5) / 5, robots.ElementAt<IterativeRobot>(player).getRed()));
