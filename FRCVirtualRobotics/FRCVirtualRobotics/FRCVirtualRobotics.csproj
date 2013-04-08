@@ -90,6 +90,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutonomousManager.cs" />
     <Compile Include="Field.cs" />
     <Compile Include="Frisbee.cs" />
     <Compile Include="IterativeRobot.cs" />

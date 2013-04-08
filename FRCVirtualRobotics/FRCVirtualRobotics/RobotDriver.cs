@@ -32,7 +32,7 @@ namespace FRC_Virtual_Robotics
         RobotState robotStates;
 
         Field field;
-        List<IterativeRobot> robots;
+        public static List<IterativeRobot> robots;
         List<Frisbee> frisbees;
         List<ControllerInput> driverInputs;
         List<ControlButton> fire;
@@ -503,6 +503,11 @@ namespace FRC_Virtual_Robotics
                 return -1;
             else
                 return a;
+        }
+
+        public static List<IterativeRobot> getRobots()
+        {
+            return robots;
         }
 
     }
