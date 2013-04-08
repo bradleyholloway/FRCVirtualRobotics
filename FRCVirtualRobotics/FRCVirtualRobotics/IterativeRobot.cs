@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using BradleyXboxUtils;
 using Microsoft.Xna.Framework.Audio;
+using FRCVirtualRobotics;
 
 namespace FRC_Virtual_Robotics
 {
@@ -69,9 +70,12 @@ namespace FRC_Virtual_Robotics
         private Rectangle rect;
         private float scale;
         private SoundEffectInstance drive;
+        private List<Frisbee> frisbees;
+        private Random rand;
         
-        public IterativeRobot(int maxSpeed, GraphicsDevice window, Boolean r, float sc, SoundEffectInstance driving)
+        public IterativeRobot(int maxSpeed, GraphicsDevice window, Boolean r, float sc, SoundEffectInstance driving, List<Frisbee> fbs)
         {
+            rand = new Random();
             leftMotorPID = new PID(.2, 0, 0, .15);
             rightMotorPID = new PID(.2, 0, 0, .15);
             leftMotorSpeed = 0;
@@ -88,6 +92,7 @@ namespace FRC_Virtual_Robotics
             drive = driving;
             drive.IsLooped = true;
             drive.Volume = .5f;
+            frisbees = fbs;
             reset();
             
         }
@@ -266,6 +271,7 @@ namespace FRC_Virtual_Robotics
             if (ammo > 0 && getState().Equals(Robot.DISABLED)==false)
             {
                 ammo--;
+                frisbees.Add(new Frisbee(getLocation(), getDirection() + (rand.NextDouble() - .5) / 5, getRed()));
                 return true;
             }
             return false;

@@ -46,9 +46,14 @@ namespace FRCVirtualRobotics
     {
         public Shoot()
         { }
-        public Boolean run(double gameTime)
+        public Boolean run(double gameTime, int playerIndex)
         {
-            return RobotDriver.getRobots().ElementAt<IterativeRobot>(index);
+            Boolean shot = RobotDriver.getRobots().ElementAt<IterativeRobot>(playerIndex).fire();
+            if (shot)
+            {
+
+            }
+            return shot;
         }
     }
     public class Wait : AutoCommands

@@ -73,6 +73,7 @@ namespace FRC_Virtual_Robotics
             gameState = 0;
             menuSelection = 0;
             rand = new Random();
+
         }
 
         /// <summary>
@@ -97,11 +98,13 @@ namespace FRC_Virtual_Robotics
             driving = Content.Load<SoundEffect>("Driving");
             field = new Field(GraphicsDevice);
             players = new List<int>();
+            frisbees = new List<Frisbee>();
+
             // TODO: use this.Content to load your game content here
             robots = new List<IterativeRobot>();
             if (GamePad.GetState(PlayerIndex.One).IsConnected)
             {
-                robots.Add(new IterativeRobot(6, GraphicsDevice, true, .3f, driving.CreateInstance()));
+                robots.Add(new IterativeRobot(6, GraphicsDevice, true, .3f, driving.CreateInstance(), frisbees));
                 players.Add(0);
             }
             else
@@ -109,7 +112,7 @@ namespace FRC_Virtual_Robotics
 
             if (GamePad.GetState(PlayerIndex.Two).IsConnected)
             {
-                robots.Add(new IterativeRobot(6, GraphicsDevice, false, .3f, driving.CreateInstance()));
+                robots.Add(new IterativeRobot(6, GraphicsDevice, false, .3f, driving.CreateInstance(), frisbees));
                 players.Add(1);
             }
             else
@@ -117,7 +120,7 @@ namespace FRC_Virtual_Robotics
 
             if (GamePad.GetState(PlayerIndex.Three).IsConnected)
             {
-                robots.Add(new IterativeRobot(6, GraphicsDevice, true, .3f, driving.CreateInstance()));
+                robots.Add(new IterativeRobot(6, GraphicsDevice, true, .3f, driving.CreateInstance(), frisbees));
                 players.Add(2);
             }
             else
@@ -125,7 +128,7 @@ namespace FRC_Virtual_Robotics
 
             if (GamePad.GetState(PlayerIndex.Four).IsConnected)
             {
-                robots.Add(new IterativeRobot(6, GraphicsDevice, false, .3f, driving.CreateInstance()));
+                robots.Add(new IterativeRobot(6, GraphicsDevice, false, .3f, driving.CreateInstance(), frisbees));
                 players.Add(3);
             }
             else
@@ -136,8 +139,6 @@ namespace FRC_Virtual_Robotics
             driverInputs.Add(new ControllerInput(PlayerIndex.Two));
             driverInputs.Add(new ControllerInput(PlayerIndex.Three));
             driverInputs.Add(new ControllerInput(PlayerIndex.Four));
-
-            frisbees = new List<Frisbee>();
 
             Frisbee.SPEED = 10;
             Frisbee.setFrisbees(frisbees);
@@ -485,7 +486,7 @@ namespace FRC_Virtual_Robotics
                 if (fire.ElementAt<ControlButton>(player).update((driverInputs.ElementAt<ControllerInput>(player).getRightBumper()||driverInputs.ElementAt<ControllerInput>(player).getRightTrigger()>.6)) && robots.ElementAt<IterativeRobot>(player).fire())
                 {
                     launch.Play();
-                    frisbees.Add(new Frisbee(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getDirection() + (rand.NextDouble() - .5) / 5, robots.ElementAt<IterativeRobot>(player).getRed()));
+                    //frisbees.Add(new Frisbee(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getDirection() + (rand.NextDouble() - .5) / 5, robots.ElementAt<IterativeRobot>(player).getRed()));
                 }
             }//PreAutonmous disable feeding and shooting
 
