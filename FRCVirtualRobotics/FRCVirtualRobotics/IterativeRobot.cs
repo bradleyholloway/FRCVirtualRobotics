@@ -58,6 +58,7 @@ namespace FRC_Virtual_Robotics
         private double rightMotorSpeed;
         private double directionForward;
         private double magnitude;
+        private int feedDelay;
         private Boolean red;
         private int scalar;
         private static Texture2D image;
@@ -90,6 +91,7 @@ namespace FRC_Virtual_Robotics
             windowX = window.Viewport.Width;
             windowY = window.Viewport.Height;
             red = r;
+            feedDelay = 0;
             ammo = 3;
             scale = sc;
             drive = driving;
@@ -286,9 +288,14 @@ namespace FRC_Virtual_Robotics
         }
         public Boolean feed()
         {
-            if (ammo < 4)
+            if (feedDelay > 0)
+            {
+                feedDelay--;
+            }
+            if (ammo < 4 && feedDelay == 0)
             {
                 ammo++;
+                feedDelay = 18;
                 return true;
             }
             return false;

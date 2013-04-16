@@ -482,8 +482,10 @@ namespace FRC_Virtual_Robotics
             {
                 if (field.feeding(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getRed()))
                     if (robots.ElementAt<IterativeRobot>(player).feed())
+                    {
+                        field.feed(robots.ElementAt<IterativeRobot>(player).getRed());
                         feed.Play();
-
+                    }
                 if (fire.ElementAt<ControlButton>(player).update((driverInputs.ElementAt<ControllerInput>(player).getRightBumper()||driverInputs.ElementAt<ControllerInput>(player).getRightTrigger()>.6)) && robots.ElementAt<IterativeRobot>(player).fire())
                 {
                     launch.Play();

@@ -19,12 +19,21 @@ namespace FRCVirtualRobotics
         static int rightX;
         public static int X;
         public static int Y;
+        private int redWhiteFrisbees;
+        private int redRedFrisbees;
+        private int blueWhiteFrisbees;
+        private int blueBlueFrisbees;
         List<FieldObjects> objects;
    
         public Field(GraphicsDevice window)
         {
             X = window.Viewport.Width;
             Y = window.Viewport.Height;
+
+            redRedFrisbees = 5;
+            blueBlueFrisbees = 5;
+            redWhiteFrisbees = 45;
+            blueWhiteFrisbees = 45;
 
             objects = new List<FieldObjects>();
 
@@ -96,14 +105,36 @@ namespace FRCVirtualRobotics
         {//red feeds left, and blue feeds right
             if (red)
             {//95 left tollerance
-                if(location.X < 95 && (location.Y < 70 || location.Y > Y-70))
-                    return true;
+                if (location.X < 95 && (location.Y < 70 || location.Y > Y - 70))
+                {
+                    if (redWhiteFrisbees > 0)
+                    {
+                        return true;
+                    }
+                }
             }
             else
             {//115 right tollerance
-                if(location.X > X - 95 && (location.Y < 70 || location.Y > Y-70))
-                    return true;
+                if (location.X > X - 95 && (location.Y < 70 || location.Y > Y - 70))
+                {
+                    if (blueWhiteFrisbees > 0)
+                    {
+                        return true;
+                    }
+                }
             }
+            return false;
+        }
+        public void feed(Boolean red)
+        {
+            if (red)
+                redWhiteFrisbees--;
+            else
+                blueWhiteFrisbees--;
+        }
+
+        public static Boolean didCollideWithPyramid(Vector2 location)
+        {
             return false;
         }
 

@@ -30,11 +30,11 @@ namespace FRCVirtualRobotics
         }
         public void load(double time)
         {
-            commandList.Add(new Wait(2, time));
+            commandList.Add(new Wait(2));
             commandList.Add(new Shoot());
-            commandList.Add(new Wait(2, time));
+            commandList.Add(new Wait(2));
             commandList.Add(new Shoot());
-            commandList.Add(new Wait(2, time));
+            commandList.Add(new Wait(2));
             commandList.Add(new Shoot());
         }
         public IterativeRobot getRobot()
@@ -68,12 +68,19 @@ namespace FRCVirtualRobotics
     {
         private double time;
         private double timeStart;
-        public Wait(double seconds, double gameTimeStart)
+        private bool firstCycle;
+        public Wait(double seconds)
         {
-            time = seconds; gameTimeStart = timeStart;
+            time = seconds;
+            firstCycle = true;
         }
         public override Boolean run(double gameTime, IterativeRobot robot)
         {
+            if (firstCycle)
+            {
+                timeStart = gameTime;
+                firstCycle = false;
+            }
             return gameTime-timeStart > time;
         }
     }
