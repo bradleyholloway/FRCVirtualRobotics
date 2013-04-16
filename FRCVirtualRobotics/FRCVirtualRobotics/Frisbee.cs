@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FRCVirtualRobotics
 {
-    class Frisbee
+    public class Frisbee
     {
         private Vector2 location;
         private double direction;

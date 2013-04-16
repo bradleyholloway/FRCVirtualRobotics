@@ -32,7 +32,7 @@ namespace FRC_Virtual_Robotics
         RobotState robotStates;
 
         Field field;
-        public static List<IterativeRobot> robots;
+        private static List<IterativeRobot> robots;
         List<Frisbee> frisbees;
         List<ControllerInput> driverInputs;
         List<ControlButton> fire;
@@ -285,7 +285,8 @@ namespace FRC_Virtual_Robotics
                         processInput(player);
                     else if(robots.ElementAt<IterativeRobot>(player).getState().equals(Robot.AUTONOMOUS))
                     {
-                        if (inGameTime > 3 && autoState < players.Count)
+                        robots.ElementAt<IterativeRobot>(player).runAuto(inGameTime);
+                        /*if (inGameTime > 3 && autoState < players.Count)
                         {
                             if (robots.ElementAt<IterativeRobot>(player).fire())
                             {
@@ -311,7 +312,7 @@ namespace FRC_Virtual_Robotics
                                 frisbees.Add(new Frisbee(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getDirection() + (rand.NextDouble() - .5) / 5, robots.ElementAt<IterativeRobot>(player).getRed()));
                                 autoState++;
                             }
-                        }
+                        }*/
                     }
                 }
 
@@ -504,12 +505,7 @@ namespace FRC_Virtual_Robotics
                 return -1;
             else
                 return a;
-        }
-
-        public static List<IterativeRobot> getRobots()
-        {
-            return robots;
-        }
+        } 
 
     }
 }

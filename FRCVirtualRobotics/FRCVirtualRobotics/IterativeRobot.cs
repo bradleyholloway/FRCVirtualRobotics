@@ -27,7 +27,7 @@ namespace FRC_Virtual_Robotics
             return s.getState() == this.getState();
         }
     }//RobotState protection class
-    class Robot
+    public class Robot
     {
         private RobotState state;
 
@@ -52,7 +52,7 @@ namespace FRC_Virtual_Robotics
             return state;
         }
     }
-    class IterativeRobot : Robot
+    public class IterativeRobot : Robot
     {
         private double leftMotorSpeed;
         private double rightMotorSpeed;
@@ -72,10 +72,13 @@ namespace FRC_Virtual_Robotics
         private SoundEffectInstance drive;
         private List<Frisbee> frisbees;
         private Random rand;
+        private AutonomousManager auto;
         
         public IterativeRobot(int maxSpeed, GraphicsDevice window, Boolean r, float sc, SoundEffectInstance driving, List<Frisbee> fbs)
         {
             rand = new Random();
+            auto = new AutonomousManager(this);
+            auto.load(3);
             leftMotorPID = new PID(.2, 0, 0, .15);
             rightMotorPID = new PID(.2, 0, 0, .15);
             leftMotorSpeed = 0;
@@ -100,6 +103,11 @@ namespace FRC_Virtual_Robotics
         {
             return rect;
         }
+        public void runAuto(double gameTime)
+        {
+            auto.run(gameTime);
+        }
+
         public float getScale()
         {
             return scale;

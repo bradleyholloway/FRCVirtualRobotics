@@ -10,17 +10,20 @@ namespace FRCVirtualRobotics
     {
         private List<AutoCommands> commandList;
         private int index;
-        public AutonomousManager()
+        private IterativeRobot robot;
+
+        public AutonomousManager(IterativeRobot thisRobot)
         {
             commandList = new List<AutoCommands>();
             index = 0;
+            robot = thisRobot;
         }
-        public void run()
+        public void run(double gameTime)
         {
             if (index < commandList.Count)
             {
 
-                if (commandList.ElementAt<AutoCommands>(index).run())
+                if (commandList.ElementAt<AutoCommands>(index).run(gameTime, robot))
                     index++;
 
             }
@@ -34,21 +37,26 @@ namespace FRCVirtualRobotics
             commandList.Add(new Wait(2, time));
             commandList.Add(new Shoot());
         }
+        public IterativeRobot getRobot()
+        {
+            return robot;
+        }
 
 
     }
 
-    abstract class AutoCommands
+    public abstract class AutoCommands
     {
-        public abstract Boolean run(double gameTime);
+        public abstract Boolean run(double gameTime, IterativeRobot robot);
     }
     public class Shoot : AutoCommands
     {
         public Shoot()
         { }
-        public Boolean run(double gameTime, int playerIndex)
+        
+        public override Boolean run(double gameTime, IterativeRobot robot)
         {
-            Boolean shot = RobotDriver.getRobots().ElementAt<IterativeRobot>(playerIndex).fire();
+            Boolean shot = robot.fire();
             if (shot)
             {
 
@@ -64,7 +72,7 @@ namespace FRCVirtualRobotics
         {
             time = seconds; gameTimeStart = timeStart;
         }
-        public Boolean run(double gameTime)
+        public override Boolean run(double gameTime, IterativeRobot robot)
         {
             return gameTime-timeStart > time;
         }
