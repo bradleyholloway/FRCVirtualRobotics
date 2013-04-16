@@ -380,6 +380,10 @@ namespace BradleyXboxUtils
             else
                 return input;
         }
+        public static double distance(Vector2 point1, Vector2 point2)
+        {
+            return Math.Sqrt((point1.X - point2.X) * (point1.X - point2.X) + (point1.Y - point2.Y) * (point1.Y - point2.Y));
+        }
     }//static Util
 
 }

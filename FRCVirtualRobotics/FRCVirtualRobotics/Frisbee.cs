@@ -25,7 +25,7 @@ namespace FRCVirtualRobotics
         {
             location = new Vector2(loc.X, loc.Y);
             direction = dir;
-            countdown = 70;
+            countdown = 80;
             red = true;
             rotation = 0;
             origin = new Vector2(image.Width / 2, image.Height / 2);
@@ -34,11 +34,31 @@ namespace FRCVirtualRobotics
         {
             location = new Vector2(loc.X, loc.Y);
             direction = dir;
-            countdown = 70;
+            countdown = 80;
             red = r;
             rotation = 0;
             origin = new Vector2(image.Width / 2, image.Height / 2);
         }
+        public Boolean colidedWith(Frisbee frisbee2)
+        {
+            return BradleyXboxUtils.UTIL.distance(location, frisbee2.getLocation()) <= image.Width / 2 * .06;
+        }
+        public void checkCollision(Frisbee frisbee2)
+        {
+           if(!frisbee2.Equals(this))
+            if (colidedWith(frisbee2))
+            {
+                double dir1 = (this.direction + frisbee2.getDirection() ) /2;
+                double dir2 = (this.direction - dir1) / 3;
+                this.setDirection(dir1 + dir2);
+                frisbee2.setDirection(dir1 - dir2);
+            }
+        }
+        public void setDirection(double dir)
+        {
+            direction = dir;
+        }
+
 
         public int run()
         {

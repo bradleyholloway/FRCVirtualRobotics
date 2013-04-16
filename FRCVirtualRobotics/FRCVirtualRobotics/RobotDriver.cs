@@ -352,6 +352,8 @@ namespace FRC_Virtual_Robotics
                     }
                     else
                     {
+                        foreach (Frisbee f2 in frisbees)
+                            frisbees.ElementAt<Frisbee>(index).checkCollision(f2);
                         index += frisbees.ElementAt<Frisbee>(index).run();
                     }
                 }
