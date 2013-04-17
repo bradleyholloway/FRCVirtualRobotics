@@ -104,7 +104,7 @@ namespace FRC_Virtual_Robotics
             robots = new List<IterativeRobot>();
             if (GamePad.GetState(PlayerIndex.One).IsConnected)
             {
-                robots.Add(new IterativeRobot(6, GraphicsDevice, true, .3f, driving.CreateInstance(), frisbees));
+                robots.Add(new IterativeRobot(6, GraphicsDevice, true, .2f, driving.CreateInstance(), frisbees));
                 players.Add(0);
             }
             else
@@ -112,7 +112,7 @@ namespace FRC_Virtual_Robotics
 
             if (GamePad.GetState(PlayerIndex.Two).IsConnected)
             {
-                robots.Add(new IterativeRobot(6, GraphicsDevice, false, .3f, driving.CreateInstance(), frisbees));
+                robots.Add(new IterativeRobot(6, GraphicsDevice, false, .2f, driving.CreateInstance(), frisbees));
                 players.Add(1);
             }
             else
@@ -120,7 +120,7 @@ namespace FRC_Virtual_Robotics
 
             if (GamePad.GetState(PlayerIndex.Three).IsConnected)
             {
-                robots.Add(new IterativeRobot(6, GraphicsDevice, true, .3f, driving.CreateInstance(), frisbees));
+                robots.Add(new IterativeRobot(6, GraphicsDevice, true, .2f, driving.CreateInstance(), frisbees));
                 players.Add(2);
             }
             else
@@ -128,7 +128,7 @@ namespace FRC_Virtual_Robotics
 
             if (GamePad.GetState(PlayerIndex.Four).IsConnected)
             {
-                robots.Add(new IterativeRobot(6, GraphicsDevice, false, .3f, driving.CreateInstance(), frisbees));
+                robots.Add(new IterativeRobot(6, GraphicsDevice, false, .2f, driving.CreateInstance(), frisbees));
                 players.Add(3);
             }
             else
@@ -175,7 +175,7 @@ namespace FRC_Virtual_Robotics
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            IterativeRobot.setImage(Content.Load<Texture2D>("robot"));
+            IterativeRobot.setImage(Content.Load<Texture2D>("robot2"));
             Frisbee.setImage(Content.Load<Texture2D>("frisbee"));
             if (launch == null)
             {
@@ -361,6 +361,8 @@ namespace FRC_Virtual_Robotics
             else if (gameState == 0)
             {
                 Menu();
+                if(endGameInstance.State.Equals(SoundState.Playing))
+                    endGameInstance.Stop();
                 if (!titleScreenInstance.State.Equals(SoundState.Playing))
                     titleScreenInstance.Play();
                 startGameTime = gameTime.TotalGameTime;
@@ -383,8 +385,11 @@ namespace FRC_Virtual_Robotics
                     scoreText.Add(new MenuItem("Total: " + (redClimbScore+redFrisbeeScore+redAutoScore), new Vector2(60, 350), Color.Red));
                     scoreText.Add(new MenuItem("Total: " + (blueClimbScore+blueFrisbeeScore+blueAutoScore), new Vector2(370, 350), Color.Blue));
                 }
-                if (endGameInstance.State.Equals(SoundState.Stopped))
+                if (endGameInstance.State.Equals(SoundState.Stopped) || driverInputs.ElementAt<ControllerInput>(0).getBottomActionButton())
+                {
+                    fire.ElementAt<ControlButton>(0).update(true);
                     gameState = 0;
+                }
             }
             base.Update(gameTime);
         }
