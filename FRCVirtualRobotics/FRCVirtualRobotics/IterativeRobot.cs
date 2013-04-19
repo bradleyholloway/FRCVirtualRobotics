@@ -134,38 +134,50 @@ namespace FRC_Virtual_Robotics
             if (!((location + magD(magnitude, directionForward)).X < 75 || (location + magD(magnitude, directionForward)).X > windowX - 75) &&
                 !((location + magD(magnitude, directionForward)).Y < 50 || (location + magD(magnitude, directionForward)).Y > windowY - 50))
             {
-                Boolean collisionFree = true;
-                IterativeRobot collidedWith = null;
-                foreach (IterativeRobot rob in robots)
+                Boolean pyramidCollided = Field.didCollideWithPyramid(rect);
+                if (!pyramidCollided)
                 {
-                    if(rob != null)
-                        if(!rob.Equals(this))
-                            if (intersects(rob))
-                            {
-                                collisionFree = false;
-                                rect = new Rectangle((int)location.X, (int)location.Y, (int)(image.Width * scale), (int)(image.Height * scale));
-                                collidedWith = rob;
-                            }
-                }
-                
-                if (collisionFree)
-                {
-                    if(drive.State.Equals(SoundState.Stopped))
-                        drive.Play();
-                    location += magD(magnitude, directionForward);
+                    Boolean collisionFree = true;
+                    IterativeRobot collidedWith = null;
+                    foreach (IterativeRobot rob in robots)
+                    {
+                        if (rob != null)
+                            if (!rob.Equals(this))
+                                if (intersects(rob))
+                                {
+                                    collisionFree = false;
+                                    rect = new Rectangle((int)location.X, (int)location.Y, (int)(image.Width * scale), (int)(image.Height * scale));
+                                    collidedWith = rob;
+                                }
+                    }
+
+                    if (collisionFree)
+                    {
+                        if (drive.State.Equals(SoundState.Stopped))
+                            drive.Play();
+                        location += magD(magnitude, directionForward);
+                    }
+                    else
+                    {
+                        drive.Stop();
+                        Vector2 result = magD(magnitude, directionForward) + magD(collidedWith.magnitude, collidedWith.directionForward);
+                        result /= 3;
+                        if (collidedWith.push(result, robots))
+                            this.push(result, robots);
+                    }
                 }
                 else
                 {
                     drive.Stop();
-                    Vector2 result = magD(magnitude, directionForward) + magD(collidedWith.magnitude, collidedWith.directionForward);
-                    result /= 3;
-                    if (collidedWith.push(result, robots))
-                        this.push(result, robots);
-                }
+                    rightMotorSpeed = 0;
+                    leftMotorSpeed = 0;
+                }//pyramid Collided
             }
             else
             {
                 drive.Stop();
+                rightMotorSpeed = 0;
+                leftMotorSpeed = 0;
             }
             if (Math.Abs(magnitude) < 0.2)
                 drive.Stop();

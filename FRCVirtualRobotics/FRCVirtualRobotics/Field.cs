@@ -24,7 +24,7 @@ namespace FRCVirtualRobotics
         private int blueWhiteFrisbees;
         private int blueBlueFrisbees;
         List<FieldObjects> objects;
-        List<Point> pyramidPoints;
+        static List<Point> pyramidPoints;
    
         public Field(GraphicsDevice window)
         {
@@ -143,7 +143,7 @@ namespace FRCVirtualRobotics
                 blueWhiteFrisbees--;
         }
 
-        public Boolean didCollideWithPyramid(Rectangle robot)
+        public static Boolean didCollideWithPyramid(Rectangle robot)
         {
             Boolean collided = false;
             foreach (Point pyramidPoint in pyramidPoints)
