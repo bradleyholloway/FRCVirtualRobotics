@@ -466,7 +466,7 @@ namespace FRC_Virtual_Robotics
                     spriteBatch.DrawString(spriteFont, menuItem.text(), menuItem.location(), menuItem.color());
                 foreach (MenuItem menuItem in menuText)
                     spriteBatch.DrawString(spriteFont, menuItem.text(), menuItem.location(), menuItem.color());
-                spriteBatch.Draw(Frisbee.getImage(), menuItems.ElementAt<MenuItem>(menuSelection).location()- new Vector2( 100, 0), null, Color.White, menuSpin, Vector2.Zero, .1f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(Frisbee.getImage(), menuItems.ElementAt<MenuItem>(menuSelection).location()- new Vector2( 100, 0), null, Color.White, menuSpin, new Vector2(Frisbee.getImage().Width/2,Frisbee.getImage().Height/2), .1f, SpriteEffects.None, 0f);
             }
             else if (gameState == 2)
             {
