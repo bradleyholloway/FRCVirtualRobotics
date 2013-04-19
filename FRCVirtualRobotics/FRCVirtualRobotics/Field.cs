@@ -24,6 +24,7 @@ namespace FRCVirtualRobotics
         private int blueWhiteFrisbees;
         private int blueBlueFrisbees;
         List<FieldObjects> objects;
+        List<Point> pyramidPoints;
    
         public Field(GraphicsDevice window)
         {
@@ -51,8 +52,17 @@ namespace FRCVirtualRobotics
             rightX = X-20;
 
             //Pyramid
-
-
+            pyramidPoints = new List<Point>();
+            //Red Pyramid
+            pyramidPoints.Add(new Point((int)(X * .2), (int)(Y * .4)));
+            pyramidPoints.Add(new Point((int)(X * .2), (int)(Y * .6)));
+            pyramidPoints.Add(new Point((int)(X * .4), (int)(Y * .4)));
+            pyramidPoints.Add(new Point((int)(X * .4), (int)(Y * .6)));
+            //Blue Pyramid
+            pyramidPoints.Add(new Point((int)(X * .2), (int)(Y * .4)));
+            pyramidPoints.Add(new Point((int)(X * .2), (int)(Y * .6)));
+            pyramidPoints.Add(new Point((int)(X * .4), (int)(Y * .4)));
+            pyramidPoints.Add(new Point((int)(X * .4), (int)(Y * .6)));
 
         }
         public static List<int> getGoals()
@@ -133,9 +143,15 @@ namespace FRCVirtualRobotics
                 blueWhiteFrisbees--;
         }
 
-        public static Boolean didCollideWithPyramid(Vector2 location)
+        public Boolean didCollideWithPyramid(Rectangle robot)
         {
-            return false;
+            Boolean collided = false;
+            foreach (Point pyramidPoint in pyramidPoints)
+            {
+                if (robot.Contains(pyramidPoint))
+                    collided = true;
+            }
+            return collided;
         }
 
     }
@@ -216,6 +232,20 @@ namespace FRCVirtualRobotics
                 rot = (float) Math.PI / 4;
                 loc = new Vector2(0, Field.Y);
                 color = Color.Red;
+            }
+            else if (name.Equals("bluePyramid"))
+            {
+                rot = 0f;
+                loc = new Vector2((float)(Field.X * .2), (float)(Field.Y * .4));
+                color = Color.Blue;
+                scale = (float) (Field.Y * .2) / image.Height;
+            }
+            else if (name.Equals("redPyramid"))
+            {
+                rot = 0f;
+                loc = new Vector2((float)(Field.X * .6), (float)(Field.Y * .4));
+                color = Color.Red;
+                scale = (float)(Field.Y * .2) / image.Height;
             }
             construct(pic, loc, scale, rot);
         }

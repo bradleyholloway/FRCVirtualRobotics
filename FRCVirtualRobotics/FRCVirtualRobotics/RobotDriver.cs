@@ -204,6 +204,8 @@ namespace FRC_Virtual_Robotics
             field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "redFeedBot"));
             field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "blueFeedBot"));
             field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "blueFeedTop"));
+            field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("pyramid"), "bluePyramid"));
+            field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("pyramid"), "redPyramid"));
             spriteFont = Content.Load<SpriteFont>("TimesNewRoman");
 
             redFrisbeeScore = blueFrisbeeScore = 0;
