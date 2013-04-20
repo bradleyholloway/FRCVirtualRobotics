@@ -55,14 +55,14 @@ namespace FRCVirtualRobotics
             pyramidPoints = new List<Point>();
             //Red Pyramid
             pyramidPoints.Add(new Point((int)(X * .2), (int)(Y * .4)));
-            pyramidPoints.Add(new Point((int)(X * .2), (int)(Y * .6)));
+            pyramidPoints.Add(new Point((int)(X * .2), (int)(Y * .7)));
             pyramidPoints.Add(new Point((int)(X * .4), (int)(Y * .4)));
-            pyramidPoints.Add(new Point((int)(X * .4), (int)(Y * .6)));
+            pyramidPoints.Add(new Point((int)(X * .4), (int)(Y * .7)));
             //Blue Pyramid
-            pyramidPoints.Add(new Point((int)(X * .2), (int)(Y * .4)));
-            pyramidPoints.Add(new Point((int)(X * .2), (int)(Y * .6)));
-            pyramidPoints.Add(new Point((int)(X * .4), (int)(Y * .4)));
-            pyramidPoints.Add(new Point((int)(X * .4), (int)(Y * .6)));
+            pyramidPoints.Add(new Point((int)(X * .6), (int)(Y * .4)));
+            pyramidPoints.Add(new Point((int)(X * .6), (int)(Y * .7)));
+            pyramidPoints.Add(new Point((int)(X * .8), (int)(Y * .4)));
+            pyramidPoints.Add(new Point((int)(X * .8), (int)(Y * .7)));
 
         }
         public static List<int> getGoals()
@@ -163,12 +163,14 @@ namespace FRCVirtualRobotics
         float scaleFactor;
         float rotation;
         Color color;
+        Boolean setOrigin;
         public FieldObjects(Texture2D pic, String name)
         {
             List<int> field = Field.getGoals();
             Vector2 loc = Vector2.Zero;
             float scale = 1;
             float rot = 0;
+            setOrigin = false;
             color = Color.White;
             if (name.Equals("topGoalRed"))
             {
@@ -238,14 +240,18 @@ namespace FRCVirtualRobotics
                 rot = 0f;
                 loc = new Vector2((float)(Field.X * .2), (float)(Field.Y * .4));
                 color = Color.Blue;
-                scale = (float) (Field.Y * .2) / image.Height;
+                scale = (float) (Field.Y * .3) / pic.Height;
+                origin = Vector2.Zero;
+                setOrigin = true;
             }
             else if (name.Equals("redPyramid"))
             {
                 rot = 0f;
                 loc = new Vector2((float)(Field.X * .6), (float)(Field.Y * .4));
                 color = Color.Red;
-                scale = (float)(Field.Y * .2) / image.Height;
+                scale = (float)(Field.Y * .3) / pic.Height;
+                origin = Vector2.Zero;
+                setOrigin = true;
             }
             construct(pic, loc, scale, rot);
         }
@@ -277,7 +283,8 @@ namespace FRCVirtualRobotics
             location = loc;
             scaleFactor = scale;
             rotation = rot;
-            origin = new Vector2(pic.Width / 2, pic.Height / 2);
+            if(!setOrigin)
+                origin = new Vector2(pic.Width / 2, pic.Height / 2);
             if (color == null)
                 color = Color.White;
         }
