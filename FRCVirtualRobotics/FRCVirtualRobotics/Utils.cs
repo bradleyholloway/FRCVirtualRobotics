@@ -384,6 +384,10 @@ namespace BradleyXboxUtils
         {
             return Math.Sqrt((point1.X - point2.X) * (point1.X - point2.X) + (point1.Y - point2.Y) * (point1.Y - point2.Y));
         }
+        public static Vector2 magD(double mag, double d)
+        {
+            return new Vector2((float)(mag * Math.Cos(d)), (float)(mag * Math.Sin(d)));
+        }
     }//static Util
 
 }

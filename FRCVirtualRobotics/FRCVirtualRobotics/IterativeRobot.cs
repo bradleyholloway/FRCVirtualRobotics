@@ -68,7 +68,8 @@ namespace FRC_Virtual_Robotics
         private int windowY;
         private PID leftMotorPID;
         private PID rightMotorPID;
-        private Rectangle rect;
+        //private Rectangle rect;
+        private RotatedRectangle rect2;
         private float scale;
         private SoundEffectInstance drive;
         private List<Frisbee> frisbees;
@@ -101,13 +102,14 @@ namespace FRC_Virtual_Robotics
             reset();
             
         }
+
         public void stopMoving()
         {
             drive.Stop();
         }
-        public Rectangle getRectangle()
+        public RotatedRectangle getRectangle()
         {
-            return rect;
+            return rect2;
         }
         public void runAuto(double gameTime)
         {
@@ -120,7 +122,16 @@ namespace FRC_Virtual_Robotics
         }
         public Boolean intersects(IterativeRobot rob)
         {
-            return rect.Contains(rob.getRectangle()) || rect.Intersects(rob.getRectangle());
+            Boolean intersecting = false;
+            if (rect2.Contains(rob.getRectangle().p1))
+                intersecting = true;
+            if (rect2.Contains(rob.getRectangle().p2))
+                intersecting = true;
+            if (rect2.Contains(rob.getRectangle().p3))
+                intersecting = true;
+            if (rect2.Contains(rob.getRectangle().p4))
+                intersecting = true;
+            return intersecting;
         }
 
         public void run(List<IterativeRobot> robots)
@@ -133,12 +144,13 @@ namespace FRC_Virtual_Robotics
 
             Vector2 tempLocation = location + magD(magnitude, directionForward);
             
-            rect = new Rectangle((int) tempLocation.X, (int) tempLocation.Y, (int)(image.Width*scale), (int)(image.Height*scale));
+            //rect = new Rectangle((int) tempLocation.X, (int) tempLocation.Y, (int)(image.Width*scale), (int)(image.Height*scale));
+            rect2 = new RotatedRectangle(new Point((int)tempLocation.X, (int)tempLocation.Y), image.Width * scale, image.Height * scale, directionForward);
 
             if (!((location + magD(magnitude, directionForward)).X < 75 || (location + magD(magnitude, directionForward)).X > windowX - 75) &&
                 !((location + magD(magnitude, directionForward)).Y < 50 || (location + magD(magnitude, directionForward)).Y > windowY - 50))
             {
-                Boolean pyramidCollided = Field.didCollideWithPyramid(rect);
+                Boolean pyramidCollided = Field.didCollideWithPyramid(rect2);
                 if (!pyramidCollided)
                 {
                     Boolean collisionFree = true;
@@ -150,7 +162,8 @@ namespace FRC_Virtual_Robotics
                                 if (intersects(rob))
                                 {
                                     collisionFree = false;
-                                    rect = new Rectangle((int)location.X, (int)location.Y, (int)(image.Width * scale), (int)(image.Height * scale));
+                                    //rect = new Rectangle((int)location.X, (int)location.Y, (int)(image.Width * scale), (int)(image.Height * scale));
+                                    rect2 = new RotatedRectangle(new Point((int)location.X, (int)location.Y), image.Width * scale, image.Height * scale, directionForward);
                                     collidedWith = rob;
                                 }
                     }
@@ -202,7 +215,8 @@ namespace FRC_Virtual_Robotics
                             if (intersects(rob))
                             {
                                 collisionFree = false;
-                                rect = new Rectangle((int)location.X, (int)location.Y, (int)(image.Width * scale), (int)(image.Height * scale));
+                                //rect = new Rectangle((int)location.X, (int)location.Y, (int)(image.Width * scale), (int)(image.Height * scale));
+                                rect2 = new RotatedRectangle(new Point((int)location.X, (int)location.Y), image.Width * scale, image.Height * scale, directionForward);
                                 collidedWith = rob;
                             }
                 }

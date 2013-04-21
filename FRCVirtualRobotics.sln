@@ -3,21 +3,39 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FRCVirtualRobotics", "FRCVirtualRobotics\FRCVirtualRobotics\FRCVirtualRobotics.csproj", "{1E12EA86-EEBC-4FFD-B333-8382C2C90B7C}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "FRCVirtualRoboticsContent", "FRCVirtualRobotics\FRCVirtualRoboticsContent\FRCVirtualRoboticsContent.contentproj", "{6C6302F8-2DFF-4993-8966-7D117713F5CA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FRCVirtualRoboticsContent", "FRCVirtualRobotics\FRCVirtualRoboticsContent\FRCVirtualRoboticsContent.contentproj", "{6C6302F8-2DFF-4993-8966-7D117713F5CA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|x86 = Debug|x86
 		Debug|Xbox 360 = Debug|Xbox 360
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|x86 = Release|x86
 		Release|Xbox 360 = Release|Xbox 360
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1E12EA86-EEBC-4FFD-B333-8382C2C90B7C}.Debug|Mixed Platforms.ActiveCfg = Debug|Xbox 360
+		{1E12EA86-EEBC-4FFD-B333-8382C2C90B7C}.Debug|Mixed Platforms.Build.0 = Debug|Xbox 360
+		{1E12EA86-EEBC-4FFD-B333-8382C2C90B7C}.Debug|Mixed Platforms.Deploy.0 = Debug|Xbox 360
+		{1E12EA86-EEBC-4FFD-B333-8382C2C90B7C}.Debug|x86.ActiveCfg = Debug|Xbox 360
+		{1E12EA86-EEBC-4FFD-B333-8382C2C90B7C}.Debug|x86.Build.0 = Debug|Xbox 360
 		{1E12EA86-EEBC-4FFD-B333-8382C2C90B7C}.Debug|Xbox 360.ActiveCfg = Debug|Xbox 360
 		{1E12EA86-EEBC-4FFD-B333-8382C2C90B7C}.Debug|Xbox 360.Build.0 = Debug|Xbox 360
 		{1E12EA86-EEBC-4FFD-B333-8382C2C90B7C}.Debug|Xbox 360.Deploy.0 = Debug|Xbox 360
+		{1E12EA86-EEBC-4FFD-B333-8382C2C90B7C}.Release|Mixed Platforms.ActiveCfg = Release|Xbox 360
+		{1E12EA86-EEBC-4FFD-B333-8382C2C90B7C}.Release|Mixed Platforms.Build.0 = Release|Xbox 360
+		{1E12EA86-EEBC-4FFD-B333-8382C2C90B7C}.Release|Mixed Platforms.Deploy.0 = Release|Xbox 360
+		{1E12EA86-EEBC-4FFD-B333-8382C2C90B7C}.Release|x86.ActiveCfg = Release|Xbox 360
+		{1E12EA86-EEBC-4FFD-B333-8382C2C90B7C}.Release|x86.Build.0 = Release|Xbox 360
 		{1E12EA86-EEBC-4FFD-B333-8382C2C90B7C}.Release|Xbox 360.ActiveCfg = Release|Xbox 360
 		{1E12EA86-EEBC-4FFD-B333-8382C2C90B7C}.Release|Xbox 360.Build.0 = Release|Xbox 360
 		{1E12EA86-EEBC-4FFD-B333-8382C2C90B7C}.Release|Xbox 360.Deploy.0 = Release|Xbox 360
+		{6C6302F8-2DFF-4993-8966-7D117713F5CA}.Debug|Mixed Platforms.ActiveCfg = Debug|Xbox 360
+		{6C6302F8-2DFF-4993-8966-7D117713F5CA}.Debug|x86.ActiveCfg = Debug|Xbox 360
 		{6C6302F8-2DFF-4993-8966-7D117713F5CA}.Debug|Xbox 360.ActiveCfg = Debug|Xbox 360
+		{6C6302F8-2DFF-4993-8966-7D117713F5CA}.Release|Mixed Platforms.ActiveCfg = Release|Xbox 360
+		{6C6302F8-2DFF-4993-8966-7D117713F5CA}.Release|x86.ActiveCfg = Release|Xbox 360
 		{6C6302F8-2DFF-4993-8966-7D117713F5CA}.Release|Xbox 360.ActiveCfg = Release|Xbox 360
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
