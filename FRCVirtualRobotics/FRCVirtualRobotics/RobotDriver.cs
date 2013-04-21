@@ -24,6 +24,8 @@ namespace FRC_Virtual_Robotics
         List<MenuItem> menuItems;
         List<MenuItem> menuText;
         List<MenuItem> scoreText;
+        List<MenuItem> infoText;
+        ControlButton playerOneA;
         float menuSpin;
         int menuSelection;
         TimeSpan startGameTime;
@@ -167,11 +169,14 @@ namespace FRC_Virtual_Robotics
             menuItems = new List<MenuItem>();
             menuText = new List<MenuItem>();
             scoreText = new List<MenuItem>();
+            infoText = new List<MenuItem>();
             menuItems.Add(new MenuItem("Play Game", new Vector2(200,200), Color.Red));
             menuItems.Add(new MenuItem("Information", new Vector2(200,300), Color.White));
             menuItems.Add(new MenuItem("Exit", new Vector2(200,400), Color.Blue));
+            //menuItems.Add(new MenuItem("Test", new Vector2(200, 600), Color.White));
             menuText.Add(new MenuItem("Ultimate - Accent!", new Vector2(250,30), Color.White));
             menuText.Add(new MenuItem("By: Texas Torque, Team 1477", new Vector2(120,80),Color.White));
+            infoText.Add(new MenuItem("This is where the rules should go.", new Vector2(100, 30), Color.Red));
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -386,10 +391,26 @@ namespace FRC_Virtual_Robotics
                     scoreText.Add(new MenuItem("Disk: " + blueFrisbeeScore, new Vector2(370, 300), Color.Blue));
                     scoreText.Add(new MenuItem("Total: " + (redClimbScore+redFrisbeeScore+redAutoScore), new Vector2(60, 350), Color.Red));
                     scoreText.Add(new MenuItem("Total: " + (blueClimbScore+blueFrisbeeScore+blueAutoScore), new Vector2(370, 350), Color.Blue));
+                    foreach (int player in players)
+                        robots.ElementAt<IterativeRobot>(player).stopMoving();
                 }
                 if (endGameInstance.State.Equals(SoundState.Stopped) || driverInputs.ElementAt<ControllerInput>(0).getBottomActionButton())
                 {
                     fire.ElementAt<ControlButton>(0).update(true);
+                    gameState = 0;
+                }
+            }
+            else if (gameState == 9)
+            {
+                //titleScreenInstance.Stop();
+                playerOneA = new ControlButton(false);
+                gameState = 10;
+            }
+            else if (gameState == 10)
+            {
+                if (playerOneA.update(driverInputs.ElementAt<ControllerInput>(0).getBottomActionButton()))
+                {
+                    launch.Play();
                     gameState = 0;
                 }
             }
@@ -415,6 +436,7 @@ namespace FRC_Virtual_Robotics
 
             if (fire.ElementAt<ControlButton>(0).update(driverInputs.ElementAt<ControllerInput>(0).getRightBumper() || driverInputs.ElementAt<ControllerInput>(0).getBottomActionButton()))
             {
+                launch.Play();
                 if (menuSelection == 0)
                 {
                     LoadContent();
@@ -422,7 +444,7 @@ namespace FRC_Virtual_Robotics
                 }
                 else if (menuSelection == 1)
                 {
-                    //Display more information
+                    gameState = 9;
                 }
                 else if (menuSelection == 2)
                 {
@@ -473,6 +495,11 @@ namespace FRC_Virtual_Robotics
             else if (gameState == 2)
             {
                 foreach (MenuItem menuItem in scoreText)
+                    spriteBatch.DrawString(spriteFont, menuItem.text(), menuItem.location(), menuItem.color());
+            }
+            else if (gameState == 10)
+            {
+                foreach (MenuItem menuItem in infoText)
                     spriteBatch.DrawString(spriteFont, menuItem.text(), menuItem.location(), menuItem.color());
             }
 

@@ -54,15 +54,15 @@ namespace FRCVirtualRobotics
             //Pyramid
             pyramidPoints = new List<Point>();
             //Red Pyramid
-            pyramidPoints.Add(new Point((int)(X * .2), (int)(Y * .4)));
-            pyramidPoints.Add(new Point((int)(X * .2), (int)(Y * .7)));
-            pyramidPoints.Add(new Point((int)(X * .4), (int)(Y * .4)));
-            pyramidPoints.Add(new Point((int)(X * .4), (int)(Y * .7)));
+            pyramidPoints.Add(new Point((int)(X * .2) + 8, (int)(Y * .4) + 13));
+            pyramidPoints.Add(new Point((int)(X * .2) + 8, (int)(Y * .7) + 13));
+            pyramidPoints.Add(new Point((int)(X * .4) + 3, (int)(Y * .4) + 13));
+            pyramidPoints.Add(new Point((int)(X * .4) + 3, (int)(Y * .7) + 13));
             //Blue Pyramid
-            pyramidPoints.Add(new Point((int)(X * .6), (int)(Y * .4)));
-            pyramidPoints.Add(new Point((int)(X * .6), (int)(Y * .7)));
-            pyramidPoints.Add(new Point((int)(X * .8), (int)(Y * .4)));
-            pyramidPoints.Add(new Point((int)(X * .8), (int)(Y * .7)));
+            pyramidPoints.Add(new Point((int)(X * .6) + 3, (int)(Y * .4) + 13));
+            pyramidPoints.Add(new Point((int)(X * .6) + 3, (int)(Y * .7) + 13));
+            pyramidPoints.Add(new Point((int)(X * .8) + 3, (int)(Y * .4) + 13));
+            pyramidPoints.Add(new Point((int)(X * .8) + 3, (int)(Y * .7) + 13));
 
         }
         public static List<int> getGoals()

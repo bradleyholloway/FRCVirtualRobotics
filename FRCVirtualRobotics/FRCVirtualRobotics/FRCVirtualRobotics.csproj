@@ -17,7 +17,7 @@
     <XnaCrossPlatformGroupID>78829ab9-dfa3-44ad-95ce-99ba80c9e179</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
     <ApplicationIcon>Game.ico</ApplicationIcon>
-    <Thumbnail>GameThumbnail.png</Thumbnail>
+    <Thumbnail>robot2.png</Thumbnail>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Xbox 360' ">
     <DebugSymbols>true</DebugSymbols>
@@ -102,6 +102,7 @@
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
+    <Content Include="robot2.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FRCVirtualRoboticsContent\FRCVirtualRoboticsContent.contentproj">

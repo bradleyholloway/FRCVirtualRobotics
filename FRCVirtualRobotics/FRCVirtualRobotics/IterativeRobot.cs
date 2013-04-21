@@ -101,6 +101,10 @@ namespace FRC_Virtual_Robotics
             reset();
             
         }
+        public void stopMoving()
+        {
+            drive.Stop();
+        }
         public Rectangle getRectangle()
         {
             return rect;
