@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using BradleyXboxUtils;
 
 namespace FRCVirtualRobotics
 {
@@ -143,7 +144,7 @@ namespace FRCVirtualRobotics
                 blueWhiteFrisbees--;
         }
 
-        public static Boolean didCollideWithPyramid(Rectangle robot)
+        public static Boolean didCollideWithPyramid(RotatedRectangle robot)
         {
             Boolean collided = false;
             foreach (Point pyramidPoint in pyramidPoints)
