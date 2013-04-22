@@ -24,7 +24,7 @@ namespace FRCVirtualRobotics
         public Frisbee(Vector2 loc, double dir)
         {
             location = new Vector2(loc.X, loc.Y);
-            direction = dir;
+            direction = dir % (Math.PI * 2);
             countdown = 80;
             red = true;
             rotation = 0;
@@ -33,7 +33,7 @@ namespace FRCVirtualRobotics
         public Frisbee(Vector2 loc, double dir, Boolean r)
         {
             location = new Vector2(loc.X, loc.Y);
-            direction = dir;
+            direction = dir % (Math.PI*2);
             countdown = 80;
             red = r;
             rotation = 0;

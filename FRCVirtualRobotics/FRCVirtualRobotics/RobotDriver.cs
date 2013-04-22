@@ -179,9 +179,17 @@ namespace FRC_Virtual_Robotics
             menuItems.Add(new MenuItem("Information", new Vector2(200,300), Color.White));
             menuItems.Add(new MenuItem("Exit", new Vector2(200,400), Color.Blue));
             //menuItems.Add(new MenuItem("Test", new Vector2(200, 600), Color.White));
-            menuText.Add(new MenuItem("Ultimate - Accent!", new Vector2(250,30), Color.White));
+            menuText.Add(new MenuItem("Ultimate - Accent! (Unoffical)", new Vector2(120,30), Color.White));
             menuText.Add(new MenuItem("By: Texas Torque, Team 1477", new Vector2(120,80),Color.White));
-            infoText.Add(new MenuItem("This is where the rules should go.", new Vector2(100, 30), Color.Red));
+            infoText.Add(new MenuItem("This game is an arcade version of", new Vector2(100, 30), Color.White));
+            infoText.Add(new MenuItem("Ultimate Ascent. The game play is", new Vector2(100, 80), Color.White));
+            infoText.Add(new MenuItem("in accordance with the real game ", new Vector2(100, 130), Color.White));
+            infoText.Add(new MenuItem("except that there are no penalties.", new Vector2(100, 180), Color.White));
+            infoText.Add(new MenuItem("", new Vector2(100, 230), Color.White));
+            infoText.Add(new MenuItem("Autonomous mode is pre-made,", new Vector2(50, 250), Color.White));
+            infoText.Add(new MenuItem("firing three shots and then turning.", new Vector2(50, 300), Color.White));
+            infoText.Add(new MenuItem("The 'Pre-Autonomous' mode lets you", new Vector2(50, 350), Color.White));
+            infoText.Add(new MenuItem("to place the robot for its shots.", new Vector2(50, 400), Color.White));
 
             // Create a new SpriteBatch, which can be used to draw textures.
             

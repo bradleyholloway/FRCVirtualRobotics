@@ -75,6 +75,9 @@ namespace FRC_Virtual_Robotics
         private List<Frisbee> frisbees;
         private Random rand;
         private AutonomousManager auto;
+        private static int redRobots;
+        private static int blueRobots;
+        private Boolean firstRobot;
         
         public IterativeRobot(int maxSpeed, GraphicsDevice window, Boolean r, float sc, SoundEffectInstance driving, List<Frisbee> fbs)
         {
@@ -100,6 +103,18 @@ namespace FRC_Virtual_Robotics
             frisbees = fbs;
             reset();
             rect2 = new RotatedRectangle(new Point((int)(location.X), (int)(location.Y)), image.Width * scale, image.Height * scale, directionForward);
+            if (red)
+            {
+                if(redRobots == 0)
+                    firstRobot = true;
+                redRobots++;
+            }
+            else
+            {
+                if (blueRobots == 0)
+                    firstRobot = true;
+                blueRobots++;
+            }
         }
 
         public void stopMoving()
@@ -176,11 +191,11 @@ namespace FRC_Virtual_Robotics
                     }
                     else
                     {
-                        drive.Stop();
+                        //drive.Stop();
                         Vector2 result = magD(magnitude, directionForward) + magD(collidedWith.magnitude, collidedWith.directionForward);
-                        result /= 3;
-                        if (collidedWith.push(result, robots))
-                            this.push(result, robots);
+                        result /= 2;
+                        if (collidedWith.push(result))
+                            this.push(result);
                     }
                 }
                 else
@@ -199,17 +214,18 @@ namespace FRC_Virtual_Robotics
             if (Math.Abs(magnitude) < 0.2)
                 drive.Stop();
         }
-        public Boolean push(Vector2 collision, List<IterativeRobot> robots)
+        public Boolean push(Vector2 collision)
         {
             Vector2 tempLocation = location + collision;
             rect2 = new RotatedRectangle(new Point((int)tempLocation.X, (int)tempLocation.Y), image.Width * scale, image.Height * scale, directionForward);
+            
             Boolean pyramidCollided = Field.didCollideWithPyramid(rect2);
             
             if (!((tempLocation).X < 75 || (tempLocation).X > windowX - 75) &&
                 !(tempLocation.Y < 50 || (tempLocation).Y > windowY - 50))
             {
-                Boolean collisionFree = pyramidCollided;
-                IterativeRobot collidedWith = null;
+                Boolean collisionFree = !pyramidCollided;
+                /*IterativeRobot collidedWith = null;
                 foreach (IterativeRobot rob in robots)
                 {
                     if (rob != null)
@@ -219,7 +235,7 @@ namespace FRC_Virtual_Robotics
                                 collisionFree = false;
                                 collidedWith = rob;
                             }
-                }
+                }*/
                 if (collisionFree)
                 {
                     location += collision;
@@ -298,12 +314,12 @@ namespace FRC_Virtual_Robotics
         {
             if (red)
             {
-                location = new Vector2(100, 100);
+                location = new Vector2(100, (firstRobot) ? 100 : 400);
                 directionForward = 0;
             }
             else
             {
-                location = new Vector2(windowX - 150, 100);
+                location = new Vector2(windowX - 150, (firstRobot) ? 100 : 400);
                 directionForward = Math.PI;
             } 
         }
