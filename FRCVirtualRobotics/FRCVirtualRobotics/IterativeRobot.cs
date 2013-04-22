@@ -271,6 +271,10 @@ namespace FRC_Virtual_Robotics
         {
             return climber;
         }
+        public Boolean getClimb()
+        {
+            return climbLock;
+        }
         public void endGame()
         {
             drive.Stop();

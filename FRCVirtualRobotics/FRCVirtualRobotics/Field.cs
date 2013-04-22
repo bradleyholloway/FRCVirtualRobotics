@@ -182,10 +182,10 @@ namespace FRCVirtualRobotics
                 return false;
             Point pyramidCenter = (robot.getRed()) ? redPyramidCenter : bluePyramidCenter;
             Point location = UTIL.vectorToPoint(robot.getLocation());
-            double direction = robot.getDirection();
+            double direction = UTIL.normalizeDirection(robot.getDirection());
             double goalDirection = UTIL.getDirectionTward(location, pyramidCenter);
             double dErr = Math.Abs(goalDirection - direction);
-            if (dErr < Math.PI / 2)
+            if (dErr < Math.PI / 24)
             {
                 return true;
             }

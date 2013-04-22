@@ -412,6 +412,14 @@ namespace BradleyXboxUtils
         {
             return Math.Atan2((goal.Y - start.Y), (goal.X - start.X));
         }
+        public static double normalizeDirection(double startDir)
+        {
+            while (startDir > Math.PI * 2)
+                startDir -= (Math.PI * 2);
+            while (startDir < 0)
+                startDir += (Math.PI * 2);
+            return startDir;
+        }
     }//static Util
 
 }

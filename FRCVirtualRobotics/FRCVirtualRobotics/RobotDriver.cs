@@ -394,15 +394,26 @@ namespace FRC_Virtual_Robotics
             {
                 if (endGameFirstCycle)
                 {
+                    foreach (int player in players)
+                    {
+                        if (robots.ElementAt<IterativeRobot>(player).getClimb())
+                        {
+                            if (robots.ElementAt<IterativeRobot>(player).getRed())
+                                redClimbScore += 10;
+                            else
+                                blueClimbScore += 10;
+                        }
+                    }
+                    
                     endGameFirstCycle = false;
                     endGameInstance.Play();
                     scoreText.Add(new MenuItem("Final Score", new Vector2(250,30), Color.White));
                     scoreText.Add(new MenuItem("Red Alliance", new Vector2(60,100), Color.Red));
                     scoreText.Add(new MenuItem("Blue Alliance", new Vector2(370,100), Color.Blue));
-                    //scoreText.Add(new MenuItem("Climb: " + redClimbScore, new Vector2(60, 200), Color.Red));
+                    scoreText.Add(new MenuItem("Climb: " + redClimbScore, new Vector2(60, 200), Color.Red));
                     scoreText.Add(new MenuItem("Auto: " + redAutoScore, new Vector2(60, 250), Color.Red));
                     scoreText.Add(new MenuItem("Disk: " + redFrisbeeScore, new Vector2(60, 300), Color.Red));
-                    //scoreText.Add(new MenuItem("Climb: " + blueClimbScore, new Vector2(370, 200), Color.Blue));
+                    scoreText.Add(new MenuItem("Climb: " + blueClimbScore, new Vector2(370, 200), Color.Blue));
                     scoreText.Add(new MenuItem("Auto: " + blueAutoScore, new Vector2(370, 250), Color.Blue));
                     scoreText.Add(new MenuItem("Disk: " + blueFrisbeeScore, new Vector2(370, 300), Color.Blue));
                     scoreText.Add(new MenuItem("Total: " + (redClimbScore+redFrisbeeScore+redAutoScore), new Vector2(60, 350), Color.Red));
