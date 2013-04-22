@@ -97,6 +97,11 @@ namespace FRC_Virtual_Robotics
         /// </summary>
         protected override void LoadContent()
         {
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            IterativeRobot.setImage(Content.Load<Texture2D>("robot2"));
+            Frisbee.setImage(Content.Load<Texture2D>("frisbee"));
+
             driving = Content.Load<SoundEffect>("Driving");
             field = new Field(GraphicsDevice);
             players = new List<int>();
@@ -179,9 +184,7 @@ namespace FRC_Virtual_Robotics
             infoText.Add(new MenuItem("This is where the rules should go.", new Vector2(100, 30), Color.Red));
 
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            IterativeRobot.setImage(Content.Load<Texture2D>("robot2"));
-            Frisbee.setImage(Content.Load<Texture2D>("frisbee"));
+            
             if (launch == null)
             {
                 launch = Content.Load<SoundEffect>("Piston");
@@ -383,10 +386,10 @@ namespace FRC_Virtual_Robotics
                     scoreText.Add(new MenuItem("Final Score", new Vector2(250,30), Color.White));
                     scoreText.Add(new MenuItem("Red Alliance", new Vector2(60,100), Color.Red));
                     scoreText.Add(new MenuItem("Blue Alliance", new Vector2(370,100), Color.Blue));
-                    scoreText.Add(new MenuItem("Climb: " + redClimbScore, new Vector2(60, 200), Color.Red));
+                    //scoreText.Add(new MenuItem("Climb: " + redClimbScore, new Vector2(60, 200), Color.Red));
                     scoreText.Add(new MenuItem("Auto: " + redAutoScore, new Vector2(60, 250), Color.Red));
                     scoreText.Add(new MenuItem("Disk: " + redFrisbeeScore, new Vector2(60, 300), Color.Red));
-                    scoreText.Add(new MenuItem("Climb: " + blueClimbScore, new Vector2(370, 200), Color.Blue));
+                    //scoreText.Add(new MenuItem("Climb: " + blueClimbScore, new Vector2(370, 200), Color.Blue));
                     scoreText.Add(new MenuItem("Auto: " + blueAutoScore, new Vector2(370, 250), Color.Blue));
                     scoreText.Add(new MenuItem("Disk: " + blueFrisbeeScore, new Vector2(370, 300), Color.Blue));
                     scoreText.Add(new MenuItem("Total: " + (redClimbScore+redFrisbeeScore+redAutoScore), new Vector2(60, 350), Color.Red));
@@ -470,7 +473,9 @@ namespace FRC_Virtual_Robotics
                 foreach (IterativeRobot robot in robots)
                 {
                     if (robot != null)
+                    {
                         spriteBatch.Draw(robot.getImage(), robot.getLocation(), null, robot.getColor(), robot.getDirection(), robot.getOrigin(), robot.getScale(), SpriteEffects.None, 0f);
+                    }
                 }
                 foreach (Frisbee frisbee in frisbees)
                 {
@@ -480,6 +485,8 @@ namespace FRC_Virtual_Robotics
                 {
                     spriteBatch.Draw(fo.getImage(), fo.getLocation(), null, fo.getColor(), fo.getRotation(), fo.getOrigin(), fo.getScale(), SpriteEffects.None, 0f);
                 }
+              //  List<double> calcs = robots.ElementAt<IterativeRobot>(0).getRectangle().getLastCalc();
+              //  spriteBatch.DrawString(spriteFont, calcs.ElementAt<double>(0) + " " + calcs.ElementAt<double>(1) + " " + calcs.ElementAt<double>(2), new Vector2(120, 40), Color.White);
                 spriteBatch.DrawString(spriteFont, (redFrisbeeScore + redAutoScore)+"", new Vector2(60, 0), Color.Red);
                 spriteBatch.DrawString(spriteFont, (blueFrisbeeScore + blueAutoScore)+"", new Vector2(GraphicsDevice.Viewport.Width - 130,0), Color.Blue);
                 spriteBatch.DrawString(spriteFont, Math.Round(inGameTime) + "", new Vector2(GraphicsDevice.Viewport.Width / 2, 0), Color.White);

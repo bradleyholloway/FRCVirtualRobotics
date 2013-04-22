@@ -12,6 +12,12 @@ namespace BradleyXboxUtils
         public Point p2;
         public Point p3;
         public Point p4;
+        double b11;
+        double b12;
+        double b1n;
+        double b21;
+        double b22;
+        double b2n;
         public RotatedRectangle(Point pt1,Point pt2,Point pt3, Point pt4)
         {
             p1 = pt1;
@@ -41,21 +47,30 @@ namespace BradleyXboxUtils
             double m1 = (double)(p2.Y - p1.Y) / (p2.X - p1.X);
             double m2 = (double)(p3.Y - p2.Y) / (p3.X - p2.X);
 
-            double b1a = p1.Y - m1 * p1.X;
-            double b1b = p2.Y - m1 * p1.X;
-            double b11 = Math.Min(b1a, b1b);
-            double b12 = Math.Max(b1a, b1b);
-            double b1n = p.Y - m1 * p.X;
+            double b1a = p1.Y - m2 * p1.X;
+            double b1b = p2.Y - m2 * p2.X;
+            b11 = Math.Min(b1a, b1b);
+            b12 = Math.Max(b1a, b1b);
+            b1n = p.Y - m2 * p.X;
 
-            double b2a = p2.Y - m2 * p2.X;
-            double b2b = p3.Y - m2 * p3.X;
-            double b21 = Math.Min(b2a, b2b);
-            double b22 = Math.Max(b2a, b2b);
-            double b2n = p.Y - m2 * p.X;
+            double b2a = p2.Y - m1 * p2.X;
+            double b2b = p3.Y - m1 * p3.X;
+            b21 = Math.Min(b2a, b2b);
+            b22 = Math.Max(b2a, b2b);
+            b2n = p.Y - m1 * p.X;
 
             if ((b1n > b11 && b1n < b12) && (b2n > b21 && b2n < b22))
                 return true;
             return false;
+        }
+        public List<double> getLastCalc()
+        {
+            List<double> ret = new List<double>();
+            ret.Add(Math.Round(b21));
+            ret.Add(Math.Round(b22));
+            ret.Add(Math.Round(b2n));
+
+            return ret;
         }
     }
 }

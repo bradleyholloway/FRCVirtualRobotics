@@ -88,7 +88,6 @@ namespace FRC_Virtual_Robotics
             scalar = maxSpeed;
             directionForward = Math.PI * 3 / 2;
             location = new Vector2(0, 0);
-            image = null;
             windowX = window.Viewport.Width;
             windowY = window.Viewport.Height;
             red = r;
@@ -100,7 +99,7 @@ namespace FRC_Virtual_Robotics
             drive.Volume = .5f;
             frisbees = fbs;
             reset();
-            
+            rect2 = new RotatedRectangle(new Point((int)(location.X), (int)(location.Y)), image.Width * scale, image.Height * scale, directionForward);
         }
 
         public void stopMoving()
@@ -108,6 +107,7 @@ namespace FRC_Virtual_Robotics
             drive.Stop();
         }
         public RotatedRectangle getRectangle()
+
         {
             return rect2;
         }
@@ -202,11 +202,13 @@ namespace FRC_Virtual_Robotics
         public Boolean push(Vector2 collision, List<IterativeRobot> robots)
         {
             Vector2 tempLocation = location + collision;
-
+            rect2 = new RotatedRectangle(new Point((int)tempLocation.X, (int)tempLocation.Y), image.Width * scale, image.Height * scale, directionForward);
+            Boolean pyramidCollided = Field.didCollideWithPyramid(rect2);
+            
             if (!((tempLocation).X < 75 || (tempLocation).X > windowX - 75) &&
                 !(tempLocation.Y < 50 || (tempLocation).Y > windowY - 50))
             {
-                Boolean collisionFree = true;
+                Boolean collisionFree = pyramidCollided;
                 IterativeRobot collidedWith = null;
                 foreach (IterativeRobot rob in robots)
                 {
@@ -215,8 +217,6 @@ namespace FRC_Virtual_Robotics
                             if (intersects(rob))
                             {
                                 collisionFree = false;
-                                //rect = new Rectangle((int)location.X, (int)location.Y, (int)(image.Width * scale), (int)(image.Height * scale));
-                                rect2 = new RotatedRectangle(new Point((int)location.X, (int)location.Y), image.Width * scale, image.Height * scale, directionForward);
                                 collidedWith = rob;
                             }
                 }
@@ -227,6 +227,7 @@ namespace FRC_Virtual_Robotics
                 }
                 else
                 {
+                    rect2 = new RotatedRectangle(new Point((int)location.X, (int)location.Y), image.Width * scale, image.Height * scale, directionForward);
                     return false;
                 }
             }
