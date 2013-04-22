@@ -41,17 +41,32 @@ namespace FRCVirtualRobotics
         }
         public Boolean colidedWith(Frisbee frisbee2)
         {
-            return BradleyXboxUtils.UTIL.distance(location, frisbee2.getLocation()) <= image.Width / 2 * .06;
+            return BradleyXboxUtils.UTIL.distance(location, frisbee2.getLocation()) <= image.Width * .06;
         }
         public void checkCollision(Frisbee frisbee2)
         {
            if(!frisbee2.Equals(this))
             if (colidedWith(frisbee2))
             {
-                double dir1 = (this.direction + frisbee2.getDirection() ) /2;
-                double dir2 = (this.direction - dir1) / 3;
-                this.setDirection(dir1 + dir2);
-                frisbee2.setDirection(dir1 - dir2);
+                double avg = (this.direction + frisbee2.getDirection()) / 2;
+                double diff = avg - Math.Min(this.direction, frisbee2.getDirection());
+                if (diff > Math.PI / 2)
+                {
+                    avg += Math.PI;
+                    diff = Math.PI - diff;
+                }
+                diff /= 3;
+                if (this.direction > frisbee2.getDirection())
+                {
+                    this.setDirection(avg - diff);
+                    frisbee2.setDirection(avg + diff);
+                }
+                else
+                {
+                    this.setDirection(avg + diff);
+                    frisbee2.setDirection(avg - diff);
+                }
+                
             }
         }
         public void setDirection(double dir)
