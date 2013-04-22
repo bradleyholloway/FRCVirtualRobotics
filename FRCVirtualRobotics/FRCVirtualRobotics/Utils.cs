@@ -404,6 +404,14 @@ namespace BradleyXboxUtils
         {
             return new Point((int)a.X, (int)a.Y);
         }
+        public static double getDirectionTward(Point start, Point goal)
+        {
+            return Math.Atan2((goal.Y - start.Y), (goal.X - start.X));
+        }
+        public static double getDirectionTward(Vector2 start, Vector2 goal)
+        {
+            return Math.Atan2((goal.Y - start.Y), (goal.X - start.X));
+        }
     }//static Util
 
 }

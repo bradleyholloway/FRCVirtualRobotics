@@ -78,6 +78,8 @@ namespace FRC_Virtual_Robotics
         private static int redRobots;
         private static int blueRobots;
         private Boolean firstRobot;
+        private Boolean climber;
+        private Boolean climbLock;
         
         public IterativeRobot(int maxSpeed, GraphicsDevice window, Boolean r, float sc, SoundEffectInstance driving, List<Frisbee> fbs)
         {
@@ -101,20 +103,23 @@ namespace FRC_Virtual_Robotics
             drive.IsLooped = true;
             drive.Volume = .5f;
             frisbees = fbs;
-            reset();
-            rect2 = new RotatedRectangle(new Point((int)(location.X), (int)(location.Y)), image.Width * scale, image.Height * scale, directionForward);
+            climber = false;
+            climbLock = false;
             if (red)
             {
-                if(redRobots == 0)
+                if (redRobots != 1)
                     firstRobot = true;
                 redRobots++;
             }
             else
             {
-                if (blueRobots == 0)
+                if (blueRobots != 1)
                     firstRobot = true;
                 blueRobots++;
             }
+            reset();
+            rect2 = new RotatedRectangle(new Point((int)(location.X), (int)(location.Y)), image.Width * scale, image.Height * scale, directionForward);
+            
         }
 
         public void stopMoving()
@@ -151,68 +156,76 @@ namespace FRC_Virtual_Robotics
 
         public void run(List<IterativeRobot> robots)
         {
-            rightMotorSpeed += rightMotorPID.calcPID(rightMotorSpeed);
-            leftMotorSpeed += leftMotorPID.calcPID(leftMotorSpeed);
-
-            magnitude = (leftMotorSpeed + rightMotorSpeed) / 2 * scalar;
-            directionForward += .1 * (rightMotorSpeed - leftMotorSpeed);
-
-            Vector2 tempLocation = location + magD(magnitude, directionForward);
-            
-            //rect = new Rectangle((int) tempLocation.X, (int) tempLocation.Y, (int)(image.Width*scale), (int)(image.Height*scale));
-            rect2 = new RotatedRectangle(new Point((int)tempLocation.X, (int)tempLocation.Y), image.Width * scale, image.Height * scale, directionForward);
-
-            if (!((location + magD(magnitude, directionForward)).X < 75 || (location + magD(magnitude, directionForward)).X > windowX - 75) &&
-                !((location + magD(magnitude, directionForward)).Y < 50 || (location + magD(magnitude, directionForward)).Y > windowY - 50))
+            if (!climbLock)
             {
-                Boolean pyramidCollided = Field.didCollideWithPyramid(rect2);
-                if (!pyramidCollided)
-                {
-                    Boolean collisionFree = true;
-                    IterativeRobot collidedWith = null;
-                    foreach (IterativeRobot rob in robots)
-                    {
-                        if (rob != null)
-                            if (!rob.Equals(this))
-                                if (intersects(rob))
-                                {
-                                    collisionFree = false;
-                                    //rect = new Rectangle((int)location.X, (int)location.Y, (int)(image.Width * scale), (int)(image.Height * scale));
-                                    rect2 = new RotatedRectangle(new Point((int)location.X, (int)location.Y), image.Width * scale, image.Height * scale, directionForward);
-                                    collidedWith = rob;
-                                }
-                    }
+                rightMotorSpeed += rightMotorPID.calcPID(rightMotorSpeed);
+                leftMotorSpeed += leftMotorPID.calcPID(leftMotorSpeed);
 
-                    if (collisionFree)
+                magnitude = (leftMotorSpeed + rightMotorSpeed) / 2 * scalar;
+                directionForward += .1 * (rightMotorSpeed - leftMotorSpeed);
+
+                Vector2 tempLocation = location + magD(magnitude, directionForward);
+
+                //rect = new Rectangle((int) tempLocation.X, (int) tempLocation.Y, (int)(image.Width*scale), (int)(image.Height*scale));
+                rect2 = new RotatedRectangle(new Point((int)tempLocation.X, (int)tempLocation.Y), image.Width * scale, image.Height * scale, directionForward);
+
+                if (!((location + magD(magnitude, directionForward)).X < 75 || (location + magD(magnitude, directionForward)).X > windowX - 75) &&
+                    !((location + magD(magnitude, directionForward)).Y < 50 || (location + magD(magnitude, directionForward)).Y > windowY - 50))
+                {
+                    Boolean pyramidCollided = Field.didCollideWithPyramid(rect2);
+                    if (!pyramidCollided)
                     {
-                        if (drive.State.Equals(SoundState.Stopped))
-                            drive.Play();
-                        location += magD(magnitude, directionForward);
+                        Boolean collisionFree = true;
+                        IterativeRobot collidedWith = null;
+                        foreach (IterativeRobot rob in robots)
+                        {
+                            if (rob != null)
+                                if (!rob.Equals(this))
+                                    if (intersects(rob))
+                                    {
+                                        collisionFree = false;
+                                        //rect = new Rectangle((int)location.X, (int)location.Y, (int)(image.Width * scale), (int)(image.Height * scale));
+                                        rect2 = new RotatedRectangle(new Point((int)location.X, (int)location.Y), image.Width * scale, image.Height * scale, directionForward);
+                                        collidedWith = rob;
+                                    }
+                        }
+
+                        if (collisionFree)
+                        {
+                            if (drive.State.Equals(SoundState.Stopped))
+                                drive.Play();
+                            location += magD(magnitude, directionForward);
+                        }
+                        else
+                        {
+                            //drive.Stop();
+                            Vector2 result = magD(magnitude, directionForward) + magD(collidedWith.magnitude, collidedWith.directionForward);
+                            result /= 2;
+                            if (collidedWith.push(result))
+                                this.push(result);
+                        }
                     }
                     else
                     {
-                        //drive.Stop();
-                        Vector2 result = magD(magnitude, directionForward) + magD(collidedWith.magnitude, collidedWith.directionForward);
-                        result /= 2;
-                        if (collidedWith.push(result))
-                            this.push(result);
-                    }
+                        drive.Stop();
+                        rightMotorSpeed = 0;
+                        leftMotorSpeed = 0;
+                    }//pyramid Collided
                 }
                 else
                 {
                     drive.Stop();
                     rightMotorSpeed = 0;
                     leftMotorSpeed = 0;
-                }//pyramid Collided
+                }
+                if (Math.Abs(magnitude) < 0.2)
+                    drive.Stop();
+                if (Field.climbing(this))
+                {
+                    climbLock = true;
+                    drive.Stop();
+                }
             }
-            else
-            {
-                drive.Stop();
-                rightMotorSpeed = 0;
-                leftMotorSpeed = 0;
-            }
-            if (Math.Abs(magnitude) < 0.2)
-                drive.Stop();
         }
         public Boolean push(Vector2 collision)
         {
@@ -249,6 +262,14 @@ namespace FRC_Virtual_Robotics
             }
             else
                 return false;
+        }
+        public void setClimber(Boolean state)
+        {
+            climber = state;
+        }
+        public Boolean getClimberUp()
+        {
+            return climber;
         }
         public void endGame()
         {

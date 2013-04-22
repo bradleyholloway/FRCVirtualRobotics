@@ -39,6 +39,7 @@ namespace FRC_Virtual_Robotics
         List<ControllerInput> driverInputs;
         List<ControlButton> fire;
         List<Toggle> preAutoReady;
+        List<Toggle> climbers;
         List<int> players;
         ControlButton menuUp;
         ControlButton menuDown;
@@ -149,7 +150,11 @@ namespace FRC_Virtual_Robotics
 
             Frisbee.SPEED = 10;
             Frisbee.setFrisbees(frisbees);
-            
+
+            climbers = new List<Toggle>();
+            for (int a = 0; a < 4; a++)
+                climbers.Add(new Toggle(false));
+
             preAutoReady = new List<Toggle>();
             for (int a = 0; a < 4; a++)
                 preAutoReady.Add(new Toggle(false));
@@ -543,6 +548,11 @@ namespace FRC_Virtual_Robotics
                     //frisbees.Add(new Frisbee(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getDirection() + (rand.NextDouble() - .5) / 5, robots.ElementAt<IterativeRobot>(player).getRed()));
                 }
             }//PreAutonmous disable feeding and shooting
+
+            climbers.ElementAt<Toggle>(player).update(driverInputs.ElementAt<ControllerInput>(player).getRightStickDown());
+            if (climbers.ElementAt<Toggle>(player).get() != robots.ElementAt<IterativeRobot>(player).getClimberUp())
+                launch.Play();
+            robots.ElementAt<IterativeRobot>(player).setClimber(climbers.ElementAt<Toggle>(player).get());
 
             //if (driverInputs.ElementAt<ControllerInput>(player).getBack())
             //    robots.ElementAt<IterativeRobot>(player).reset();
