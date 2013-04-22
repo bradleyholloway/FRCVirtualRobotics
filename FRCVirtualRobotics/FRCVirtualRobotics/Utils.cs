@@ -420,6 +420,10 @@ namespace BradleyXboxUtils
                 startDir += (Math.PI * 2);
             return startDir;
         }
+        public static Boolean tolerant(double actual, double goal, double tollerance)
+        {
+            return tollerance <= Math.Abs(actual - goal);
+        }
     }//static Util
 
 }

@@ -187,10 +187,36 @@ namespace FRCVirtualRobotics
             double dErr = Math.Abs(goalDirection - direction);
             if (dErr < Math.PI / 24)
             {
-                return true;
+                return isOnBoundry(location, robot.getRed());
             }
             else
                 return false;
+        }
+        private static Boolean isOnBoundry(Point p, Boolean red)
+        {
+            Boolean valid = false;
+            int p1; int p2;
+            if(red)
+            {
+                p1 = 4;
+                p2 = 6;
+            }
+            else
+            {
+                p1 = 0;
+                p2 = 2;
+            }
+            if (UTIL.tolerant(p.X, climbPoints.ElementAt<Point>(p1).X, 5) || UTIL.tolerant(p.X, climbPoints.ElementAt<Point>(p2).X, 5))
+            {
+                if (p.Y > climbPoints.ElementAt<Point>(p2).Y && p.Y < climbPoints.ElementAt<Point>(p1).Y)
+                    valid = true;
+            }
+            if (UTIL.tolerant(p.Y, climbPoints.ElementAt<Point>(p1).Y, 5) || UTIL.tolerant(p.Y, climbPoints.ElementAt<Point>(p1).Y, 5))
+            {
+                if (p.X > climbPoints.ElementAt<Point>(p2).X && p.X < climbPoints.ElementAt<Point>(p1).X)
+                    valid = true;
+            }
+            return valid;
         }
 
     }
