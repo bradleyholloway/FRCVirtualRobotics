@@ -26,6 +26,7 @@ namespace FRCVirtualRobotics
         private int blueBlueFrisbees;
         List<FieldObjects> objects;
         static List<Point> pyramidPoints;
+        static List<Point> climbPoints;
    
         public Field(GraphicsDevice window)
         {
@@ -54,16 +55,30 @@ namespace FRCVirtualRobotics
 
             //Pyramid
             pyramidPoints = new List<Point>();
+            climbPoints = new List<Point>();
+            double levelOneFracConst = .8;
             //Red Pyramid
             pyramidPoints.Add(new Point((int)(X * .2), (int)(Y * .4)));//8,13
             pyramidPoints.Add(new Point((int)(X * .2), (int)(Y * .7)));
             pyramidPoints.Add(new Point((int)(X * .4), (int)(Y * .4)));//3,13
             pyramidPoints.Add(new Point((int)(X * .4), (int)(Y * .7)));
+            climbPoints.Add(UTIL.midpoint(pyramidPoints.ElementAt<Point>(0), pyramidPoints.ElementAt<Point>(3)));//Center Point
+            climbPoints.Add(UTIL.vectorToPoint(UTIL.magD(levelOneFracConst * UTIL.distance(pyramidPoints.ElementAt<Point>(0), climbPoints.ElementAt<Point>(0)), Math.PI * 1 / 4)));
+            climbPoints.Add(UTIL.vectorToPoint(UTIL.magD(levelOneFracConst * UTIL.distance(pyramidPoints.ElementAt<Point>(0), climbPoints.ElementAt<Point>(0)), Math.PI * 3 / 4)));
+            climbPoints.Add(UTIL.vectorToPoint(UTIL.magD(levelOneFracConst * UTIL.distance(pyramidPoints.ElementAt<Point>(0), climbPoints.ElementAt<Point>(0)), Math.PI * 5 / 4)));
+            climbPoints.Add(UTIL.vectorToPoint(UTIL.magD(levelOneFracConst * UTIL.distance(pyramidPoints.ElementAt<Point>(0), climbPoints.ElementAt<Point>(0)), Math.PI * 7 / 4)));
             //Blue Pyramid
             pyramidPoints.Add(new Point((int)(X * .6), (int)(Y * .4)));
             pyramidPoints.Add(new Point((int)(X * .6), (int)(Y * .7)));
             pyramidPoints.Add(new Point((int)(X * .8), (int)(Y * .4)));
             pyramidPoints.Add(new Point((int)(X * .8), (int)(Y * .7)));
+            climbPoints.Add(UTIL.midpoint(pyramidPoints.ElementAt<Point>(4), pyramidPoints.ElementAt<Point>(7)));//Center Point
+            climbPoints.Add(UTIL.vectorToPoint(UTIL.magD(levelOneFracConst * UTIL.distance(pyramidPoints.ElementAt<Point>(0), climbPoints.ElementAt<Point>(0)), Math.PI * 1 / 4)));
+            climbPoints.Add(UTIL.vectorToPoint(UTIL.magD(levelOneFracConst * UTIL.distance(pyramidPoints.ElementAt<Point>(0), climbPoints.ElementAt<Point>(0)), Math.PI * 3 / 4)));
+            climbPoints.Add(UTIL.vectorToPoint(UTIL.magD(levelOneFracConst * UTIL.distance(pyramidPoints.ElementAt<Point>(0), climbPoints.ElementAt<Point>(0)), Math.PI * 5 / 4)));
+            climbPoints.Add(UTIL.vectorToPoint(UTIL.magD(levelOneFracConst * UTIL.distance(pyramidPoints.ElementAt<Point>(0), climbPoints.ElementAt<Point>(0)), Math.PI * 7 / 4)));
+
+
 
         }
         public static List<int> getGoals()

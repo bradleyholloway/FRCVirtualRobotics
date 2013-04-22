@@ -384,9 +384,25 @@ namespace BradleyXboxUtils
         {
             return Math.Sqrt((point1.X - point2.X) * (point1.X - point2.X) + (point1.Y - point2.Y) * (point1.Y - point2.Y));
         }
+        public static double distance(Point point1, Point point2)
+        {
+            return Math.Sqrt((point1.X - point2.X) * (point1.X - point2.X) + (point1.Y - point2.Y) * (point1.Y - point2.Y));
+        }
         public static Vector2 magD(double mag, double d)
         {
             return new Vector2((float)(mag * Math.Cos(d)), (float)(mag * Math.Sin(d)));
+        }
+        public static Point midpoint(Point a, Point b)
+        {
+            return new Point((a.X + b.X) / 2, (a.Y + b.Y) / 2);
+        }
+        public static Vector2 pointToVector(Point a)
+        {
+            return new Vector2(a.X, a.Y);
+        }
+        public static Point vectorToPoint(Vector2 a)
+        {
+            return new Point((int)a.X, (int)a.Y);
         }
     }//static Util
 
