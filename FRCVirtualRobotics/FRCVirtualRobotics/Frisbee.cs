@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using BradleyXboxUtils;
 
 namespace FRCVirtualRobotics
 {
@@ -19,6 +20,7 @@ namespace FRCVirtualRobotics
 
         private int countdown;
         private Boolean red;
+        private Boolean collided;
         private static List<Frisbee> frisbees;
 
         public Frisbee(Vector2 loc, double dir)
@@ -28,19 +30,23 @@ namespace FRCVirtualRobotics
             countdown = 80;
             red = true;
             rotation = 0;
+            collided = false;
             origin = new Vector2(image.Width / 2, image.Height / 2);
         }
         public Frisbee(Vector2 loc, double dir, Boolean r)
         {
             location = new Vector2(loc.X, loc.Y);
-            direction = dir % (Math.PI*2);
+            direction = UTIL.normalizeDirection(dir);
             countdown = 80;
             red = r;
             rotation = 0;
+            collided = false;
             origin = new Vector2(image.Width / 2, image.Height / 2);
         }
         public Boolean colidedWith(Frisbee frisbee2)
         {
+            if (collided)
+                return false;
             return BradleyXboxUtils.UTIL.distance(location, frisbee2.getLocation()) <= image.Width * .06;
         }
         public void checkCollision(Frisbee frisbee2)
@@ -48,6 +54,7 @@ namespace FRCVirtualRobotics
            if(!frisbee2.Equals(this))
             if (colidedWith(frisbee2))
             {
+                collided = true;
                 double avg = (this.direction + frisbee2.getDirection()) / 2;
                 double diff = avg - Math.Min(this.direction, frisbee2.getDirection());
                 if (diff > Math.PI / 2)

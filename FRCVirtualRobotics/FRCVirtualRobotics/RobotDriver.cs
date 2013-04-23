@@ -110,6 +110,7 @@ namespace FRC_Virtual_Robotics
 
             // TODO: use this.Content to load your game content here
             robots = new List<IterativeRobot>();
+            IterativeRobot.resetPlayers();
             if (GamePad.GetState(PlayerIndex.One).IsConnected)
             {
                 robots.Add(new IterativeRobot(6, GraphicsDevice, true, .2f, driving.CreateInstance(), frisbees));

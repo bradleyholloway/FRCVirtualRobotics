@@ -109,17 +109,22 @@ namespace FRC_Virtual_Robotics
             {
                 if (redRobots != 1)
                     firstRobot = true;
-                redRobots++;
+                redRobots = 1;
             }
             else
             {
                 if (blueRobots != 1)
                     firstRobot = true;
-                blueRobots++;
+                blueRobots = 1;
             }
             reset();
             rect2 = new RotatedRectangle(new Point((int)(location.X), (int)(location.Y)), image.Width * scale, image.Height * scale, directionForward);
             
+        }
+        public static void resetPlayers()
+        {
+            redRobots = 0;
+            blueRobots = 0;
         }
 
         public void stopMoving()
@@ -150,6 +155,8 @@ namespace FRC_Virtual_Robotics
             if (rect2.Contains(rob.getRectangle().p3))
                 intersecting = true;
             if (rect2.Contains(rob.getRectangle().p4))
+                intersecting = true;
+            if (rect2.Contains(UTIL.vectorToPoint(rob.getLocation())))
                 intersecting = true;
             return intersecting;
         }
