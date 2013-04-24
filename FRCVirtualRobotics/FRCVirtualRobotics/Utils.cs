@@ -422,7 +422,7 @@ namespace BradleyXboxUtils
         }
         public static Boolean tolerant(double actual, double goal, double tollerance)
         {
-            return tollerance < Math.Abs(actual - goal);
+            return tollerance > Math.Abs(actual - goal);
         }
     }//static Util
 

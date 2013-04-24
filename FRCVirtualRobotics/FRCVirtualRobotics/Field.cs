@@ -215,7 +215,7 @@ namespace FRCVirtualRobotics
             }
             if (UTIL.tolerant(p.X, climbPoints.ElementAt<Point>(p1).X, 5) || UTIL.tolerant(p.X, climbPoints.ElementAt<Point>(p2).X, 5))
             {
-                if (p.Y > climbPoints.ElementAt<Point>(p2).Y && p.Y < climbPoints.ElementAt<Point>(p1).Y)
+                if (p.Y < climbPoints.ElementAt<Point>(p2).Y && p.Y > climbPoints.ElementAt<Point>(p1).Y)
                     valid = true;
             }
             if (UTIL.tolerant(p.Y, climbPoints.ElementAt<Point>(p1).Y, 5) || UTIL.tolerant(p.Y, climbPoints.ElementAt<Point>(p2).Y, 5))
