@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FRCVirtualRobotics", "FRCVi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FRCVirtualRoboticsContent", "FRCVirtualRobotics\FRCVirtualRoboticsContent\FRCVirtualRoboticsContent.contentproj", "{6C6302F8-2DFF-4993-8966-7D117713F5CA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Windows FRCVirtualRobotics", "FRCVirtualRobotics\FRCVirtualRobotics\Windows FRCVirtualRobotics.csproj", "{1CB95BB0-BA7F-4072-AC7A-007CE4447707}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -37,6 +39,16 @@ Global
 		{6C6302F8-2DFF-4993-8966-7D117713F5CA}.Release|Mixed Platforms.ActiveCfg = Release|Xbox 360
 		{6C6302F8-2DFF-4993-8966-7D117713F5CA}.Release|x86.ActiveCfg = Release|Xbox 360
 		{6C6302F8-2DFF-4993-8966-7D117713F5CA}.Release|Xbox 360.ActiveCfg = Release|Xbox 360
+		{1CB95BB0-BA7F-4072-AC7A-007CE4447707}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{1CB95BB0-BA7F-4072-AC7A-007CE4447707}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{1CB95BB0-BA7F-4072-AC7A-007CE4447707}.Debug|x86.ActiveCfg = Debug|x86
+		{1CB95BB0-BA7F-4072-AC7A-007CE4447707}.Debug|x86.Build.0 = Debug|x86
+		{1CB95BB0-BA7F-4072-AC7A-007CE4447707}.Debug|Xbox 360.ActiveCfg = Debug|x86
+		{1CB95BB0-BA7F-4072-AC7A-007CE4447707}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{1CB95BB0-BA7F-4072-AC7A-007CE4447707}.Release|Mixed Platforms.Build.0 = Release|x86
+		{1CB95BB0-BA7F-4072-AC7A-007CE4447707}.Release|x86.ActiveCfg = Release|x86
+		{1CB95BB0-BA7F-4072-AC7A-007CE4447707}.Release|x86.Build.0 = Release|x86
+		{1CB95BB0-BA7F-4072-AC7A-007CE4447707}.Release|Xbox 360.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

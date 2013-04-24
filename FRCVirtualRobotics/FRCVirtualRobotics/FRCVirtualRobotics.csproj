@@ -107,8 +107,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FRCVirtualRoboticsContent\FRCVirtualRoboticsContent.contentproj">
-      <Name>FRCVirtualRoboticsContent</Name>
+      <Name>FRCVirtualRoboticsContent %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>
+      <Project>{6C6302F8-2DFF-4993-8966-7D117713F5CA}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

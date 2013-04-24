@@ -10,6 +10,7 @@ namespace FRC_Virtual_Robotics
         /// </summary>
         static void Main(string[] args)
         {
+
             using (RobotDriver game = new RobotDriver())
             {
                 game.Run();
