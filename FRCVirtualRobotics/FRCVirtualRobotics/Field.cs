@@ -9,7 +9,7 @@ using FRC_Virtual_Robotics;
 
 namespace FRCVirtualRobotics
 {
-    class Field
+    public class Field
     {
         static int threeTop;
         static int threeBottom;
@@ -53,8 +53,8 @@ namespace FRCVirtualRobotics
             twoTop2 = (int)(.7 * Y);
             twoBottom2 = (int)(.9 * Y);
 
-            leftX = 0+20;
-            rightX = X-20;
+            leftX = 0+30;
+            rightX = X-30;
 
             //Pyramid
             pyramidPoints = new List<Point>();
@@ -192,12 +192,19 @@ namespace FRCVirtualRobotics
             double direction = UTIL.normalizeDirection(robot.getDirection());
             double goalDirection = UTIL.getDirectionTward(location, pyramidCenter);
             double dErr = Math.Abs(goalDirection - direction);
-            if (dErr < Math.PI / 24)
+            if (dErr < Math.PI / 12)
             {
                 return isOnBoundry(location, robot.getRed());
             }
             else
                 return false;
+        }
+        public void addFrisbee(Boolean red)
+        {
+            if (red)
+                redWhiteFrisbees++;
+            else
+                blueWhiteFrisbees++;
         }
         private static Boolean isOnBoundry(Point p, Boolean red)
         {
@@ -213,12 +220,12 @@ namespace FRCVirtualRobotics
                 p1 = 0;
                 p2 = 2;
             }
-            if (UTIL.tolerant(p.X, climbPoints.ElementAt<Point>(p1).X, 5) || UTIL.tolerant(p.X, climbPoints.ElementAt<Point>(p2).X, 5))
+            if (UTIL.tolerant(p.X, climbPoints.ElementAt<Point>(p1).X, 5) || UTIL.tolerant(p.X, climbPoints.ElementAt<Point>(p2).X, 15))
             {
                 if (p.Y < climbPoints.ElementAt<Point>(p2).Y && p.Y > climbPoints.ElementAt<Point>(p1).Y)
                     valid = true;
             }
-            if (UTIL.tolerant(p.Y, climbPoints.ElementAt<Point>(p1).Y, 5) || UTIL.tolerant(p.Y, climbPoints.ElementAt<Point>(p2).Y, 5))
+            if (UTIL.tolerant(p.Y, climbPoints.ElementAt<Point>(p1).Y, 5) || UTIL.tolerant(p.Y, climbPoints.ElementAt<Point>(p2).Y, 15))
             {
                 if (p.X > climbPoints.ElementAt<Point>(p2).X && p.X < climbPoints.ElementAt<Point>(p1).X)
                     valid = true;
@@ -227,7 +234,7 @@ namespace FRCVirtualRobotics
         }
 
     }
-    class FieldObjects
+    public class FieldObjects
     {
         Texture2D image;
         Vector2 location;

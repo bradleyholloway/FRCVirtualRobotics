@@ -105,6 +105,7 @@ namespace FRC_Virtual_Robotics
 
             driving = Content.Load<SoundEffect>("Driving");
             field = new Field(GraphicsDevice);
+            Frisbee.setField(field);
             players = new List<int>();
             frisbees = new List<Frisbee>();
 
@@ -185,7 +186,7 @@ namespace FRC_Virtual_Robotics
             menuItems.Add(new MenuItem("Information", new Vector2(200,300), Color.White));
             menuItems.Add(new MenuItem("Exit", new Vector2(200,400), Color.Blue));
             //menuItems.Add(new MenuItem("Test", new Vector2(200, 600), Color.White));
-            menuText.Add(new MenuItem("Ultimate - Accent! (Unoffical)", new Vector2(120,30), Color.White));
+            menuText.Add(new MenuItem("Ultimate - Ascent! (Unofficial)", new Vector2(120,30), Color.White));
             menuText.Add(new MenuItem("By: Texas Torque, Team 1477", new Vector2(120,80),Color.White));
             infoText.Add(new MenuItem("This game is an arcade version of", new Vector2(100, 30), Color.White));
             infoText.Add(new MenuItem("Ultimate Ascent. The game play is", new Vector2(100, 80), Color.White));
@@ -569,8 +570,8 @@ namespace FRC_Virtual_Robotics
             //if (driverInputs.ElementAt<ControllerInput>(player).getBack())
             //    robots.ElementAt<IterativeRobot>(player).reset();
 
-            if (driverInputs.ElementAt<ControllerInput>(player).getDownDPad())
-                gameState = 0;
+            //if (driverInputs.ElementAt<ControllerInput>(player).getDownDPad())
+            //    gameState = 0;
         }
         private double deadband(double a)
         {

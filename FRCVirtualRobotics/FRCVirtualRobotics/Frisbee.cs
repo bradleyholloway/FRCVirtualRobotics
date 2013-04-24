@@ -14,6 +14,7 @@ namespace FRCVirtualRobotics
         private double direction;
         private Vector2 origin;
         private float rotation;
+        private static Field field;
 
         private static Texture2D image;
         public static double SPEED;
@@ -42,6 +43,10 @@ namespace FRCVirtualRobotics
             rotation = 0;
             collided = false;
             origin = new Vector2(image.Width / 2, image.Height / 2);
+        }
+        public static void setField(Field f)
+        {
+            field = f;
         }
         public Boolean colidedWith(Frisbee frisbee2)
         {
@@ -90,6 +95,7 @@ namespace FRCVirtualRobotics
 
             if (countdown == 0 || offScreen())
             {
+                field.addFrisbee(!red);
                 removeSelfFromList();
                 return -1;
             }

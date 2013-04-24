@@ -290,6 +290,8 @@ namespace FRC_Virtual_Robotics
 
         public Color getColor()
         {
+            if (climbLock)
+                return Color.Green;
             if (red)
                 return Color.Red;
             else
@@ -360,7 +362,7 @@ namespace FRC_Virtual_Robotics
             if (ammo > 0 && getState().Equals(Robot.DISABLED)==false)
             {
                 ammo--;
-                frisbees.Add(new Frisbee(getLocation(), getDirection() + (rand.NextDouble() - .5) / 5, getRed()));
+                frisbees.Add(new Frisbee(getLocation(), getDirection() + (rand.NextDouble() - .5) / 4, getRed()));
                 return true;
             }
             return false;
