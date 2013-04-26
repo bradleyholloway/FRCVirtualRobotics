@@ -32,6 +32,11 @@ namespace FRCVirtualRobotics
         }
         public void load(double time)
         {
+            //for (int i = 0; i < 1000; i++)
+            //{
+            //    commandList.Add(new Shoot());
+            //    commandList.Add(new Wait(0.0005));
+            //}
             commandList.Add(new Wait(2));
             commandList.Add(new Shoot());
             commandList.Add(new Wait(2));
@@ -40,6 +45,7 @@ namespace FRCVirtualRobotics
             commandList.Add(new Shoot());
             commandList.Add(new Wait(.5));
             commandList.Add(new Turn(Math.PI, 2));
+            //commandList.Add(new DriveStraight(1000, 7));
             commandList.Add(new Stop());
         }
         public IterativeRobot getRobot()

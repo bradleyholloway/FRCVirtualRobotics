@@ -61,7 +61,7 @@ namespace FRC_Virtual_Robotics
         private int feedDelay;
         private Boolean red;
         private int scalar;
-        private static Texture2D image;
+        private Texture2D image;
         private Vector2 location;
         private int ammo;
         private int windowX;
@@ -81,8 +81,9 @@ namespace FRC_Virtual_Robotics
         private Boolean climber;
         private Boolean climbLock;
         
-        public IterativeRobot(int maxSpeed, GraphicsDevice window, Boolean r, float sc, SoundEffectInstance driving, List<Frisbee> fbs)
+        public IterativeRobot(int maxSpeed, GraphicsDevice window, Boolean r, float sc, SoundEffectInstance driving, List<Frisbee> fbs, Texture2D i)
         {
+            image = i;
             rand = new Random();
             auto = new AutonomousManager(this);
             auto.load(3);
@@ -339,10 +340,10 @@ namespace FRC_Virtual_Robotics
             return new Vector2(x, y);
         }
 
-        public static void setImage(Texture2D picture)
-        {
-            image = picture;
-        }
+        //public static void setImage(Texture2D picture)
+        //{
+        //    image = picture;
+       // }
 
         public void reset()
         {

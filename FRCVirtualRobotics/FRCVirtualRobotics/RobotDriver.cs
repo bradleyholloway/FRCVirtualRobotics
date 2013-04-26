@@ -100,7 +100,11 @@ namespace FRC_Virtual_Robotics
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            IterativeRobot.setImage(Content.Load<Texture2D>("robot2"));
+            Texture2D robot1477 = (Content.Load<Texture2D>("robot2"));
+            float scale1477 = .2f;
+            Texture2D robot118 = Content.Load<Texture2D>("118robot");
+            float scale118 = .4f;
+
             Frisbee.setImage(Content.Load<Texture2D>("frisbee"));
 
             driving = Content.Load<SoundEffect>("Driving");
@@ -114,7 +118,7 @@ namespace FRC_Virtual_Robotics
             IterativeRobot.resetPlayers();
             if (GamePad.GetState(PlayerIndex.One).IsConnected)
             {
-                robots.Add(new IterativeRobot(6, GraphicsDevice, true, .2f, driving.CreateInstance(), frisbees));
+                robots.Add(new IterativeRobot(6, GraphicsDevice, true, scale1477, driving.CreateInstance(), frisbees, robot1477));
                 players.Add(0);
             }
             else
@@ -122,7 +126,7 @@ namespace FRC_Virtual_Robotics
 
             if (GamePad.GetState(PlayerIndex.Two).IsConnected)
             {
-                robots.Add(new IterativeRobot(6, GraphicsDevice, false, .2f, driving.CreateInstance(), frisbees));
+                robots.Add(new IterativeRobot(6, GraphicsDevice, false, scale1477, driving.CreateInstance(), frisbees, robot1477));
                 players.Add(1);
             }
             else
@@ -130,7 +134,7 @@ namespace FRC_Virtual_Robotics
 
             if (GamePad.GetState(PlayerIndex.Three).IsConnected)
             {
-                robots.Add(new IterativeRobot(6, GraphicsDevice, true, .2f, driving.CreateInstance(), frisbees));
+                robots.Add(new IterativeRobot(6, GraphicsDevice, true, scale1477, driving.CreateInstance(), frisbees, robot1477));
                 players.Add(2);
             }
             else
@@ -138,7 +142,7 @@ namespace FRC_Virtual_Robotics
 
             if (GamePad.GetState(PlayerIndex.Four).IsConnected)
             {
-                robots.Add(new IterativeRobot(6, GraphicsDevice, false, .2f, driving.CreateInstance(), frisbees));
+                robots.Add(new IterativeRobot(6, GraphicsDevice, false, scale1477, driving.CreateInstance(), frisbees, robot1477));
                 players.Add(3);
             }
             else
