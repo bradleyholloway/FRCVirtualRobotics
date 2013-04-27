@@ -138,10 +138,12 @@ namespace FRCVirtualRobotics
 
         public Color getColor()
         {
+            return Color.White;
+            /*
             if (red)
                 return Color.Red;
             else
-                return Color.Blue;
+                return Color.Blue;*/
         }
 
         private Vector2 magD(double mag, double dir)

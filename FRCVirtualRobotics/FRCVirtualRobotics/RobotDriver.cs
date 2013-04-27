@@ -574,8 +574,8 @@ namespace FRC_Virtual_Robotics
             //if (driverInputs.ElementAt<ControllerInput>(player).getBack())
             //    robots.ElementAt<IterativeRobot>(player).reset();
 
-            //if (driverInputs.ElementAt<ControllerInput>(player).getDownDPad())
-            //    gameState = 0;
+            if (driverInputs.ElementAt<ControllerInput>(player).getDownDPad())
+                gameState = 0;
         }
         private double deadband(double a)
         {

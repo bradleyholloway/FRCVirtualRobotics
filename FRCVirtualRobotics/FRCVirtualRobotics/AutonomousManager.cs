@@ -45,7 +45,7 @@ namespace FRCVirtualRobotics
             commandList.Add(new Shoot());
             commandList.Add(new Wait(.5));
             commandList.Add(new Turn(Math.PI, 2));
-            //commandList.Add(new DriveStraight(1000, 7));
+            commandList.Add(new DriveStraight(80, 7));
             commandList.Add(new Stop());
         }
         public IterativeRobot getRobot()
