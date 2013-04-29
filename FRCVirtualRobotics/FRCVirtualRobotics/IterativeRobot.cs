@@ -64,6 +64,7 @@ namespace FRC_Virtual_Robotics
         private Texture2D image;
         private Vector2 location;
         private int ammo;
+        private int colAmmo;
         private int windowX;
         private int windowY;
         private PID leftMotorPID;
@@ -106,6 +107,7 @@ namespace FRC_Virtual_Robotics
             frisbees = fbs;
             climber = false;
             climbLock = false;
+            colAmmo = 0;
             if (red)
             {
                 if (redRobots != 1)
@@ -209,8 +211,12 @@ namespace FRC_Virtual_Robotics
                             //drive.Stop();
                             Vector2 result = magD(magnitude, directionForward) + magD(collidedWith.magnitude, collidedWith.directionForward);
                             result /= 3;
-                            if (collidedWith.push(result))
-                                this.push(result);
+                            if (collidedWith.push(result) && this.push(result))
+                            {
+                                collidedWith.pushed(result);
+                                this.pushed(result);
+                            }
+
                         }
                     }
                     else
@@ -235,7 +241,7 @@ namespace FRC_Virtual_Robotics
                 }
             }
         }
-        public Boolean push(Vector2 collision)
+        public void pushed(Vector2 collision)
         {
             Vector2 tempLocation = location + collision;
             rect2 = new RotatedRectangle(new Point((int)tempLocation.X, (int)tempLocation.Y), image.Width * scale, image.Height * scale, directionForward);
@@ -260,6 +266,44 @@ namespace FRC_Virtual_Robotics
                 if (collisionFree)
                 {
                     location += collision;
+                    //return true;
+                }
+                else
+                {
+                    rect2 = new RotatedRectangle(new Point((int)location.X, (int)location.Y), image.Width * scale, image.Height * scale, directionForward);
+                    //return false;
+                }
+            }
+            //else
+                //return false;
+        }
+        public Boolean push(Vector2 collision)
+        {
+            if (climbLock)
+                return false;
+            Vector2 tempLocation = location + collision;
+            rect2 = new RotatedRectangle(new Point((int)tempLocation.X, (int)tempLocation.Y), image.Width * scale, image.Height * scale, directionForward);
+
+            Boolean pyramidCollided = Field.didCollideWithPyramid(rect2);
+
+            if (!((tempLocation).X < 75 || (tempLocation).X > windowX - 75) &&
+                !(tempLocation.Y < 50 || (tempLocation).Y > windowY - 50))
+            {
+                Boolean collisionFree = !pyramidCollided;
+                /*IterativeRobot collidedWith = null;
+                foreach (IterativeRobot rob in robots)
+                {
+                    if (rob != null)
+                        if (!rob.Equals(this))
+                            if (intersects(rob))
+                            {
+                                collisionFree = false;
+                                collidedWith = rob;
+                            }
+                }*/
+                if (collisionFree)
+                {
+                    //location += collision;
                     return true;
                 }
                 else
@@ -363,12 +407,18 @@ namespace FRC_Virtual_Robotics
             if (ammo > 0 && getState().Equals(Robot.DISABLED)==false)
             {
                 ammo--;
-                frisbees.Add(new Frisbee(getLocation(), getDirection() + (rand.NextDouble() - .5) / 4, getRed()));
+                frisbees.Add(new Frisbee(getLocation(), getDirection() + (rand.NextDouble() - .5) / 4, getRed(),false));
+                return true;
+            }
+            if (colAmmo > 0 && getState().Equals(Robot.DISABLED) == false)
+            {
+                colAmmo--;
+                frisbees.Add(new Frisbee(getLocation(), getDirection() + (rand.NextDouble() - .5) / 4, getRed(), true));
                 return true;
             }
             return false;
         }
-        public Boolean feed()
+        public Boolean feed(Boolean colored)
         {
             if (feedDelay > 0)
             {
@@ -376,7 +426,10 @@ namespace FRC_Virtual_Robotics
             }
             if (ammo < 4 && feedDelay == 0)
             {
-                ammo++;
+                if (!colored)
+                    ammo++;
+                else
+                    colAmmo++;
                 feedDelay = 18;
                 return true;
             }

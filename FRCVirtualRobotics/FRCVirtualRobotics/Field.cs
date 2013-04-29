@@ -30,6 +30,7 @@ namespace FRCVirtualRobotics
         static List<Point> climbPoints;
         static Point bluePyramidCenter;
         static Point redPyramidCenter;
+        //public static double dErr;
    
         public Field(GraphicsDevice window)
         {
@@ -61,10 +62,10 @@ namespace FRCVirtualRobotics
             climbPoints = new List<Point>();
             double levelOneFracConst = .8;
             //Blue Pyramid
-            pyramidPoints.Add(new Point((int)(X * .2), (int)(Y * .4)));//8,13
-            pyramidPoints.Add(new Point((int)(X * .2), (int)(Y * .7)));
-            pyramidPoints.Add(new Point((int)(X * .4), (int)(Y * .4)));//3,13
-            pyramidPoints.Add(new Point((int)(X * .4), (int)(Y * .7)));
+            pyramidPoints.Add(new Point((int)(X * .2), (int)(Y * .35)));//8,13
+            pyramidPoints.Add(new Point((int)(X * .2), (int)(Y * .65)));
+            pyramidPoints.Add(new Point((int)(X * .4), (int)(Y * .35)));//3,13
+            pyramidPoints.Add(new Point((int)(X * .4), (int)(Y * .65)));
             bluePyramidCenter = UTIL.midpoint(pyramidPoints.ElementAt<Point>(0), pyramidPoints.ElementAt<Point>(3));
             
             climbPoints.Add(UTIL.midpoint(pyramidPoints.ElementAt<Point>(0), pyramidPoints.ElementAt<Point>(3)));//Center Point
@@ -73,10 +74,10 @@ namespace FRCVirtualRobotics
             climbPoints.Add(UTIL.vectorToPoint(UTIL.magD(levelOneFracConst * UTIL.distance(pyramidPoints.ElementAt<Point>(0), climbPoints.ElementAt<Point>(0)), Math.PI * 5 / 4) + UTIL.pointToVector(bluePyramidCenter)));
             climbPoints.Add(UTIL.vectorToPoint(UTIL.magD(levelOneFracConst * UTIL.distance(pyramidPoints.ElementAt<Point>(0), climbPoints.ElementAt<Point>(0)), Math.PI * 7 / 4) + UTIL.pointToVector(bluePyramidCenter)));
             //Red Pyramid
-            pyramidPoints.Add(new Point((int)(X * .6), (int)(Y * .4)));
-            pyramidPoints.Add(new Point((int)(X * .6), (int)(Y * .7)));
-            pyramidPoints.Add(new Point((int)(X * .8), (int)(Y * .4)));
-            pyramidPoints.Add(new Point((int)(X * .8), (int)(Y * .7)));
+            pyramidPoints.Add(new Point((int)(X * .6), (int)(Y * .35)));
+            pyramidPoints.Add(new Point((int)(X * .6), (int)(Y * .65)));
+            pyramidPoints.Add(new Point((int)(X * .8), (int)(Y * .35)));
+            pyramidPoints.Add(new Point((int)(X * .8), (int)(Y * .65)));
             redPyramidCenter = UTIL.midpoint(pyramidPoints.ElementAt<Point>(4), pyramidPoints.ElementAt<Point>(7));
             climbPoints.Add(UTIL.midpoint(pyramidPoints.ElementAt<Point>(4), pyramidPoints.ElementAt<Point>(7)));//Center Point
             climbPoints.Add(UTIL.vectorToPoint(UTIL.magD(levelOneFracConst * UTIL.distance(pyramidPoints.ElementAt<Point>(4), climbPoints.ElementAt<Point>(5)), Math.PI * 1 / 4) + UTIL.pointToVector(redPyramidCenter)));
@@ -89,10 +90,6 @@ namespace FRCVirtualRobotics
             redPyramidCenter = UTIL.midpoint(pyramidPoints.ElementAt<Point>(4), pyramidPoints.ElementAt<Point>(7));
 
 
-        }
-        public static List<Point> getClimbPoints()
-        {
-            return climbPoints;
         }
         public static List<int> getGoals()
         {
@@ -140,7 +137,7 @@ namespace FRCVirtualRobotics
             }
             return 0;
         }
-        public Boolean feeding(Vector2 location, Boolean red)
+        private Boolean feeding2(Vector2 location, Boolean red)
         {//red feeds left, and blue feeds right
             if (red)
             {//95 left tollerance
@@ -164,12 +161,62 @@ namespace FRCVirtualRobotics
             }
             return false;
         }
+        private Boolean feedingC(Vector2 location, Boolean red)
+        {//red feeds left, and blue feeds right
+            if (red)
+            {//95 left tollerance
+                if (location.X < 95 && (location.Y < 70 || location.Y > Y - 70))
+                {
+                    if (redRedFrisbees > 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+            else
+            {//115 right tollerance
+                if (location.X > X - 95 && (location.Y < 70 || location.Y > Y - 70))
+                {
+                    if (blueBlueFrisbees > 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        public int feeding(Vector2 location, Boolean red)
+        {
+            if (feeding2(location, red))
+                return 1;
+            else if (feedingC(location, red))
+                return 2;
+            else
+                return 0;
+        }
         public void feed(Boolean red)
         {
             if (red)
                 redWhiteFrisbees--;
             else
                 blueWhiteFrisbees--;
+        }
+        public void feed(Boolean red, Boolean colored)
+        {
+            if (red)
+            {
+                if (colored)
+                    redRedFrisbees--;
+                else
+                    redWhiteFrisbees--;
+            }
+            else
+            {
+                if (colored)
+                    blueBlueFrisbees--;
+                else
+                    blueWhiteFrisbees--;
+            }
         }
 
         public static Boolean didCollideWithPyramid(RotatedRectangle robot)
@@ -190,7 +237,7 @@ namespace FRCVirtualRobotics
             Point pyramidCenter = (robot.getRed()) ? redPyramidCenter : bluePyramidCenter;
             Point location = UTIL.vectorToPoint(robot.getLocation());
             double direction = UTIL.normalizeDirection(robot.getDirection());
-            double goalDirection = UTIL.getDirectionTward(location, pyramidCenter);
+            double goalDirection = UTIL.normalizeDirection(UTIL.getDirectionTward(location, pyramidCenter));
             double dErr = Math.Abs(goalDirection - direction);
             if (dErr < Math.PI / 12)
             {
@@ -212,20 +259,20 @@ namespace FRCVirtualRobotics
             int p1; int p2;
             if(red)
             {
-                p1 = 4;
-                p2 = 6;
+                p1 = 7;
+                p2 = 5;
             }
             else
             {
-                p1 = 0;
-                p2 = 2;
+                p1 = 3;
+                p2 = 1;
             }
-            if (UTIL.tolerant(p.X, climbPoints.ElementAt<Point>(p1).X, 5) || UTIL.tolerant(p.X, climbPoints.ElementAt<Point>(p2).X, 15))
+            if (UTIL.tolerant(p.X, climbPoints.ElementAt<Point>(p1).X, 10) || UTIL.tolerant(p.X, climbPoints.ElementAt<Point>(p2).X, 10))
             {
                 if (p.Y < climbPoints.ElementAt<Point>(p2).Y && p.Y > climbPoints.ElementAt<Point>(p1).Y)
                     valid = true;
             }
-            if (UTIL.tolerant(p.Y, climbPoints.ElementAt<Point>(p1).Y, 5) || UTIL.tolerant(p.Y, climbPoints.ElementAt<Point>(p2).Y, 15))
+            if (UTIL.tolerant(p.Y, climbPoints.ElementAt<Point>(p1).Y, 10) || UTIL.tolerant(p.Y, climbPoints.ElementAt<Point>(p2).Y, 10))
             {
                 if (p.X > climbPoints.ElementAt<Point>(p2).X && p.X < climbPoints.ElementAt<Point>(p1).X)
                     valid = true;
@@ -317,7 +364,7 @@ namespace FRCVirtualRobotics
             else if (name.Equals("bluePyramid"))
             {
                 rot = 0f;
-                loc = new Vector2((float)(Field.X * .2), (float)(Field.Y * .4));
+                loc = new Vector2((float)(Field.X * .2), (float)(Field.Y * .35));
                 color = Color.Blue;
                 scale = (float) (Field.Y * .3) / pic.Height;
                 origin = Vector2.Zero;
@@ -326,7 +373,7 @@ namespace FRCVirtualRobotics
             else if (name.Equals("redPyramid"))
             {
                 rot = 0f;
-                loc = new Vector2((float)(Field.X * .6), (float)(Field.Y * .4));
+                loc = new Vector2((float)(Field.X * .6), (float)(Field.Y * .35));
                 color = Color.Red;
                 scale = (float)(Field.Y * .3) / pic.Height;
                 origin = Vector2.Zero;
