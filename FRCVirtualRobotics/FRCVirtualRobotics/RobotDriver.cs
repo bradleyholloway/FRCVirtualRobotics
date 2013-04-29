@@ -192,6 +192,7 @@ namespace FRC_Virtual_Robotics
             //menuItems.Add(new MenuItem("Test", new Vector2(200, 600), Color.White));
             menuText.Add(new MenuItem("Ultimate - Ascent! (Unofficial)", new Vector2(120,30), Color.White));
             menuText.Add(new MenuItem("By: Texas Torque, Team 1477", new Vector2(120,80),Color.White));
+            menuText.Add(new MenuItem("2013 FRC World Champs", new Vector2(160, 140), Color.White));
             infoText.Add(new MenuItem("This game is an arcade version of", new Vector2(100, 30), Color.White));
             infoText.Add(new MenuItem("Ultimate Ascent. The game play is", new Vector2(100, 80), Color.White));
             infoText.Add(new MenuItem("in accordance with the real game ", new Vector2(100, 130), Color.White));
@@ -527,7 +528,7 @@ namespace FRC_Virtual_Robotics
                     spriteBatch.DrawString(spriteFont, menuItem.text(), menuItem.location(), menuItem.color());
                 foreach (MenuItem menuItem in menuText)
                     spriteBatch.DrawString(spriteFont, menuItem.text(), menuItem.location(), menuItem.color());
-                spriteBatch.Draw(Frisbee.getImage(), menuItems.ElementAt<MenuItem>(menuSelection).location()- new Vector2( 100, 0), null, Color.White, menuSpin, new Vector2(Frisbee.getImage().Width/2,Frisbee.getImage().Height/2), .1f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(Frisbee.getImage(), menuItems.ElementAt<MenuItem>(menuSelection).location()- new Vector2( 80, -33), null, Color.White, menuSpin, new Vector2(Frisbee.getImage().Width/2,Frisbee.getImage().Height/2), .1f, SpriteEffects.None, 0f);
             }
             else if (gameState == 2)
             {
