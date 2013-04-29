@@ -265,8 +265,7 @@ namespace FRC_Virtual_Robotics
             {
                 if (titleScreenInstance.State.Equals(SoundState.Playing))
                     titleScreenInstance.Stop();
-                if (transcendenceInstance.State.Equals(SoundState.Stopped))
-                    transcendenceInstance.Play();
+                
 
                 Boolean ready = true;
                 foreach (int play in players)
@@ -293,6 +292,8 @@ namespace FRC_Virtual_Robotics
                         start.Play();
                     robotStates = Robot.AUTONOMOUS;
                     inGameState = 1;
+                    if (transcendenceInstance.State.Equals(SoundState.Stopped))
+                        transcendenceInstance.Play();
                 }
                 else if (gameTime.TotalGameTime.Subtract(startGameTime).TotalSeconds < 135)
                 {
