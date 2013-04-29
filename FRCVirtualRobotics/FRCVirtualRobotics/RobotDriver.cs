@@ -126,7 +126,7 @@ namespace FRC_Virtual_Robotics
 
             if (GamePad.GetState(PlayerIndex.Two).IsConnected)
             {
-                robots.Add(new IterativeRobot(6, GraphicsDevice, false, scale118, driving.CreateInstance(), frisbees, robot118));
+                robots.Add(new IterativeRobot(6, GraphicsDevice, false, scale1477, driving.CreateInstance(), frisbees, robot1477));
                 players.Add(1);
             }
             else
@@ -516,10 +516,10 @@ namespace FRC_Virtual_Robotics
                     spriteBatch.Draw(fo.getImage(), fo.getLocation(), null, fo.getColor(), fo.getRotation(), fo.getOrigin(), fo.getScale(), SpriteEffects.None, 0f);
                 }
               //  List<double> calcs = robots.ElementAt<IterativeRobot>(0).getRectangle().getLastCalc();
-              //  spriteBatch.DrawString(spriteFont, calcs.ElementAt<double>(0) + " " + calcs.ElementAt<double>(1) + " " + calcs.ElementAt<double>(2), new Vector2(120, 40), Color.White);
+                //spriteBatch.DrawString(spriteFont, Field.dErr+"", new Vector2(120, 40), Color.White);
                 spriteBatch.DrawString(spriteFont, (redFrisbeeScore + redAutoScore)+"", new Vector2(60, 0), Color.Red);
                 spriteBatch.DrawString(spriteFont, (blueFrisbeeScore + blueAutoScore)+"", new Vector2(GraphicsDevice.Viewport.Width - 130,0), Color.Blue);
-                spriteBatch.DrawString(spriteFont, Math.Round(inGameTime) + "", new Vector2(GraphicsDevice.Viewport.Width / 2, 0), Color.White);
+                spriteBatch.DrawString(spriteFont, calcGameTime(inGameTime) + "", new Vector2(GraphicsDevice.Viewport.Width / 2, 0), Color.White);
             }
             else if (gameState == 0)
             {
@@ -553,10 +553,10 @@ namespace FRC_Virtual_Robotics
 
             if (!robots.ElementAt<IterativeRobot>(player).getState().equals(Robot.PreAUTONOMOUS))
             {
-                if (field.feeding(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getRed()))
-                    if (robots.ElementAt<IterativeRobot>(player).feed())
+                if (field.feeding(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getRed())!=0)
+                    if (robots.ElementAt<IterativeRobot>(player).feed((field.feeding(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getRed())==2)))
                     {
-                        field.feed(robots.ElementAt<IterativeRobot>(player).getRed());
+                        field.feed(robots.ElementAt<IterativeRobot>(player).getRed(), (field.feeding(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getRed()) == 2));
                         feed.Play();
                     }
                 if (fire.ElementAt<ControlButton>(player).update((driverInputs.ElementAt<ControllerInput>(player).getRightBumper()||driverInputs.ElementAt<ControllerInput>(player).getRightTrigger()>.6)) && robots.ElementAt<IterativeRobot>(player).fire())
@@ -587,7 +587,16 @@ namespace FRC_Virtual_Robotics
                 return -1;
             else
                 return a;
-        } 
+        }
+        private int calcGameTime(double time)
+        {
+            int Time = (int)Math.Round(time);
+            if (Time > 15)
+                return 135 - Time;
+            else
+                return 15 - Time;
+
+        }
 
     }
 }

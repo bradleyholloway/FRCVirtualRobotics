@@ -21,6 +21,7 @@ namespace FRCVirtualRobotics
 
         private int countdown;
         private Boolean red;
+        private Boolean colored;
         private Boolean collided;
         private static List<Frisbee> frisbees;
 
@@ -34,7 +35,7 @@ namespace FRCVirtualRobotics
             collided = false;
             origin = new Vector2(image.Width / 2, image.Height / 2);
         }
-        public Frisbee(Vector2 loc, double dir, Boolean r)
+        public Frisbee(Vector2 loc, double dir, Boolean r, Boolean col)
         {
             location = new Vector2(loc.X, loc.Y);
             direction = UTIL.normalizeDirection(dir);
@@ -42,6 +43,7 @@ namespace FRCVirtualRobotics
             red = r;
             rotation = 0;
             collided = false;
+            colored = col;
             origin = new Vector2(image.Width / 2, image.Height / 2);
         }
         public static void setField(Field f)
@@ -138,12 +140,12 @@ namespace FRCVirtualRobotics
 
         public Color getColor()
         {
-            return Color.White;
-            /*
+            if(!colored)
+                return Color.White;            
             if (red)
                 return Color.Red;
             else
-                return Color.Blue;*/
+                return Color.Blue;
         }
 
         private Vector2 magD(double mag, double dir)
