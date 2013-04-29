@@ -208,7 +208,7 @@ namespace FRC_Virtual_Robotics
                         {
                             //drive.Stop();
                             Vector2 result = magD(magnitude, directionForward) + magD(collidedWith.magnitude, collidedWith.directionForward);
-                            result /= 2;
+                            result /= 3;
                             if (collidedWith.push(result))
                                 this.push(result);
                         }

@@ -126,7 +126,7 @@ namespace FRC_Virtual_Robotics
 
             if (GamePad.GetState(PlayerIndex.Two).IsConnected)
             {
-                robots.Add(new IterativeRobot(6, GraphicsDevice, false, scale1477, driving.CreateInstance(), frisbees, robot1477));
+                robots.Add(new IterativeRobot(6, GraphicsDevice, false, scale118, driving.CreateInstance(), frisbees, robot118));
                 players.Add(1);
             }
             else
@@ -158,9 +158,9 @@ namespace FRC_Virtual_Robotics
             Frisbee.setFrisbees(frisbees);
 
             climbers = new List<Toggle>();
-            for (int a = 0; a < 4; a++)
+            for (int a = 0; a < 4; a++) 
                 climbers.Add(new Toggle(false));
-
+            
             preAutoReady = new List<Toggle>();
             for (int a = 0; a < 4; a++)
                 preAutoReady.Add(new Toggle(false));
@@ -575,7 +575,9 @@ namespace FRC_Virtual_Robotics
             //    robots.ElementAt<IterativeRobot>(player).reset();
 
             if (driverInputs.ElementAt<ControllerInput>(player).getDownDPad())
-                gameState = 0;
+            {
+                gameState = 2;
+            }
         }
         private double deadband(double a)
         {

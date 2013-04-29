@@ -37,6 +37,7 @@ namespace FRCVirtualRobotics
             //    commandList.Add(new Shoot());
             //    commandList.Add(new Wait(0.0005));
             //}
+            
             commandList.Add(new Wait(2));
             commandList.Add(new Shoot());
             commandList.Add(new Wait(2));
