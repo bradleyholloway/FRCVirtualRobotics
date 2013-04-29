@@ -65,6 +65,8 @@ namespace FRC_Virtual_Robotics
         SoundEffect driving;
         SoundEffect endGame;
         SoundEffect titleScreen;
+        SoundEffect Transcendence;
+        SoundEffectInstance transcendenceInstance;
         SoundEffectInstance titleScreenInstance;
         SoundEffectInstance endGameInstance;
         private Boolean endGameFirstCycle;
@@ -215,6 +217,8 @@ namespace FRC_Virtual_Robotics
                 teleOp = Content.Load<SoundEffect>("TeleOp");
                 start = Content.Load<SoundEffect>("TrumpetStart");
                 titleScreen = Content.Load<SoundEffect>("CantHoldUs");
+                Transcendence = Content.Load<SoundEffect>("transcendence");
+                transcendenceInstance = Transcendence.CreateInstance();
                 titleScreenInstance = titleScreen.CreateInstance();
                 endGameInstance = endGame.CreateInstance();
                 endGameInstance.IsLooped = false;
@@ -260,6 +264,8 @@ namespace FRC_Virtual_Robotics
             {
                 if (titleScreenInstance.State.Equals(SoundState.Playing))
                     titleScreenInstance.Stop();
+                if (transcendenceInstance.State.Equals(SoundState.Stopped))
+                    transcendenceInstance.Play();
 
                 Boolean ready = true;
                 foreach (int play in players)
@@ -400,6 +406,7 @@ namespace FRC_Virtual_Robotics
             {
                 if (endGameFirstCycle)
                 {
+                    transcendenceInstance.Stop();
                     foreach (int player in players)
                     {
                         if (robots.ElementAt<IterativeRobot>(player).getClimb())
