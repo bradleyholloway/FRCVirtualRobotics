@@ -70,6 +70,7 @@ namespace FRC_Virtual_Robotics
         SoundEffectInstance titleScreenInstance;
         SoundEffectInstance endGameInstance;
         private Boolean endGameFirstCycle;
+        private List<PlayerIndex> playerIndecies;
 
         public RobotDriver()
         {
@@ -78,6 +79,11 @@ namespace FRC_Virtual_Robotics
             gameState = 0;
             menuSelection = 0;
             rand = new Random();
+            playerIndecies = new List<PlayerIndex>();
+            playerIndecies.Add(PlayerIndex.One);
+            playerIndecies.Add(PlayerIndex.Two);
+            playerIndecies.Add(PlayerIndex.Three);
+            playerIndecies.Add(PlayerIndex.Four);
 
         }
 
@@ -355,8 +361,13 @@ namespace FRC_Virtual_Robotics
 
 
                 foreach (int player in players)
-                    robots.ElementAt<IterativeRobot>(player).run(robots);
-
+                {
+                    Boolean vibrate = robots.ElementAt<IterativeRobot>(player).run(robots);
+                    if (vibrate)
+                        GamePad.SetVibration(playerIndecies.ElementAt<PlayerIndex>(player), .5f, .5f);
+                    else
+                        GamePad.SetVibration(playerIndecies.ElementAt<PlayerIndex>(player), .0f, .0f);
+                }
                 for (int index = 0; index < frisbees.Count; index++)
                 {
                     int frisbeeScore = 0;

@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using BradleyXboxUtils;
 using Microsoft.Xna.Framework.Audio;
 using FRCVirtualRobotics;
+using Microsoft.Xna.Framework.Input;
 
 namespace FRC_Virtual_Robotics
 {
@@ -54,6 +55,8 @@ namespace FRC_Virtual_Robotics
     }
     public class IterativeRobot : Robot
     {
+        private static int playerCount = -1;
+        private int player;
         private double leftMotorSpeed;
         private double rightMotorSpeed;
         private double directionForward;
@@ -81,10 +84,16 @@ namespace FRC_Virtual_Robotics
         private Boolean firstRobot;
         private Boolean climber;
         private Boolean climbLock;
+
         
         public IterativeRobot(int maxSpeed, GraphicsDevice window, Boolean r, float sc, SoundEffectInstance driving, List<Frisbee> fbs, Texture2D i)
         {
+            playerCount++;
+
+            player = playerCount;
+
             image = i;
+            
             rand = new Random();
             auto = new AutonomousManager(this);
             auto.load(3);
@@ -164,8 +173,9 @@ namespace FRC_Virtual_Robotics
             return intersecting;
         }
 
-        public void run(List<IterativeRobot> robots)
+        public Boolean run(List<IterativeRobot> robots)
         {
+            Boolean vibrate = false;
             if (!climbLock)
             {
                 rightMotorSpeed += rightMotorPID.calcPID(rightMotorSpeed);
@@ -209,6 +219,7 @@ namespace FRC_Virtual_Robotics
                         else
                         {
                             //drive.Stop();
+                            vibrate = true;//GamePad.SetVibration(playerIndex, .5f, .5f);
                             Vector2 result = magD(magnitude, directionForward) + magD(collidedWith.magnitude, collidedWith.directionForward);
                             result /= 3;
                             if (collidedWith.push(result) && this.push(result))
@@ -221,6 +232,7 @@ namespace FRC_Virtual_Robotics
                     }
                     else
                     {
+                        vibrate = true;// GamePad.SetVibration(playerIndex, .5f, .5f);
                         drive.Stop();
                         rightMotorSpeed = 0;
                         leftMotorSpeed = 0;
@@ -228,9 +240,11 @@ namespace FRC_Virtual_Robotics
                 }
                 else
                 {
+                    vibrate = true; // GamePad.SetVibration(playerIndex, .5f, .5f);
                     drive.Stop();
                     rightMotorSpeed = 0;
                     leftMotorSpeed = 0;
+                    
                 }
                 if (Math.Abs(magnitude) < 0.2)
                     drive.Stop();
@@ -240,6 +254,7 @@ namespace FRC_Virtual_Robotics
                     drive.Stop();
                 }
             }
+            return vibrate;
         }
         public void pushed(Vector2 collision)
         {

@@ -123,7 +123,7 @@ namespace FRCVirtualRobotics
                 endTime += gameTime;
                 firstCycle = false;
             }
-            double distance = UTIL.distance(startPoint, robot.getLocation());
+            distance = UTIL.distance(startPoint, robot.getLocation());
             if (negative)
                 distance *= -1;
             double speed = distancePID.calcPID(distance);

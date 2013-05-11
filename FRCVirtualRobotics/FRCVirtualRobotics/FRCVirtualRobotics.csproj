@@ -17,7 +17,7 @@
     <XnaCrossPlatformGroupID>78829ab9-dfa3-44ad-95ce-99ba80c9e179</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
     <ApplicationIcon>Game.ico</ApplicationIcon>
-    <Thumbnail>robot2.png</Thumbnail>
+    <Thumbnail>GameThumbnail.png</Thumbnail>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Xbox 360' ">
     <DebugSymbols>true</DebugSymbols>
