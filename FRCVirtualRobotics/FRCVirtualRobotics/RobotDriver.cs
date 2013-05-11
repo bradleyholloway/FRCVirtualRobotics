@@ -118,37 +118,37 @@ namespace FRC_Virtual_Robotics
             // TODO: use this.Content to load your game content here
             robots = new List<IterativeRobot>();
             IterativeRobot.resetPlayers();
-            if (GamePad.GetState(PlayerIndex.One).IsConnected)
-            {
-                robots.Add(new IterativeRobot(6, GraphicsDevice, true, scale1477, driving.CreateInstance(), frisbees, robot1477));
+            //if (GamePad.GetState(PlayerIndex.One).IsConnected)
+            //{
+                robots.Add(new IterativeRobot(6, GraphicsDevice, true, scale1477, driving.CreateInstance(), frisbees, robot1477, true));
                 players.Add(0);
-            }
-            else
-                robots.Add(null);
+            //}
+            //else
+            //    robots.Add(null);
 
-            if (GamePad.GetState(PlayerIndex.Two).IsConnected)
-            {
-                robots.Add(new IterativeRobot(6, GraphicsDevice, false, scale1477, driving.CreateInstance(), frisbees, robot1477));
+            //if (GamePad.GetState(PlayerIndex.Two).IsConnected)
+            //{
+                robots.Add(new IterativeRobot(6, GraphicsDevice, false, scale1477, driving.CreateInstance(), frisbees, robot1477, true));
                 players.Add(1);
-            }
-            else
-                robots.Add(null);
+            //}
+            //else
+            //    robots.Add(null);
 
-            if (GamePad.GetState(PlayerIndex.Three).IsConnected)
-            {
-                robots.Add(new IterativeRobot(6, GraphicsDevice, true, scale1477, driving.CreateInstance(), frisbees, robot1477));
+            //if (GamePad.GetState(PlayerIndex.Three).IsConnected)
+            //{
+                robots.Add(new IterativeRobot(6, GraphicsDevice, true, scale1477, driving.CreateInstance(), frisbees, robot1477, true));
                 players.Add(2);
-            }
-            else
-                robots.Add(null);
+            //}
+            //else
+            //    robots.Add(null);
 
-            if (GamePad.GetState(PlayerIndex.Four).IsConnected)
-            {
-                robots.Add(new IterativeRobot(6, GraphicsDevice, false, scale1477, driving.CreateInstance(), frisbees, robot1477));
+            //if (GamePad.GetState(PlayerIndex.Four).IsConnected)
+            //{
+                robots.Add(new IterativeRobot(6, GraphicsDevice, false, scale1477, driving.CreateInstance(), frisbees, robot1477, true));
                 players.Add(3);
-            }
-            else
-                robots.Add(null);
+            //}
+            //else
+            //    robots.Add(null);
 
             driverInputs = new List<ControllerInput>();
             driverInputs.Add(new ControllerInput(PlayerIndex.One));
@@ -226,18 +226,18 @@ namespace FRC_Virtual_Robotics
                 titleScreenInstance.IsLooped = true;
             }
             endGameFirstCycle = true;
-            field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "topGoalRed"));
-            field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "midGoalRed"));
-            field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "botGoalRed"));
-            field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "topGoalBlue"));
-            field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "midGoalBlue"));
-            field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "botGoalBlue"));
-            field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "redFeedTop"));
-            field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "redFeedBot"));
-            field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "blueFeedBot"));
-            field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "blueFeedTop"));
-            field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("pyramid"), "bluePyramid"));
-            field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("pyramid"), "redPyramid"));
+            Field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "topGoalRed"));
+            Field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "midGoalRed"));
+            Field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "botGoalRed"));
+            Field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "topGoalBlue"));
+            Field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "midGoalBlue"));
+            Field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "botGoalBlue"));
+            Field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "redFeedTop"));
+            Field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "redFeedBot"));
+            Field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "blueFeedBot"));
+            Field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("goal"), "blueFeedTop"));
+            Field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("pyramid"), "bluePyramid"));
+            Field.getObjects().Add(new FieldObjects(Content.Load<Texture2D>("pyramid"), "redPyramid"));
             spriteFont = Content.Load<SpriteFont>("TimesNewRoman");
 
             redFrisbeeScore = blueFrisbeeScore = 0;
@@ -318,7 +318,7 @@ namespace FRC_Virtual_Robotics
                     
                 foreach (int player in players)
                 {
-                    if (robots.ElementAt<IterativeRobot>(player).getState().equals(Robot.TELEOP) || robots.ElementAt<IterativeRobot>(player).getState().equals(Robot.PreAUTONOMOUS))
+                    if (!robots.ElementAt<IterativeRobot>(player).getAI() && (robots.ElementAt<IterativeRobot>(player).getState().equals(Robot.TELEOP) || robots.ElementAt<IterativeRobot>(player).getState().equals(Robot.PreAUTONOMOUS)))
                         processInput(player);
                     else if(robots.ElementAt<IterativeRobot>(player).getState().equals(Robot.AUTONOMOUS))
                     {
@@ -355,14 +355,14 @@ namespace FRC_Virtual_Robotics
 
 
                 foreach (int player in players)
-                    robots.ElementAt<IterativeRobot>(player).run(robots);
+                    robots.ElementAt<IterativeRobot>(player).run(robots, inGameTime);
 
                 for (int index = 0; index < frisbees.Count; index++)
                 {
                     int frisbeeScore = 0;
                     if (frisbees.ElementAt<Frisbee>(index).getRed())
                     {
-                        frisbeeScore = field.score(frisbees.ElementAt<Frisbee>(index).getLocation(), frisbees.ElementAt<Frisbee>(index).getRed());
+                        frisbeeScore = Field.score(frisbees.ElementAt<Frisbee>(index).getLocation(), frisbees.ElementAt<Frisbee>(index).getRed());
                         redFrisbeeScore += frisbeeScore;
                         if (inGameTime < 15)
                         {
@@ -373,7 +373,7 @@ namespace FRC_Virtual_Robotics
                     }
                     else
                     {
-                        frisbeeScore = field.score(frisbees.ElementAt<Frisbee>(index).getLocation(), frisbees.ElementAt<Frisbee>(index).getRed());
+                        frisbeeScore = Field.score(frisbees.ElementAt<Frisbee>(index).getLocation(), frisbees.ElementAt<Frisbee>(index).getRed());
                         blueFrisbeeScore += frisbeeScore;
                         if (inGameTime < 15)
                         {
@@ -520,7 +520,7 @@ namespace FRC_Virtual_Robotics
                 {
                     spriteBatch.Draw(Frisbee.getImage(), frisbee.getLocation(), null, frisbee.getColor(), frisbee.getDirection(), frisbee.getOrigin(), .06f, SpriteEffects.None, 0f);
                 }
-                foreach (FieldObjects fo in field.getObjects())
+                foreach (FieldObjects fo in Field.getObjects())
                 {
                     spriteBatch.Draw(fo.getImage(), fo.getLocation(), null, fo.getColor(), fo.getRotation(), fo.getOrigin(), fo.getScale(), SpriteEffects.None, 0f);
                 }
@@ -562,10 +562,10 @@ namespace FRC_Virtual_Robotics
 
             if (!robots.ElementAt<IterativeRobot>(player).getState().equals(Robot.PreAUTONOMOUS))
             {
-                if (field.feeding(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getRed())!=0)
-                    if (robots.ElementAt<IterativeRobot>(player).feed((field.feeding(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getRed())==2)))
+                if (Field.feeding(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getRed())!=0)
+                    if (robots.ElementAt<IterativeRobot>(player).feed((Field.feeding(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getRed())==2)))
                     {
-                        field.feed(robots.ElementAt<IterativeRobot>(player).getRed(), (field.feeding(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getRed()) == 2));
+                        Field.feed(robots.ElementAt<IterativeRobot>(player).getRed(), (Field.feeding(robots.ElementAt<IterativeRobot>(player).getLocation(), robots.ElementAt<IterativeRobot>(player).getRed()) == 2));
                         feed.Play();
                     }
                 if (fire.ElementAt<ControlButton>(player).update((driverInputs.ElementAt<ControllerInput>(player).getRightBumper()||driverInputs.ElementAt<ControllerInput>(player).getRightTrigger()>.6)) && robots.ElementAt<IterativeRobot>(player).fire())
