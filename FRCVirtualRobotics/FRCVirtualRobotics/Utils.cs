@@ -111,6 +111,142 @@ namespace BradleyXboxUtils
         }
     }//Controller Input
 
+    public class KeyboardInput
+    {
+                PlayerIndex p;
+
+        public KeyboardInput()
+        {
+            p = PlayerIndex.One;
+        }
+
+        public KeyboardInput(PlayerIndex player)
+        {
+            p = player;
+        }
+
+        private double boolToDouble(Boolean state)
+        {
+            return (state) ? 1.00 : 0.00;
+        }
+
+        public double getLeftX()
+        {
+            return boolToDouble(false);
+            //return GamePad.GetState(p).ThumbSticks.Left.X;
+        }
+        public double getRightX()
+        {
+            if (Keyboard.GetState().IsKeyDown(Keys.D))
+                return 1;
+            else if (Keyboard.GetState().IsKeyDown(Keys.A))
+                return -1;
+            else
+                return 0;
+            //return GamePad.GetState(p).ThumbSticks.Right.X;
+        }
+        public double getLeftY()
+        {
+            if (Keyboard.GetState().IsKeyDown(Keys.W))
+                return 1;
+            else if (Keyboard.GetState().IsKeyDown(Keys.S))
+                return -1;
+            else
+                return 0;
+            //return GamePad.GetState(p).ThumbSticks.Left.Y;
+        }
+        public double getRightY()
+        {
+            return 0;
+            //return GamePad.GetState(p).ThumbSticks.Right.Y;
+        }
+        public Boolean getBottomActionButton()
+        {
+            return Keyboard.GetState().IsKeyDown(Keys.Space);
+            //return GamePad.GetState(p).IsButtonDown(Buttons.A);
+        }
+        public Boolean getLeftActionButton()
+        {
+            return false;
+            //return GamePad.GetState(p).IsButtonDown(Buttons.X);
+        }
+        public Boolean getTopActionButton()
+        {
+            return false;
+            //return GamePad.GetState(p).IsButtonDown(Buttons.Y);
+        }
+        public Boolean getRightActionButton()
+        {
+            return false;
+            //return GamePad.GetState(p).IsButtonDown(Buttons.B);
+        }
+        public Boolean getUpDPad()
+        {
+            return false;
+            //return (GamePad.GetState(p).DPad.Up == ButtonState.Pressed);
+        }
+        public Boolean getRightDPad()
+        {
+            return false;
+            //return (GamePad.GetState(p).DPad.Right == ButtonState.Pressed);
+        }
+        public Boolean getDownDPad()
+        {
+            return Keyboard.GetState().IsKeyDown(Keys.Tab);
+            //return (GamePad.GetState(p).DPad.Down == ButtonState.Pressed);
+        }
+        public Boolean getLeftDPad()
+        {
+            return false;
+            //return (GamePad.GetState(p).DPad.Left == ButtonState.Pressed);
+        }
+        public Boolean getStart()
+        {
+            return false;
+            //return (GamePad.GetState(p).IsButtonDown(Buttons.Start));
+        }
+        public Boolean getBack()
+        {
+            return getDownDPad();
+            //return (GamePad.GetState(p).IsButtonDown(Buttons.Back));
+        }
+        public Boolean getBigButton()
+        {
+            return false;
+            //return (GamePad.GetState(p).IsButtonDown(Buttons.BigButton));
+        }
+        public Boolean getRightBumper()
+        {
+            return getBottomActionButton();
+            //return GamePad.GetState(p).IsButtonDown(Buttons.RightShoulder);
+        }
+        public Boolean getLeftBumper()
+        {
+            return false;
+            //return GamePad.GetState(p).IsButtonDown(Buttons.LeftShoulder);
+        }
+        public Boolean getRightStickDown()
+        {
+            return Keyboard.GetState().IsKeyDown(Keys.C);
+            //return GamePad.GetState(p).IsButtonDown(Buttons.RightStick);
+        }
+        public Boolean getLeftStickDown()
+        {
+            return false;
+            //return GamePad.GetState(p).IsButtonDown(Buttons.LeftStick);
+        }
+        public double getRightTrigger()
+        {
+            return boolToDouble(getRightBumper());
+            //return GamePad.GetState(p).Triggers.Right;
+        }
+        public double getLeftTrigger()
+        {
+            return 0.0;
+            //return GamePad.GetState(p).Triggers.Left;
+        }
+    }
+
     public class Toggle
     {
         Boolean value;

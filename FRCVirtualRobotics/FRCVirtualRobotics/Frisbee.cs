@@ -97,7 +97,7 @@ namespace FRCVirtualRobotics
 
             if (countdown == 0 || offScreen())
             {
-                field.addFrisbee(!red);
+                Field.addFrisbee(!red);
                 removeSelfFromList();
                 return -1;
             }

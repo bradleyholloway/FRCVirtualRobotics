@@ -21,11 +21,11 @@ namespace FRCVirtualRobotics
         static int rightX;
         public static int X;
         public static int Y;
-        private int redWhiteFrisbees;
-        private int redRedFrisbees;
-        private int blueWhiteFrisbees;
-        private int blueBlueFrisbees;
-        List<FieldObjects> objects;
+        private static int redWhiteFrisbees;
+        private static int redRedFrisbees;
+        private static int blueWhiteFrisbees;
+        private static int blueBlueFrisbees;
+        static List<FieldObjects> objects;
         static List<Point> pyramidPoints;
         static List<Point> climbPoints;
         static Point bluePyramidCenter;
@@ -104,12 +104,12 @@ namespace FRCVirtualRobotics
             list.Add(rightX);
             return list;
         }
-        public List<FieldObjects> getObjects()
+        public static List<FieldObjects> getObjects()
         {
             return objects;
         }
 
-        public int score(Vector2 location, Boolean red)
+        public static int score(Vector2 location, Boolean red)
         {//Left = blue goal, right = red goal
             if (red)
             {
@@ -137,7 +137,7 @@ namespace FRCVirtualRobotics
             }
             return 0;
         }
-        private Boolean feeding2(Vector2 location, Boolean red)
+        private static Boolean feeding2(Vector2 location, Boolean red)
         {//red feeds left, and blue feeds right
             if (red)
             {//95 left tollerance
@@ -161,7 +161,7 @@ namespace FRCVirtualRobotics
             }
             return false;
         }
-        private Boolean feedingC(Vector2 location, Boolean red)
+        private static Boolean feedingC(Vector2 location, Boolean red)
         {//red feeds left, and blue feeds right
             if (red)
             {//95 left tollerance
@@ -185,7 +185,7 @@ namespace FRCVirtualRobotics
             }
             return false;
         }
-        public int feeding(Vector2 location, Boolean red)
+        public static int feeding(Vector2 location, Boolean red)
         {
             if (feeding2(location, red))
                 return 1;
@@ -194,14 +194,14 @@ namespace FRCVirtualRobotics
             else
                 return 0;
         }
-        public void feed(Boolean red)
+        public static void feed(Boolean red)
         {
             if (red)
                 redWhiteFrisbees--;
             else
                 blueWhiteFrisbees--;
         }
-        public void feed(Boolean red, Boolean colored)
+        public static void feed(Boolean red, Boolean colored)
         {
             if (red)
             {
@@ -246,7 +246,7 @@ namespace FRCVirtualRobotics
             else
                 return false;
         }
-        public void addFrisbee(Boolean red)
+        public static void addFrisbee(Boolean red)
         {
             if (red)
                 redWhiteFrisbees++;

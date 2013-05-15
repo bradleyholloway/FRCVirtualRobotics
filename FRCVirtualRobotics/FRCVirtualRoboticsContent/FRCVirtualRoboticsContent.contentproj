@@ -126,13 +126,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CantHoldUs.wav">
-      <Name>CantHoldUs</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="robot2.png">
       <Name>robot2</Name>
       <Importer>TextureImporter</Importer>

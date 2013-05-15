@@ -67,6 +67,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AICommands.cs" />
     <Compile Include="AutonomousManager.cs" />
     <Compile Include="Field.cs" />
     <Compile Include="Frisbee.cs" />
