@@ -438,6 +438,7 @@ namespace FRC_Virtual_Robotics
                             else
                                 blueClimbScore += 10;
                         }
+                        GamePad.SetVibration(playerIndecies.ElementAt<PlayerIndex>(player), 0.0f, 0.0f);
                     }
                     
                     endGameFirstCycle = false;
