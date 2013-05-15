@@ -230,6 +230,42 @@ namespace FRCVirtualRobotics
             return collided;
         }
 
+        public static double getEscapeDirection(Vector2 pv)
+        {
+            Point p = UTIL.vectorToPoint(pv);
+            double dist = 1000;
+            Point nearest = new Point(0, 0) ;
+            foreach (Point pp in pyramidPoints)
+            {
+                if(dist > UTIL.distance(p,pp))
+                {
+                    nearest = pp;
+                    dist = UTIL.distance(p,pp);
+                }
+            }
+            double dir = UTIL.getDirectionTward(p,nearest);
+            dir += Math.PI;
+            dir = UTIL.normalizeDirection(dir);
+            return dir;
+        }
+        public static Boolean isEscaped(Vector2 pv)
+        {
+            Point p = UTIL.vectorToPoint(pv);
+            double dist = 100;
+            Point nearest = new Point(0, 0);
+            foreach (Point pp in pyramidPoints)
+            {
+                if (dist > UTIL.distance(p, pp))
+                {
+                    nearest = pp;
+                    dist = UTIL.distance(p, pp);
+                }
+            }
+            double dir = UTIL.getDirectionTward(p, nearest);
+            dir += Math.PI;
+            dir = UTIL.normalizeDirection(dir);
+            return dist > 50;
+        }
         public static Boolean climbing(IterativeRobot robot)
         {
             if (!robot.getClimberUp())

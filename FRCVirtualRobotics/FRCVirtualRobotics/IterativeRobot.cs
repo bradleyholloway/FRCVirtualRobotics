@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework;
 using BradleyXboxUtils;
 using Microsoft.Xna.Framework.Audio;
 using FRCVirtualRobotics;
-using Microsoft.Xna.Framework.Input;
 using WindowsFRCRobotics;
 
 namespace FRC_Virtual_Robotics
@@ -15,7 +14,7 @@ namespace FRC_Virtual_Robotics
     public class RobotState
     {
         int state;
-        
+
         public RobotState(int s)
         {
             state = s;
@@ -56,8 +55,6 @@ namespace FRC_Virtual_Robotics
     }
     public class IterativeRobot : Robot
     {
-        private static int playerCount = -1;
-        private int player;
         private double leftMotorSpeed;
         private double rightMotorSpeed;
         private double directionForward;
@@ -86,28 +83,23 @@ namespace FRC_Virtual_Robotics
         private Boolean firstRobot;
         private Boolean climber;
         private Boolean climbLock;
-
         private Boolean comp;
         private PID aiTurnPID;
         private PID aiDrivePID;
         private List<AICommands> aiCommands;
         List<AICommands>.Enumerator aiEnum;
         private AICommands aiCommand;
+        private int aiFailCount;
+        private Boolean defencive;
 
-        
         public IterativeRobot(int maxSpeed, GraphicsDevice window, Boolean r, float sc, SoundEffectInstance driving, List<Frisbee> fbs, Texture2D i, Boolean ai)
         {
-            playerCount++;
-
-            player = playerCount;
-
             image = i;
-            
             rand = new Random();
             auto = new AutonomousManager(this);
-            if(!ai)
+            if (!ai)
                 auto.load(3);
-            
+            defencive = false;
             leftMotorPID = new PID(.2, 0, 0, .15);
             rightMotorPID = new PID(.2, 0, 0, .15);
             aiTurnPID = new PID(.2, 0, .1, .1);
@@ -145,6 +137,7 @@ namespace FRC_Virtual_Robotics
                     firstRobot = true;
                 blueRobots = 1;
             }
+            firstRobot = (firstRobot == red);
             reset();
             rect2 = new RotatedRectangle(new Point((int)(location.X), (int)(location.Y)), image.Width * scale, image.Height * scale, directionForward);
             aiCommands = new List<AICommands>();
@@ -154,24 +147,26 @@ namespace FRC_Virtual_Robotics
             else
                 robotString += "Blue";
 
-            if (firstRobot==red)
+            if (firstRobot)
                 robotString += "1";
             else
                 robotString += "2";
-            aiCommands.Add(new AICommands("feed" + robotString, 2.5));
+
+
+            aiCommands.Add(new AICommands("feed" + robotString, 6));
             aiCommands.Add(new AICommands("feed" + robotString, .4));
             aiCommands.Add(new AICommands("feed" + robotString, .4));
             aiCommands.Add(new AICommands("feed" + robotString, .4));
-            aiCommands.Add(new AICommands("shoot" + robotString, 4.5));
+            aiCommands.Add(new AICommands("shoot" + robotString, 5));
             aiCommands.Add(new AICommands("shoot" + robotString, .4));
             aiCommands.Add(new AICommands("shoot" + robotString, .4));
             aiCommands.Add(new AICommands("shoot" + robotString, .4));
             aiCommands.Add(new AICommands("middle" + robotString, 2));
             aiCommand = aiCommands.ElementAt<AICommands>(0);
             aiEnum = aiCommands.GetEnumerator();
-            
 
-            
+
+
         }
         public static void resetPlayers()
         {
@@ -188,7 +183,6 @@ namespace FRC_Virtual_Robotics
             return comp;
         }
         public RotatedRectangle getRectangle()
-
         {
             return rect2;
         }
@@ -217,11 +211,10 @@ namespace FRC_Virtual_Robotics
             return intersecting;
         }
 
-
         public Boolean run(List<IterativeRobot> robots, double inGameTime)
         {
             Boolean vibrate = false;
-            
+
             if (shootDelay > 0)
                 shootDelay--;
 
@@ -282,7 +275,7 @@ namespace FRC_Virtual_Robotics
                             {
                                 collidedWith.pushed(result);
                             }
-                            
+
 
                         }
                     }
@@ -300,7 +293,7 @@ namespace FRC_Virtual_Robotics
                     drive.Stop();
                     rightMotorSpeed = 0;
                     leftMotorSpeed = 0;
-                    
+
                 }
                 if (Math.Abs(magnitude) < 0.2)
                     drive.Stop();
@@ -316,9 +309,9 @@ namespace FRC_Virtual_Robotics
         {
             Vector2 tempLocation = location + collision;
             rect2 = new RotatedRectangle(new Point((int)tempLocation.X, (int)tempLocation.Y), image.Width * scale, image.Height * scale, directionForward);
-            
+
             Boolean pyramidCollided = Field.didCollideWithPyramid(rect2);
-            
+
             if (!((tempLocation).X < 75 || (tempLocation).X > windowX - 75) &&
                 !(tempLocation.Y < 50 || (tempLocation).Y > windowY - 50))
             {
@@ -346,8 +339,20 @@ namespace FRC_Virtual_Robotics
                 }
             }
             //else
-                //return false;
+            //return false;
         }
+
+        public void setDefensive(Boolean def)
+        {
+            if (defencive != def)
+            {
+                aiDrivePID = new PID(.01, 0, 0, (defencive) ? 100 : 53);
+                //aiDrivePID.setErrorEpsilon((defencive) ? 53 : 100);
+            }
+            defencive = def;
+
+        }
+
         public Boolean push(Vector2 collision, List<IterativeRobot> robots)
         {
             if (climbLock)
@@ -389,6 +394,12 @@ namespace FRC_Virtual_Robotics
         private void calcAIDriveValues(List<IterativeRobot> robots, double inGameTime)
         {
             Point p = getAIPoint(robots);
+            if (aiFailCount > 4)
+            {
+                p = UTIL.vectorToPoint(location + UTIL.magD(120, Field.getEscapeDirection(location)));
+                if (Field.isEscaped(location))
+                    aiFailCount = 0;
+            }
             double desiredAngle = UTIL.normalizeDirection(UTIL.getDirectionTward(UTIL.vectorToPoint(location), p));
             double currentForward = UTIL.normalizeDirection(directionForward);
             if ((desiredAngle - currentForward) < -Math.PI)
@@ -399,12 +410,12 @@ namespace FRC_Virtual_Robotics
 
             aiTurnPID.setDesiredValue(desiredAngle);
             aiDrivePID.setDesiredValue(0.00);
-            double y = -1* aiTurnPID.calcPID(currentForward);
+            double y = -1 * aiTurnPID.calcPID(currentForward);
             double x = -1 * aiDrivePID.calcPID(UTIL.distance(p, UTIL.vectorToPoint(location)));
             if (aiDrivePID.isDone())
                 x = 0;
 
-            
+
             //if (x < .2)
             //    x = 0;
 
@@ -413,6 +424,10 @@ namespace FRC_Virtual_Robotics
             setMotorValues(x + y, x - y);
             if (aiCommand.isDone(this, inGameTime))
             {
+                if (aiCommand.timedOut())
+                    aiFailCount++;
+                else
+                    aiFailCount = 0;
                 if (!aiEnum.MoveNext() || aiEnum.Current == null)
                     aiEnum = aiCommands.GetEnumerator();
                 if (aiEnum.Current != null)
@@ -424,8 +439,19 @@ namespace FRC_Virtual_Robotics
         }
         private Point getAIPoint(List<IterativeRobot> robots)
         {
-            return aiCommand.getLocation();
-            //return UTIL.vectorToPoint(robots.ElementAt<IterativeRobot>(0).getLocation()+new Vector2(0,0));
+            if (!defencive)
+                return aiCommand.getLocation();
+            int robotDefend = 0;
+            if (red && firstRobot)
+                robotDefend = 1;
+            else if (red && !firstRobot)
+                robotDefend = 1;
+            else if (!red && firstRobot)
+                robotDefend = 0;
+            else if (!red && !firstRobot)
+                robotDefend = 0;
+
+            return UTIL.vectorToPoint(robots.ElementAt<IterativeRobot>(robotDefend).getLocation() + new Vector2(0, 0));
         }
 
         public void setClimber(Boolean state)
@@ -465,7 +491,7 @@ namespace FRC_Virtual_Robotics
         {
             leftMotorPID.setDesiredValue(left);
             rightMotorPID.setDesiredValue(right);
-            
+
             //leftMotorSpeed = left;
             //rightMotorSpeed = right;
         }
@@ -500,20 +526,20 @@ namespace FRC_Virtual_Robotics
         //public static void setImage(Texture2D picture)
         //{
         //    image = picture;
-       // }
+        // }
 
         public void reset()
         {
             if (red)
             {
-                location = new Vector2(100, (firstRobot) ? 100 : 400);
+                location = new Vector2(75, (firstRobot) ? 65 : 430);
                 directionForward = 0;
             }
             else
             {
-                location = new Vector2(windowX - 150, (!firstRobot) ? 100 : 400);
+                location = new Vector2(windowX - 75, (firstRobot) ? 65 : 430);
                 directionForward = Math.PI;
-            } 
+            }
         }
         public Boolean fire()
         {
@@ -556,8 +582,8 @@ namespace FRC_Virtual_Robotics
                 return true;
             }
             return false;
-            
+
         }
-            
+
     }
 }

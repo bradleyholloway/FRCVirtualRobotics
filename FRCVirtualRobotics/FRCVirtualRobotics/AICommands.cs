@@ -16,9 +16,11 @@ namespace WindowsFRCRobotics
         Boolean firstCycle;
         double timeout;
         double startTime;
+        Boolean btimedOut;
 
         public AICommands(String command, double timeOut)
         {
+            btimedOut = false;
             timeout = timeOut;
             shoot = false;
             if (command.Equals("feedRed1"))
@@ -47,11 +49,11 @@ namespace WindowsFRCRobotics
             if (command.Equals("shootBlue2"))
             {
                 shoot = true;
-                location = new Point(150, 320);
+                location = new Point(150, 310);
             }
             if (command.Equals("middleRed2") || command.Equals("middleBlue2"))
             {
-                location = new Point(400, 400);
+                location = new Point(400, 410);
                 justDrive = true;
             }
             if (command.Equals("middleRed1") || command.Equals("middleBlue1"))
@@ -73,10 +75,12 @@ namespace WindowsFRCRobotics
             {
                 startTime = inGameTime;
                 firstCycle = false;
+                btimedOut = false;
             }
             if (inGameTime - startTime > timeout)
             {
                 firstCycle = true;
+                btimedOut = true;
                 return true;
             }
             if (!shoot)
@@ -98,6 +102,10 @@ namespace WindowsFRCRobotics
             if (!BradleyXboxUtils.UTIL.tolerant(BradleyXboxUtils.UTIL.distance(location, BradleyXboxUtils.UTIL.vectorToPoint(robot.getLocation())), 0.0, 100))
                 return false;
             return robot.fire() || robot.getAmmo()==0;
+        }
+        public Boolean timedOut()
+        {
+            return btimedOut;
         }
     }
 }

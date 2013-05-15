@@ -41,6 +41,7 @@ namespace FRC_Virtual_Robotics
         List<Toggle> preAutoReady;
         List<Toggle> climbers;
         List<int> players;
+        List<Toggle> AIModes;
         ControlButton menuUp;
         ControlButton menuDown;
 
@@ -173,6 +174,10 @@ namespace FRC_Virtual_Robotics
             for (int a = 0; a < 4; a++)
                 preAutoReady.Add(new Toggle(false));
 
+            AIModes = new List<Toggle>();
+            for (int a = 0; a < 4; a++)
+                AIModes.Add(new Toggle(false));
+
             fire = new List<ControlButton>();
             for (int a = 0; a < 4; a++)
                 fire.Add(new ControlButton());
@@ -279,6 +284,9 @@ namespace FRC_Virtual_Robotics
                         ready = false;
                 
                 inGameTime = gameTime.TotalGameTime.Subtract(startGameTime).TotalSeconds;
+
+                foreach (int player in players)
+                    robots.ElementAt<IterativeRobot>(player).setDefensive(AIModes.ElementAt<Toggle>(player).get());
 
                 //Robot Control States
                 if (!ready)
@@ -571,6 +579,9 @@ namespace FRC_Virtual_Robotics
             double y = driverInputs.ElementAt<ControllerInput>(player).getLeftY();
             double x = -driverInputs.ElementAt<ControllerInput>(player).getRightX();
             robots.ElementAt<IterativeRobot>(player).setMotorValues(deadband(y + x), deadband(y - x));
+
+            if (player <= 1)
+                AIModes.ElementAt<Toggle>(player + 2).update(driverInputs.ElementAt<ControllerInput>(player).getLeftActionButton());
 
             if (!robots.ElementAt<IterativeRobot>(player).getState().equals(Robot.PreAUTONOMOUS))
             {
