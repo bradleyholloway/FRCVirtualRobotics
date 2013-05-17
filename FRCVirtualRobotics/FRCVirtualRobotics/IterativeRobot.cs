@@ -220,7 +220,7 @@ namespace FRC_Virtual_Robotics
 
             if (!climbLock)
             {
-                if (comp && (getState().equals(Robot.TELEOP) || getState().equals(Robot.AUTONOMOUS)))
+                if ((getState().equals(Robot.TELEOP) || getState().equals(Robot.AUTONOMOUS)))
                     calcAIDriveValues(robots, inGameTime);
 
                 rightMotorSpeed += rightMotorPID.calcPID(rightMotorSpeed);
@@ -443,13 +443,13 @@ namespace FRC_Virtual_Robotics
                 return aiCommand.getLocation();
             int robotDefend = 0;
             if (red && firstRobot)
-                robotDefend = 1;
+                robotDefend = 3;
             else if (red && !firstRobot)
                 robotDefend = 1;
             else if (!red && firstRobot)
                 robotDefend = 0;
             else if (!red && !firstRobot)
-                robotDefend = 0;
+                robotDefend = 2;
 
             return UTIL.vectorToPoint(robots.ElementAt<IterativeRobot>(robotDefend).getLocation() + new Vector2(0, 0));
         }

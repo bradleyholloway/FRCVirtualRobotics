@@ -577,11 +577,13 @@ namespace FRC_Virtual_Robotics
 
         protected void processInput(int player)
         {
-            double y = driverInputs.ElementAt<ControllerInput>(player).getLeftY();
-            double x = -driverInputs.ElementAt<ControllerInput>(player).getRightX();
-            robots.ElementAt<IterativeRobot>(player).setMotorValues(deadband(y + x), deadband(y - x));
+            //double y = driverInputs.ElementAt<ControllerInput>(player).getLeftY();
+            //double x = -driverInputs.ElementAt<ControllerInput>(player).getRightX();
+            //robots.ElementAt<IterativeRobot>(player).setMotorValues(deadband(y + x), deadband(y - x));
 
-            if (player <= 1)
+            AIModes.ElementAt<Toggle>(player).update(driverInputs.ElementAt<ControllerInput>(player).getRightActionButton());
+
+            if (player <= 1 && robots.ElementAt<IterativeRobot>(player+2).getAI())
                 AIModes.ElementAt<Toggle>(player + 2).update(driverInputs.ElementAt<ControllerInput>(player).getLeftActionButton());
 
             if (!robots.ElementAt<IterativeRobot>(player).getState().equals(Robot.PreAUTONOMOUS))
