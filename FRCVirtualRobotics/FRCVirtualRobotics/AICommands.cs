@@ -23,19 +23,24 @@ namespace WindowsFRCRobotics
             btimedOut = false;
             timeout = timeOut;
             shoot = false;
-            if (command.Equals("feedRed1"))
+            if (command.Equals("feedRed3"))
                 location = new Point(0, 0);
-            if (command.Equals("shootRed1"))
+            if (command.Equals("shootRed3"))
             {
                 shoot = true;
                 location = new Point(650, 170);
             }
-            if (command.Equals("feedBlue1"))
+            if (command.Equals("feedBlue3"))
                 location = new Point(800, 0);
-            if (command.Equals("shootBlue1"))
+            if (command.Equals("shootBlue3"))
             {
                 shoot = true;
                 location = new Point(150, 160);
+            }
+            if (command.Equals("middleRed3") || command.Equals("middleBlue3"))
+            {
+                location = new Point(400, 100);
+                justDrive = true;
             }
             if (command.Equals("feedRed2"))
                 location = new Point(0, 450);
@@ -56,11 +61,26 @@ namespace WindowsFRCRobotics
                 location = new Point(400, 410);
                 justDrive = true;
             }
+            if (command.Equals("feedRed1"))
+                location = new Point(0, 255);
+            if (command.Equals("shootRed1"))
+            {
+                shoot = true;
+                location = new Point(650, 255);
+            }
+            if (command.Equals("feedBlue1"))
+                location = new Point(800, 255);
+            if (command.Equals("shootBlue1"))
+            {
+                shoot = true;
+                location = new Point(150, 255);
+            }
             if (command.Equals("middleRed1") || command.Equals("middleBlue1"))
             {
-                location = new Point(400, 100);
+                location = new Point(400, 255);
                 justDrive = true;
             }
+
             firstCycle = true;
         }
 

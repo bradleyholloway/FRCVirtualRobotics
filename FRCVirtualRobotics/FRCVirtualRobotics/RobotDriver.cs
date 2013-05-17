@@ -157,6 +157,13 @@ namespace FRC_Virtual_Robotics
             //else
             //    robots.Add(null);
 
+                robots.Add(new IterativeRobot(6, GraphicsDevice, true, scale1477, driving.CreateInstance(), frisbees, robot1477, true));
+                players.Add(4);
+
+                robots.Add(new IterativeRobot(6, GraphicsDevice, false, scale1477, driving.CreateInstance(), frisbees, robot1477, true));
+                players.Add(5);
+
+
             driverInputs = new List<ControllerInput>();
             driverInputs.Add(new ControllerInput(PlayerIndex.One));
             driverInputs.Add(new ControllerInput(PlayerIndex.Two));
@@ -167,19 +174,19 @@ namespace FRC_Virtual_Robotics
             Frisbee.setFrisbees(frisbees);
 
             climbers = new List<Toggle>();
-            for (int a = 0; a < 4; a++) 
+            for (int a = 0; a < 6; a++) 
                 climbers.Add(new Toggle(false));
             
             preAutoReady = new List<Toggle>();
-            for (int a = 0; a < 4; a++)
+            for (int a = 0; a < 6; a++)
                 preAutoReady.Add(new Toggle(false));
 
             AIModes = new List<Toggle>();
-            for (int a = 0; a < 4; a++)
+            for (int a = 0; a < 6; a++)
                 AIModes.Add(new Toggle(false));
 
             fire = new List<ControlButton>();
-            for (int a = 0; a < 4; a++)
+            for (int a = 0; a < 6; a++)
                 fire.Add(new ControlButton());
 
             //Score Initalization
@@ -294,10 +301,7 @@ namespace FRC_Virtual_Robotics
                     inGameState = 0;
                     startGameTime = gameTime.TotalGameTime;
                     robotStates = Robot.PreAUTONOMOUS;
-                    foreach (int play in players)
-                    {
-                        preAutoReady.ElementAt<Toggle>(play).update(driverInputs.ElementAt<ControllerInput>(play).getBottomActionButton());
-                    }
+                        
 
                 }
                 else if (gameTime.TotalGameTime.Subtract(startGameTime).TotalSeconds < 15)
@@ -370,11 +374,16 @@ namespace FRC_Virtual_Robotics
 
                 foreach (int player in players)
                 {
-                    Boolean vibrate = robots.ElementAt<IterativeRobot>(player).run(robots, inGameTime);
-                    if (vibrate)
-                        GamePad.SetVibration(playerIndecies.ElementAt<PlayerIndex>(player), .5f, .5f);
+                    if (!robots.ElementAt<IterativeRobot>(player).getAI())
+                    {
+                        Boolean vibrate = robots.ElementAt<IterativeRobot>(player).run(robots, inGameTime);
+                        if (vibrate)
+                            GamePad.SetVibration(playerIndecies.ElementAt<PlayerIndex>(player), .5f, .5f);
+                        else
+                            GamePad.SetVibration(playerIndecies.ElementAt<PlayerIndex>(player), .0f, .0f);
+                    }
                     else
-                        GamePad.SetVibration(playerIndecies.ElementAt<PlayerIndex>(player), .0f, .0f);
+                        robots.ElementAt<IterativeRobot>(player).run(robots, inGameTime);
                 }
 
                 for (int index = 0; index < frisbees.Count; index++)
@@ -438,7 +447,8 @@ namespace FRC_Virtual_Robotics
                             else
                                 blueClimbScore += 10;
                         }
-                        GamePad.SetVibration(playerIndecies.ElementAt<PlayerIndex>(player), 0.0f, 0.0f);
+                        if(!robots.ElementAt<IterativeRobot>(player).getAI())
+                            GamePad.SetVibration(playerIndecies.ElementAt<PlayerIndex>(player), 0.0f, 0.0f);
                     }
                     
                     endGameFirstCycle = false;
@@ -581,8 +591,12 @@ namespace FRC_Virtual_Robotics
             double x = -driverInputs.ElementAt<ControllerInput>(player).getRightX();
             robots.ElementAt<IterativeRobot>(player).setMotorValues(deadband(y + x), deadband(y - x));
 
+            preAutoReady.ElementAt<Toggle>(player).update(driverInputs.ElementAt<ControllerInput>(player).getBottomActionButton());
+
             if (player <= 1)
                 AIModes.ElementAt<Toggle>(player + 2).update(driverInputs.ElementAt<ControllerInput>(player).getLeftActionButton());
+            if (player <= 1)
+                AIModes.ElementAt<Toggle>(player + 4).update(driverInputs.ElementAt<ControllerInput>(player).getRightActionButton());
 
             if (!robots.ElementAt<IterativeRobot>(player).getState().equals(Robot.PreAUTONOMOUS))
             {

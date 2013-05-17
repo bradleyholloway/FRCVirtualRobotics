@@ -91,6 +91,7 @@ namespace FRC_Virtual_Robotics
         private AICommands aiCommand;
         private int aiFailCount;
         private Boolean defencive;
+        private int robotNum;
 
         public IterativeRobot(int maxSpeed, GraphicsDevice window, Boolean r, float sc, SoundEffectInstance driving, List<Frisbee> fbs, Texture2D i, Boolean ai)
         {
@@ -127,17 +128,15 @@ namespace FRC_Virtual_Robotics
             comp = ai;
             if (red)
             {
-                if (redRobots != 1)
-                    firstRobot = true;
-                redRobots = 1;
+                redRobots++;
+                robotNum = redRobots;
             }
             else
             {
-                if (blueRobots != 1)
-                    firstRobot = true;
-                blueRobots = 1;
+                blueRobots++;
+                robotNum = blueRobots;
             }
-            firstRobot = (firstRobot == red);
+            
             reset();
             rect2 = new RotatedRectangle(new Point((int)(location.X), (int)(location.Y)), image.Width * scale, image.Height * scale, directionForward);
             aiCommands = new List<AICommands>();
@@ -147,10 +146,7 @@ namespace FRC_Virtual_Robotics
             else
                 robotString += "Blue";
 
-            if (firstRobot)
-                robotString += "1";
-            else
-                robotString += "2";
+            robotString += "" + robotNum;
 
 
             aiCommands.Add(new AICommands("feed" + robotString, 6));
@@ -441,8 +437,10 @@ namespace FRC_Virtual_Robotics
         {
             if (!defencive)
                 return aiCommand.getLocation();
-            int robotDefend = 0;
-            if (red && firstRobot)
+            int robotDefend = robotNum - 1;
+            robotDefend = (robotDefend * 2) + ((red) ? 1 : 0);
+            
+            /*if (red && firstRobot)
                 robotDefend = 1;
             else if (red && !firstRobot)
                 robotDefend = 1;
@@ -450,7 +448,7 @@ namespace FRC_Virtual_Robotics
                 robotDefend = 0;
             else if (!red && !firstRobot)
                 robotDefend = 0;
-
+            */
             return UTIL.vectorToPoint(robots.ElementAt<IterativeRobot>(robotDefend).getLocation() + new Vector2(0, 0));
         }
 
@@ -532,12 +530,22 @@ namespace FRC_Virtual_Robotics
         {
             if (red)
             {
-                location = new Vector2(75, (firstRobot) ? 65 : 430);
+                if(robotNum == 1)
+                    location = new Vector2(75, 250);
+                if (robotNum == 2)
+                    location = new Vector2(75, 430);
+                if (robotNum == 3)
+                    location = new Vector2(75, 65);
                 directionForward = 0;
             }
             else
             {
-                location = new Vector2(windowX - 75, (firstRobot) ? 65 : 430);
+                if (robotNum == 1)
+                    location = new Vector2(windowX - 75, 250);
+                if (robotNum == 2)
+                    location = new Vector2(windowX - 75, 430);
+                if (robotNum == 3)
+                    location = new Vector2(windowX - 75, 65);
                 directionForward = Math.PI;
             }
         }
